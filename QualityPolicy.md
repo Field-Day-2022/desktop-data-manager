@@ -1,6 +1,29 @@
 # Quality Policy
 
-## Sprint
+## Scrum
+
+The team will use the Scrum framework to govern the management of the Field Day project.
+
+### Sprint Planning
+
+Sprint planning will be done on the first Sunday of each sprint duration.
+
+### Stand Up
+
+Each team member will post in `#field-day-2022-standup` at least **3** times per week. 
+
+#### Standup posts will follow the following format:
+
+1. What's done
+2. What's next
+3. Obstacles
+
+At the end of each sprint each team member is responsible for moving their standup notes from Slack
+to the Google sheet [here](https://docs.google.com/spreadsheets/d/1beFXzJNFcR82lcvSi-tIZXk3Qr86IBEQbFVrCKx_DNw/edit?usp=sharing).
+
+### Sprint Retrospective
+
+Sprint retrospective will be done on or before the due date.
 
 ## Communication
 
@@ -27,8 +50,15 @@ found [here](https://drive.google.com/drive/folders/19JDGxjSamYeW-ZXcv5gNdX_Ifoo
 #### The file structure is as follows:
 
 - Capstone (top level directory)
-  - Contains resources that require constant attention and span the life of the project. 
-### Standup
+  - Contains resources that require constant attention and span the life of the project.
+- Sprints (Capstone/Sprint #)
+  - Contains resources that are specific to one sprint.
+- Templates (Capstone/Templates)
+  - Contains reusable templates for generating documentation.
+- Carlo Pelosi (Capstone/Carlo Pelosi)
+  - Contains notes and recordings from meetings with the legacy developer, Carlo Pelosi.
+- Bateman (Capstone/Bateman)
+  - Contains notes and recordings from meetings with the Sponsor, Dr. Heather Bateman.
 
 ## Version Control
 The team will use git for version control and host the source code on GitHub.
@@ -37,13 +67,16 @@ The team will use git for version control and host the source code on GitHub.
 
 The Field Day project spans multiple repositories.
 
+1. [field-day-2022](https://github.com/Field-Day-2022/field-day-2022): Main project repository. Contains source code 
+and supporting documentation for submission and deployment.
+2. [field-day-2022-research](https://github.com/Field-Day-2022/field-day-2022-research): 
+3. [documentation](https://github.com/Field-Day-2022/documentation)
+
 - All repositories will include a `.gitignore` for all generated files.
 - All repositories will include a `README.md` with basic operation information in the top level directory.
 - There will be no source files in the top level directory of any repository.
 
-#### [field-day-2022](https://github.com/Field-Day-2022/field-day-2022)
-#### [field-day-2022-research](https://github.com/Field-Day-2022/field-day-2022-research)
-#### [documentation](https://github.com/Field-Day-2022/documentation)
+
 
 ### Git Workflow:
 - The master branch, `main`, will not be pushed to until the end of each sprint.
@@ -71,8 +104,11 @@ Further information about git steps can be found in the repository [wiki](https:
 
 ## Code
 
-- A team member will commit to a US or TS branch at least once every 3 days.
-- Pair Programming
+- Each team member will commit to a US or TS branch at least once every 3 days.
+- Each team member will participate in pair programming at least once per sprint.
+  - Pair programming should last between 30 minutes and 1 hour.
+  - Two team members write code together live.
+  - Half of the time will be spent on each developer's tasks.
 
 ## Acknowledgement
 
