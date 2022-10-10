@@ -71,6 +71,7 @@ Further information about git steps can be found in the repository [wiki](https:
 
 ## Code
 
+- A team member will commit to a US or TS branch at least once every 3 days.
 - Pair Programming
 
 ## Acknowledgement
