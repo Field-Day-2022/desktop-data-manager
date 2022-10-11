@@ -104,11 +104,25 @@ Further information about git steps can be found in the repository [wiki](https:
 
 ## Code
 
+### Practices
+
 - Each team member will commit to a US or TS branch at least once every 3 days.
 - Each team member will participate in pair programming at least once per sprint.
   - Pair programming should last between 30 minutes and 1 hour.
   - Two team members write code together live.
   - Half of the time will be spent on each developer's tasks.
+
+### Formatting
+
+- Code formatting will be maintained with [prettier.io](https://prettier.io/) with the following configuration:
+```json
+{
+  "singleQuote": true,
+  "tabWidth": 4,
+  "printWidth": 100,
+  "semi": true
+}
+  ```
 
 ## Acknowledgement
 
