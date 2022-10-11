@@ -36,6 +36,10 @@ Communication for the Field Day project spans multiple applications and channels
 | Slack       | field-day-2022-standup                     | Stand up notes                                       |
 | Discord     | [Field Day](https://discord.gg/qfWDMEdUfr) | Communication with legacy developer, Carlo Pelosi    |
 
+### Video Meetings
+
+All video meetings with Dr. Bateman and Carlo will be recorded and stored in the corresponding directory in the Capstone Google Drive.
+
 ## Resource Sharing
 
 ### Google Drive
