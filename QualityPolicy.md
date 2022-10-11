@@ -146,6 +146,6 @@ and practices specified in this document.
 
 - [ ] Jack Norman
 - [ ] Isaiah Lathem
-- [ ] Denis Grassl
+- [x] Denis Grassl
 - [ ] Zachary Jacobson
 - [ ] Ian Skelskey
