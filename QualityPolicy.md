@@ -87,24 +87,41 @@ The Field Day project spans multiple repositories.
 - Developers will pull the corresponding US branch to their local repo and branch for each task.
   - Branch name format: `TS#-description`
   - Task branches will only be merged into their parent user story branch once they are complete.
-- Developers are expected to use descriptive commit messages and comments.
-#### The process for merging task branches to their corresponding user story branch:
-1. Squash the task branch history.
-2. Rebase with it's associated US branch.
-3. Push to the remote.
-4. Create a pull request for merge to the associated US branch.
-#### The process for merging user story branches into development:
-1. Rebase the US branch with the development branch.
-2. Create a pull request for merge to the development branch.
+- Each commit will be prepended with US#-TS#, along with a short description of the purpose of the commit
 
-Further information about git steps can be found in the repository [wiki](https://github.com/Field-Day-2022/field-day-2022/wiki).
+#### The process for creating a new user story branch from the dev branch
+
+1. Checkout `dev` 
+   `git checkout dev`
+2. Create a new branch from `dev` using the naming criteria outlined above
+   `git checkout -b US#-desc`
+
+#### The process for creating a new task branch from a user story branch
+
+1. Checkout the user story branch `US#-desc`
+   `git checkout US#-desc`
+2. Create a new branch from `US#-desc` using the naming criteria outlined above
+   `git checkout -b TS#-desc`
+
+#### The process for merging task branches to their corresponding user story branch:
+1. Merge the user story branch into the task branch
+1. Resolve any conflicts, then push the fixes to the task branch if any updates were needed
+1. Create a pull request to merge the task branch to the user story branch, delete the task branch after a successful merge
+#### The process for merging user story branches into development:
+1. Merge `dev` into `US#`
+1. Resolve any conflicts, then push the fixes to `US#` if any updates were needed
+1. Create a pull request to merge `US#` into `dev`, delete the user story branch after a successful merge
+
+
+
+These steps are replicated in the repository [wiki](https://github.com/Field-Day-2022/field-day-2022/wiki).
 
 ## Code
 
 ### Practices
 
 - Each team member will commit to a US or TS branch at least once every 3 days.
-- Each team member will participate in pair programming at least once per sprint.
+- Each team member will participate in pair programming at least once per sprint on an as needed basis.
   - Pair programming should last between 30 minutes and 1 hour.
   - Two team members write code together live.
   - Half of the time will be spent on each developer's tasks.
@@ -121,6 +138,8 @@ Further information about git steps can be found in the repository [wiki](https:
 }
 ```
 Prettier will be installed in the repository locally to ensure that all developers are using the same version.
+
+Formatting will also change as needed as the needs of the project evolve over time.
 
 ## Acknowledgement
 
