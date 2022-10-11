@@ -105,12 +105,12 @@ The Field Day project spans multiple repositories.
 
 #### The process for merging task branches to their corresponding user story branch:
 1. Merge the user story branch into the task branch
-1. Resolve any conflicts, then push the fixes to the task branch if any updates were needed
-1. Create a pull request to merge the task branch to the user story branch, delete the task branch after a successful merge
+2. Resolve any conflicts, then push the fixes to the task branch if any updates were needed
+3. Create a pull request to merge the task branch to the user story branch, delete the task branch after a successful merge
 #### The process for merging user story branches into development:
 1. Merge `dev` into `US#`
-1. Resolve any conflicts, then push the fixes to `US#` if any updates were needed
-1. Create a pull request to merge `US#` into `dev`, delete the user story branch after a successful merge
+2. Resolve any conflicts, then push the fixes to `US#` if any updates were needed
+3. Create a pull request to merge `US#` into `dev`, delete the user story branch after a successful merge
 
 
 
