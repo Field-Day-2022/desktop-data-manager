@@ -27,20 +27,16 @@ Sprint retrospective will be done on or before the due date.
 
 ## Communication
 
-Communication for the Field Day project spans multiple applications and channels. The modes of communication and the 
-rules that govern their use are as follows.
+Communication for the Field Day project spans multiple applications and channels. The team's primary communication application will be Slack, but Discord will be used as well.
 
-### Slack Channels
+| Application | Channel Name                               | Purpose                                              |
+| ----------- | ------------------------------------------ | ---------------------------------------------------- |
+| Slack       | field-day-2022                             | General communication, daily huddles                 |
+| Slack       | field-day-2022-sponsor                     | Communication with team sponsor, Dr. Heather Bateman |
+| Slack       | field-day-2022-standup                     | Stand up notes                                       |
+| Discord     | [Field Day](https://discord.gg/qfWDMEdUfr) | Communication with legacy developer, Carlo Pelosi    |
 
-- The `#field-day-2022` is used for general communications and daily huddles.
-- The `#field-day-2022-sponsor` channel is used for communication with the team sponsor, Professor Heather Bateman.
-- The `#field-day-2022-standup` channel is used for posting standup notes. 
-
-
-### Discord
-
-Communication with legacy developer, Carlo Pelosi, will occur in the [Field Day](https://discord.gg/qfWDMEdUfr) 
-discord channel.
+## Resource Sharing
 
 ### Google Drive
 
@@ -67,16 +63,17 @@ The team will use git for version control and host the source code on GitHub.
 
 The Field Day project spans multiple repositories.
 
-1. [field-day-2022](https://github.com/Field-Day-2022/field-day-2022): Main project repository. Contains source code 
-and supporting documentation for submission and deployment.
-2. [field-day-2022-research](https://github.com/Field-Day-2022/field-day-2022-research): 
-3. [documentation](https://github.com/Field-Day-2022/documentation)
+| Repository                                                   | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [field-day-2022](https://github.com/Field-Day-2022/field-day-2022) | Main project repository. Contains source code and supporting documentation for submission and deployment. |
+| [field-day-2022-research](https://github.com/Field-Day-2022/field-day-2022-research) | Contains research artifacts and prototypes related to Field Day. |
+| [documentation](https://github.com/Field-Day-2022/documentation) | Contains documentation related to Field Day.                 |
+
+#### General Repository Requirements
 
 - All repositories will include a `.gitignore` for all generated files.
 - All repositories will include a `README.md` with basic operation information in the top level directory.
 - There will be no source files in the top level directory of any repository.
-
-
 
 ### Git Workflow:
 - The master branch, `main`, will not be pushed to until the end of each sprint.
@@ -122,7 +119,8 @@ Further information about git steps can be found in the repository [wiki](https:
   "printWidth": 100,
   "semi": true
 }
-  ```
+```
+Prettier will be installed in the repository locally to ensure that all developers are using the same version.
 
 ## Acknowledgement
 
