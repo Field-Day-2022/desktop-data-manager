@@ -19,7 +19,7 @@ Each team member will post in `#field-day-2022-standup` at least **3** times per
 3. Obstacles
 
 At the end of each sprint each team member is responsible for moving their standup notes from Slack
-to the Google sheet [here](https://docs.google.com/spreadsheets/d/1beFXzJNFcR82lcvSi-tIZXk3Qr86IBEQbFVrCKx_DNw/edit?usp=sharing).
+to the Google sheet [here](https://docs.google.com/spreadsheets/d/1w-NvV3TirU2b-vhc_i9atq4p5Iq6dCsULkxHvz-hnAI/edit?usp=sharing).
 
 ### Sprint Retrospective
 
