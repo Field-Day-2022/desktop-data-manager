@@ -148,4 +148,4 @@ and practices specified in this document.
 - [x] Isaiah Lathem
 - [x] Denis Grassl
 - [ ] Zachary Jacobson
-- [ ] Ian Skelskey
+- [x] Ian Skelskey
