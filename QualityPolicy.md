@@ -112,8 +112,6 @@ The Field Day project spans multiple repositories.
 2. Resolve any conflicts, then push the fixes to `US#` if any updates were needed
 3. Create a pull request to merge `US#` into `dev`, delete the user story branch after a successful merge
 
-
-
 These steps are replicated in the repository [wiki](https://github.com/Field-Day-2022/field-day-2022/wiki).
 
 ## Code
