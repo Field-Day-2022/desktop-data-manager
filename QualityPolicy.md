@@ -85,9 +85,9 @@ The Field Day project spans multiple repositories.
   - Branch name format: `US#-description`
   - User stories will not be merged into Development until all that user story's tasks are complete.
 - Developers will pull the corresponding US branch to their local repo and branch for each task.
-  - Branch name format: `TS#-description`
+  - Branch name format: `US#-TS#-description`
   - Task branches will only be merged into their parent user story branch once they are complete.
-- Each commit will be prepended with US#-TS#, along with a short description of the purpose of the commit
+- Each commit will be prepended with `US#-TS#`, along with a short description of the purpose of the commit
 
 #### The process for creating a new user story branch from the dev branch
 
