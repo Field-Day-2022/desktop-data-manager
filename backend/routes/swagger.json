@@ -1,0 +1,1843 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Defines API endpoints for the FieldDay mark/recapture application.",
+      "version": "1.0.1",
+      "title": "FieldDay - Web Server",
+      "termsOfService": "https://www.asu.edu/aad/manuals/acd/acd125.html",
+      "contact": {
+        "email": "krshelle@asu.edu"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+    },
+    "host": "fhqtkwwgl1.execute-api.us-west-1.amazonaws.com",
+    "basePath": "/dev",
+    "tags": [
+      {
+        "name": "answer set",
+        "description": "Access to answer set information"
+      },
+      {
+        "name": "data form",
+        "description": "Access to data form information"
+      },
+      {
+        "name": "data entry",
+        "description": "Access to data entry information"
+      },
+      {
+        "name": "deleted item",
+        "description": "Access to deleted item information"
+      },
+      {
+        "name": "login",
+        "description": "Access to login information ( NOT YET IMPLEMENTED )"
+      },
+      {
+        "name": "project",
+        "description": "Access to project information"
+      },
+      {
+        "name": "session",
+        "description": "Access to session information"
+      },
+      {
+        "name": "sync",
+        "description": "Access to sync mobile application ( NOT YET IMPLEMENTED )"
+      },
+      {
+        "name": "token",
+        "description": "Access to jwt access token information ( NOT YET IMPLEMENTED )"
+      },
+      {
+        "name": "user",
+        "description": "Access to user information"
+      }
+    ],
+    "schemes": [
+      "https",
+      "http"
+    ],
+    "paths": {
+      "/answer_set": {
+        "post": {
+          "tags": [
+            "answer set"
+          ],
+          "summary": "Add a new answer set",
+          "description": "",
+          "operationId": "addAnswerSet",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Answer set object that needs to be added to the store",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/AnswerSet"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "answer set"
+          ],
+          "summary": "Gets all answer sets",
+          "description": "",
+          "operationId": "getAllAnswerSets",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/AnswerSet"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/answer_set/{set_name}": {
+        "get": {
+          "tags": [
+            "answer set"
+          ],
+          "summary": "Finds answer set by set name",
+          "description": "",
+          "operationId": "findAnswerSetBySetName",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "set_name",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/AnswerSet"
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "answer set"
+          ],
+          "summary": "Updated answer set",
+          "description": "",
+          "operationId": "updateAnswerSet",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "set_name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated answer set object",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/AnswerSet"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid answer set name supplied"
+            },
+            "404": {
+              "description": "Answer set not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "answer set"
+          ],
+          "summary": "Deletes an answer set",
+          "description": "",
+          "operationId": "deleteAnswerSet",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "set_name",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid set name supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Answer set not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/data_form": {
+        "post": {
+          "tags": [
+            "data form"
+          ],
+          "summary": "Add a new data form",
+          "description": "",
+          "operationId": "addDataForm",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Data form object that needs to be added to the store",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DataForm"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "data form"
+          ],
+          "summary": "Gets all data forms",
+          "description": "",
+          "operationId": "getAllDataForm",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/DataForm"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/data_form/{form_id}": {
+        "get": {
+          "tags": [
+            "data form"
+          ],
+          "summary": "Finds data form by form id",
+          "description": "",
+          "operationId": "findDataFormById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "form_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/DataForm"
+              }
+            },
+            "400": {
+              "description": "Invalid form id"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "data form"
+          ],
+          "summary": "Updated data form",
+          "description": "",
+          "operationId": "updateDataForm",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "form_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated data form",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DataForm"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid form id"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Data Form not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "data form"
+          ],
+          "summary": "Deletes a data form set",
+          "description": "",
+          "operationId": "deleteDataForm",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "form_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid form id supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Data form not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/data_entry": {
+        "post": {
+          "tags": [
+            "data entry"
+          ],
+          "summary": "Add a new data entry",
+          "description": "",
+          "operationId": "addDataEntry",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Data entry object that needs to be added to the store",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DataEntry"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "data entry"
+          ],
+          "summary": "Gets all data entries",
+          "description": "",
+          "operationId": "getAllDataEntries",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/DataEntry"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/data_entry/{session_id}/{entry_id}": {
+        "get": {
+          "tags": [
+            "data entry"
+          ],
+          "summary": "Finds data entry by session and entry id",
+          "description": "",
+          "operationId": "findDataEntryById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "session_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "entry_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/DataEntry"
+              }
+            },
+            "400": {
+              "description": "Invalid session or entry id"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "data entry"
+          ],
+          "summary": "Updated data entry",
+          "description": "",
+          "operationId": "updateDataEntry",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "session_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "entry_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated data entry",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DataEntry"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid session or entry id"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Data Entry not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "data entry"
+          ],
+          "summary": "Deletes a data entry set",
+          "description": "",
+          "operationId": "deleteDataEntry",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "session_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "entry_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid session or entry id supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Data entry not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/deleted_item": {
+        "post": {
+          "tags": [
+            "deleted item"
+          ],
+          "summary": "Add a new deleted item",
+          "description": "",
+          "operationId": "addDeletedItem",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Deleted item object that needs to be added to the store",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DeletedItem"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "deleted item"
+          ],
+          "summary": "Gets all deleted items",
+          "description": "",
+          "operationId": "getAllDeletedItems",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/DeletedItem"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/deleted_item/{deleted_id}": {
+        "get": {
+          "tags": [
+            "deleted item"
+          ],
+          "summary": "Finds deleted item by deleted id",
+          "description": "",
+          "operationId": "findDeletedItemById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "deleted_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/DeletedItem"
+              }
+            },
+            "400": {
+              "description": "Invalid deleted id"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "deleted item"
+          ],
+          "summary": "Updated deleted item",
+          "description": "",
+          "operationId": "updateDeletedItem",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "deleted_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated deleted item",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DeletedItem"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid deleted id"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Deleted item not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "deleted item"
+          ],
+          "summary": "Deletes a deleted item set",
+          "description": "",
+          "operationId": "deleteDeletedItem",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "deleted_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid deleted id supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Deleted item not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/project": {
+        "post": {
+          "tags": [
+            "project"
+          ],
+          "summary": "Add a new project",
+          "description": "",
+          "operationId": "addProject",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Project object that needs to be added",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Project"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "project"
+          ],
+          "summary": "Gets all projects",
+          "description": "",
+          "operationId": "getAllProjects",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Project"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/project/{project_id}": {
+        "get": {
+          "tags": [
+            "project"
+          ],
+          "summary": "Finds project by id",
+          "description": "",
+          "operationId": "findProjectById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "project_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/Project"
+              }
+            },
+            "400": {
+              "description": "Invalid project id"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "project"
+          ],
+          "summary": "Updated project",
+          "description": "",
+          "operationId": "updateProject",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "project_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated project",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Project"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid project id"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Project not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "project"
+          ],
+          "summary": "Deletes a project",
+          "description": "",
+          "operationId": "deleteProject",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "project_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid project id supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Project not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/session": {
+        "post": {
+          "tags": [
+            "session"
+          ],
+          "summary": "Add a new session",
+          "description": "",
+          "operationId": "addSession",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Session object that needs to be added",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Session"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "session"
+          ],
+          "summary": "Gets all sessions",
+          "description": "",
+          "operationId": "getAllSessions",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Session"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/session/{session_id}": {
+        "get": {
+          "tags": [
+            "session"
+          ],
+          "summary": "Finds session by id",
+          "description": "",
+          "operationId": "findSessionById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "session_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/Session"
+              }
+            },
+            "400": {
+              "description": "Invalid session id"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "session"
+          ],
+          "summary": "Updated session",
+          "description": "",
+          "operationId": "updateSession",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "session_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated session",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Session"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid session id"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Session not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "session"
+          ],
+          "summary": "Deletes a session",
+          "description": "",
+          "operationId": "deleteSession",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "session_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid session id supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Session not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/user": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Add a new user",
+          "description": "",
+          "operationId": "addUser",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User object that needs to be added",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Gets all users",
+          "description": "",
+          "operationId": "getAllUsers",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/user/{user_id}": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Finds user by id",
+          "description": "",
+          "operationId": "findUserById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "user_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid user id"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Updated user",
+          "description": "",
+          "operationId": "updateUser",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "user_id",
+              "type": "integer",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated user",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid user id"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Deletes a user",
+          "description": "",
+          "operationId": "deleteUser",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "user_id",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid user id supplied"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/sync": {
+        "get": {
+          "tags": [
+            "sync"
+          ],
+          "summary": "Get all endpoints required to sync the server",
+          "description": "",
+          "operationId": "getSync",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "project_id",
+              "type": "integer",
+              "required": false
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/Sync"
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/sync/{timestamp}": {
+        "get": {
+          "tags": [
+            "sync"
+          ],
+          "summary": "Get all sync endpoints past the modified date timestamp",
+          "description": "",
+          "operationId": "getSyncEndpointsByTimestamp",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "timestamp",
+              "type": "integer",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/Sync"
+              }
+            },
+            "400": {
+              "description": "Invalid timestamp"
+            },
+            "401": {
+              "description": "Not authorized"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/login": {
+        "post": {
+          "tags": [
+            "login"
+          ],
+          "summary": "Logs in a user",
+          "description": "",
+          "operationId": "login",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Username and password",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LoginBody"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/Login"
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/token": {
+        "post": {
+          "tags": [
+            "token"
+          ],
+          "summary": "Generates a JWT authentication token for a user",
+          "description": "",
+          "operationId": "getToken",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Username and password",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LoginBody"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "$ref": "#/definitions/Token"
+              }
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "405": {
+              "description": "Invalid input"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      }
+    },
+    "securityDefinitions": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    },
+    "definitions": {
+      "AnswerSet": {
+        "type": "object",
+        "properties": {
+          "set_name": {
+            "type": "string"
+          },
+          "secondary_keys": {
+            "type": "string"
+          },
+          "answers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date_modified": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "project_name": {
+            "type": "string"
+          },
+          "date_modified": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "comments": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "access_level": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "date_modified": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DataForm": {
+        "type": "object",
+        "required": [
+          "form_id",
+          "form_name"
+        ],
+        "properties": {
+          "form_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "form_name": {
+            "type": "string"
+          },
+          "template_json": {
+            "type": "string"
+          },
+          "date_modified": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "is_session_form": {
+            "type": "integer",
+            "format": "int2"
+          }
+        }
+      },
+      "DataEntry": {
+        "type": "object",
+        "required": [
+          "name",
+          "photoUrls"
+        ],
+        "properties": {
+          "form_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "session_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "entry_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "date_modified": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "project_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "session_json": {
+            "type": "string"
+          },
+          "date_modified": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "form_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "project_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DeletedItem": {
+        "type": "object",
+        "properties": {
+          "deleted_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "date_deleted": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "table_name": {
+            "type": "string"
+          },
+          "item_json": {
+            "type": "string"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "auth": {
+            "type": "boolean"
+          },
+          "access_level": {
+            "type": "integer",
+            "format": "int16"
+          }
+        }
+      },
+      "LoginBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "username"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "auth": {
+            "type": "boolean"
+          },
+          "access_level": {
+            "type": "integer",
+            "format": "int16"
+          },
+          "message": {
+            "type": "string",
+            "example": "User successfully authenticated"
+          },
+          "token": {
+            "type": "string",
+            "example": "xxxxxxx.yyyyyyyyy.ttttttttt"
+          }
+        }
+      },
+      "Sync": {
+        "type": "object",
+        "properties": {
+          "updates": {
+            "type": "integer",
+            "format": "int64",
+            "example": 9000
+          },
+          "user": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/user/{user_id}"
+            }
+          },
+          "project": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/project/{project_id}"
+            }
+          },
+          "dataForm": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/data_form/{form_id}"
+            }
+          },
+          "answerSet": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/answer_set/{set_name}"
+            }
+          },
+          "session": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/session/{session_id}"
+            }
+          },
+          "dataEntry": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/data_entry/{session_id}/{entry_id}"
+            }
+          },
+          "deleted_item": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "/dev/deleted_item/{deleted_id}"
+            }
+          }
+        }
+      }
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+    }
+  }
