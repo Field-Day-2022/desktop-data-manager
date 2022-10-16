@@ -155,5 +155,5 @@ and practices specified in this document.
 - [x] Jack Norman
 - [x] Isaiah Lathem
 - [x] Denis Grassl
-- [ ] Zachary Jacobson
+- [x] Zachary Jacobson
 - [x] Ian Skelskey
