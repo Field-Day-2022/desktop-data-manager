@@ -18,6 +18,8 @@ import About from '../About/About';
 import CreateSessionViewPage from '../CreateSessionViewPage/CreateSessionViewPage';
 import CreateDataEntryViewPage from '../CreateDataEntryViewPage/CreateDataEntryViewPage';
 import ExportAllView from '../ExportAllView/ExportAllView';
+import { db } from '../../util/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <AuthContext.Consumer>
@@ -31,7 +33,21 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 );
 
 class App extends Component {
+
+  // this is a test to see if data transfer was successful
+  async test() {
+    const querySnapshot = await getDocs(collection(db, "VirginRiverData"));
+    console.log(querySnapshot.size);
+  }
+
+
   render() {
+
+    // uncomment this to get the size of the collection
+    // this.test();
+
+    // console.log("hello world");
+
     return (
       <Switch>
         <Route exact path="/login" component={LoginForm} />
