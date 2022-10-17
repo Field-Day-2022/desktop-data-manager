@@ -2,8 +2,8 @@
 
 ## Scrum
 
-The team will use the Scrum framework to govern the management of the Field Day project. The project will be divided into **two-week** sprints.
-
+The team will use the Scrum framework to govern the management of the Field Day project. The project will be divided into **two-week** sprints. 
+ 
 Taiga will be used to manage user stories and tasks throughout development. The task board for Field Day can be found [here](https://tree.taiga.io/project/jlnorma4-field-day-capstone-project/).
 
 ### Sprint Planning
