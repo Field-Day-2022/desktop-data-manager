@@ -68,7 +68,6 @@ typings/
 build
 
 .idea/
-package-lock.json
 
 # Firebase
 # https://stackoverflow.com/questions/43527359/what-is-the-practice-on-committing-firebase-files-in-a-nodejs-app
