@@ -34,19 +34,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 class App extends Component {
 
-  // this is a test to see if data transfer was successful
-  async test() {
-    const querySnapshot = await getDocs(collection(db, "VirginRiverData"));
-    console.log(querySnapshot.size);
-  }
-
-
   render() {
-
-    // uncomment this to get the size of the collection
-    // this.test();
-
-    // console.log("hello world");
 
     return (
       <Switch>
