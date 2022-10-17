@@ -25,3 +25,10 @@ jobs:
           # This part is also where you can pass other options, for example:
           prettier_options: --write **/*.{html,css,js,md} --config .prettierrc
           only_changed: False
+      
+      - name: Pull prettified code
+        run: git pull
+      
+      - name: Push prettified code
+        run: git push
+        
