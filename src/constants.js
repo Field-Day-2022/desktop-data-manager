@@ -1,1 +1,1 @@
-export const APP_NAME = "FieldDay";
+export const APP_NAME = 'FieldDay';
