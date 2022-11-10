@@ -1,7 +1,7 @@
 /*
  * File: entryBuilder.js
- * Version: 1.01
- * Date: 2020-03-07
+ * Version: 1.02
+ * Date: 2022-11-09
  * Description: Creates a datatable which imports mock-data.
  */
 
@@ -17,20 +17,9 @@ const typeGenerators = {
     DATE: mock.date(2010, 2018, 'YYYY-MM-DD HH:MM', false),
 };
 
-export const generateDataFormRows = (fields, rows) => generateRows(fields, rows);
-
-const generateRows = (fields, rows) => {
-    const dataRows = [];
-
-    for (let i = 0; i < rows; i++) {
-        const row = {};
-
-        fields.forEach((field) => {
-            row[field.prompt] = typeGenerators[field.type].generate();
-        });
-
-        dataRows.push(row);
-    }
-
-    return dataRows;
-};
+export const generateDataFormRows = (fields, rows) => new Array(rows)
+    .fill({})
+    .map(row => 
+        fields.forEach(field => 
+            row[field.prompt] = typeGenerators[field.type].generate()) ^
+        row);
