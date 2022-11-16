@@ -85,8 +85,8 @@ export const PATTERN_OPTIONS = {
 
 export const REGEX_OPTIONS = {
     AZ_2_3: '^[A-Za-z]{2,3}$',
-    POS_NUM: '^[0-9]*(\\.|)[0-9]*$',
-    NEG_NUM: '^-[0-9]*(\\.|)[0-9]*|0$',
-    EMAIL: '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$',
+    POS_NUM: '^[0-9]*\\.?[0-9]*$',
+    NEG_NUM: '^-[0-9]*\\.?[0-9]*|0$',
+    EMAIL: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$',
     PHONE: '^[2-9]\\d{2}-\\d{3}-\\d{4}$',
 };

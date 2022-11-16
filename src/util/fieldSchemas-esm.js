@@ -72,15 +72,15 @@ export const REGEX = {
     },
     POS_NUM: {
         title: 'Positive Number',
-        regex: '^[0-9]*(\\.|)[0-9]*$',
+        regex: '^[0-9]*\\.?[0-9]*$',
     },
     NEG_NUM: {
         title: 'Negative Number',
-        regex: '^-[0-9]*(\\.|)[0-9]*|0$',
+        regex: '^-[0-9]*\\.?[0-9]*|0$',
     },
     EMAIL: {
         title: 'Email',
-        regex: '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$',
+        regex: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$',
     },
     PHONE: {
         title: 'Phone Number',
