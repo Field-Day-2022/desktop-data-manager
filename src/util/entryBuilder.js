@@ -17,9 +17,12 @@ const typeGenerators = {
     DATE: mock.date(2010, 2018, 'YYYY-MM-DD HH:MM', false),
 };
 
-export const generateDataFormRows = (fields, rows) => new Array(rows)
-    .fill({})
-    .map(row => 
-        fields.forEach(field => 
-            row[field.prompt] = typeGenerators[field.type].generate()) ^
-        row);
+export const generateDataFormRows = (fields, rows) =>
+    new Array(rows)
+        .fill({})
+        .map(
+            (row) =>
+                fields.forEach(
+                    (field) => (row[field.prompt] = typeGenerators[field.type].generate())
+                ) ^ row
+        );

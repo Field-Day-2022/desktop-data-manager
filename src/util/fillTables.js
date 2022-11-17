@@ -40,7 +40,7 @@ const answerSetData = require('./data/AnswerSets');
         } catch (err) {
             console.error(err);
             console.log(`Failed on form index: ${i}`);
-        }        
+        }
     });
 
     // add answer sets
@@ -56,7 +56,6 @@ const answerSetData = require('./data/AnswerSets');
         } catch (err) {
             console.error(err);
             console.log(`Failed on answer set index: ${i}`);
-        }        
-    })
-
+        }
+    });
 })();
