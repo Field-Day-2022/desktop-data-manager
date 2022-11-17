@@ -1,7 +1,7 @@
 /*
  * File: inputSchemas-esm.js
- * Version: 1.01
- * Date: 2020-03-07
+ * Version: 1.02
+ * Date: 2022-11-16
  * Description: Creates references for inputting different types of information.
  */
 

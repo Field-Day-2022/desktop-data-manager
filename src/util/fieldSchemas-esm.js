@@ -1,7 +1,7 @@
 /*
  * File: fieldSchemas-esm.js
- * Version: 1.01
- * Date: 2020-03-07
+ * Version: 1.02
+ * Date: 2022-11-16
  * Description: Sets references for different inputs and options on the webpage.
  */
 

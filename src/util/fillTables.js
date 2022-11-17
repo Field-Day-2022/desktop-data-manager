@@ -1,7 +1,7 @@
 /*
  * File: fillTables.js
- * Version: 1.01
- * Date: 2020-03-07
+ * Version: 1.02
+ * Date: 2022-11-12
  * Description: Fills tables with information from forms and answer sets, contains error information.
  */
 
