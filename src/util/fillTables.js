@@ -11,7 +11,7 @@ const formData = require('./data/DataForms');
 const answerSetData = require('./data/AnswerSets');
 (async () => {
     // add projects
-    projectData.forEach((project, i) => {
+    projectData.forEach(async (project, i) => {
         try {
             const body = {
                 project_id: project.projectId,
@@ -27,7 +27,7 @@ const answerSetData = require('./data/AnswerSets');
     });
 
     // add forms
-    formData.forEach((form, i) => {
+    formData.forEach(async (form, i) => {
         try {
             const body = {
                 form_id: form.formId,
@@ -44,7 +44,7 @@ const answerSetData = require('./data/AnswerSets');
     });
 
     // add answer sets
-    answerSetData.forEach((answerSet, i) => {
+    answerSetData.forEach(async (answerSet, i) => {
         try {
             const body = {
                 set_name: answerSet.setName,
