@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "asu-field-day"
+  },
+  "targets": {
+    "asu-field-day": {
+        "hosting": {
+            "webui": [
+                "asu-field-day-webui"
+            ]
+        }
+    }
   }
 }
