@@ -4,6 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "target": "webui",
     "public": "dist",
     "ignore": [
       "firebase.json",
