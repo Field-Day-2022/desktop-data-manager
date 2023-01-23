@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@material-tailwind/react": "^1.2.5",
     "firebase": "^9.15.0",
     "framer-motion": "^8.5.0",
     "jotai": "^1.13.1",

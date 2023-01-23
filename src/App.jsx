@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="absolute inset-0 flex flex-col items-center bg-neutral-100 text-neutral-800">
       <TopNav 
-        title='FieldDay'
+        title='Field Day'
         subcomponents={[<Dropdown />, <div>User</div>]}
       />
       <Home />
