@@ -6,7 +6,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center bg-neutral-100">
+    <div className="absolute inset-0 flex flex-col items-center bg-neutral-100 text-neutral-800">
       <Navbar />
       <Home />
     </div>
