@@ -4,7 +4,7 @@
  * @param {string} title Title to be displayed on the left of the nav bar.
  * @returns 
  */
-export default function Navbar({ title, subcomponents }) {
+export default function TopNav({ title, subcomponents }) {
     return (
         <div className='px-5 bg-neutral-800 text-neutral-100 w-full shadow-md'>
             <nav className='py-5 flex justify-between' >

@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .bg-asu-maroon {
+        background: #8C1D40;
+    }
+}

@@ -1,15 +1,14 @@
-import { useState } from 'react'
-import Navbar from './components/Navbar'
+import Dropdown from './components/Dropdown'
+import TopNav from './components/TopNav'
 import Home from './pages/Home'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className="absolute inset-0 flex flex-col items-center bg-neutral-100 text-neutral-800">
-      <Navbar 
+      <TopNav 
         title='FieldDay'
-        subcomponents={[<div>Project Dropdown</div>, <div>User</div>]}
+        subcomponents={[<Dropdown />, <div>User</div>]}
       />
       <Home />
     </div>

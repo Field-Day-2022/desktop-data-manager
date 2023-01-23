@@ -1,3 +1,5 @@
+import Button from "../components/Button";
+
 export default function Home() {
     return (
         <div className="text-center">
@@ -7,7 +9,7 @@ export default function Home() {
                 <ul>
                     <li>Username</li>
                     <li>Password</li>
-                    <li>Login Button</li>
+                    <li><Button text='Login'/></li>
                 </ul>
             </div>
         </div>
