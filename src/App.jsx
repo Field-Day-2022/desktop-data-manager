@@ -7,7 +7,10 @@ function App() {
 
   return (
     <div className="absolute inset-0 flex flex-col items-center bg-neutral-100 text-neutral-800">
-      <Navbar />
+      <Navbar 
+        title='FieldDay'
+        subcomponents={[<div>Project Dropdown</div>, <div>User</div>]}
+      />
       <Home />
     </div>
   )
