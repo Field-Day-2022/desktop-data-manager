@@ -1,13 +1,9 @@
-import { useState } from 'react'
+import SessionEntries from "./pages/SessionEntries";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="absolute inset-0 flex flex-col items-center">
-        <h1 className="text-3xl">Hello world!</h1>
-    </div>
-  )
+export default function App() {
+    return (
+        <div className="absolute h-screen inset-0 flex flex-col items-center bg-slate-400">
+            <SessionEntries />
+        </div>
+    );
 }
-
-export default App

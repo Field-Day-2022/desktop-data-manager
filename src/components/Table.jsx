@@ -1,11 +1,11 @@
-import { db } from "../main"
+import { db } from "../utils/firebase"
 
-export default Table = (
-    tableType
-) => {
+export default function Table ({
+    tableName,
+}) {
     return (
-        <h1>
-            <h1>Table</h1>
-        </h1>
+        <div>
+            <p>{`${tableName} - Entries`}</p>
+        </div>
     )
 }

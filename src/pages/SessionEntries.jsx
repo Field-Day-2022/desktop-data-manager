@@ -1,7 +1,11 @@
-export default SessionEntries = () => {
+import Table from "../components/Table"
+
+export default function SessionEntries () {
     return (
-        <div>
-            <h1>Session Entries</h1>
+        <div className="bg-slate-200 w-11/12 h-full rounded-3xl p-4 my-12">
+            <Table 
+                tableName="Session"
+            />
         </div>
     )
 }
