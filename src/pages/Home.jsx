@@ -1,4 +1,5 @@
 import Button from "../components/Button";
+import Dropdown from "../components/Dropdown";
 import Logo from "../components/Logo";
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
                 <div className="flex flex-col space-y-5">
                     <input id="email" placeholder="Email Address" className="p-3 border-2 rounded-md" />
                     <input id="password" placeholder="Password" className="p-3 border-2 rounded-md" />
-
+                    <Dropdown />
                     <Button text='Login' />
                 </div>
             </div>
