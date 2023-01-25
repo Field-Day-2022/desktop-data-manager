@@ -24,6 +24,7 @@ export default function Home() {
                 <div className="flex flex-col space-y-5">
                 {userImage}
                     <p>
+                        {user.photoURL}
                         {message}
                     </p>
                     <Button
