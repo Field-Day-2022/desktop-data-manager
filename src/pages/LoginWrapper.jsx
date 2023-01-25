@@ -25,5 +25,4 @@ export default function LoginWrapper({ children }) {
         <LoginPage loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
     );
 
-
 }
