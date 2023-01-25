@@ -13,7 +13,6 @@ export default function LoginWrapper({ children }) {
     const [user, loading, error] = useAuthState(auth);
 
     if (user && (user.email.slice(-7) === 'asu.edu')) {
-        // There is already a valid user signed in.
         return children;
     }
     if (loading) {
@@ -22,7 +21,6 @@ export default function LoginWrapper({ children }) {
     if (error) {
         return <ErrorPage code={1} message={'We\'re having trouble connecting to Google\'s authentication service.'} />
     }
-    console.log('Ready for login')
     return (
         <LoginPage loginEvent={signInWithRedirect(auth, new GoogleAuthProvider())} />
     );
