@@ -28,6 +28,7 @@ export default function Home() {
                         text='Login'
                         onClick={() => {
                             if (user && (user.email.slice(-7) === 'asu.edu')) {
+                                setMessage(user.email)
                                 return
                             }
                             if (loading) {
