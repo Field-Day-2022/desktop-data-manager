@@ -22,7 +22,7 @@ export default function LoginWrapper({ children }) {
         return <ErrorPage code={1} message={'We\'re having trouble connecting to Google\'s authentication service.'} />
     }
     return (
-        <LoginPage loginEvent={signInWithRedirect(auth, new GoogleAuthProvider())} />
+        <LoginPage loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
     );
 
 
