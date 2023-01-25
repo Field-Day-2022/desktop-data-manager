@@ -5,6 +5,8 @@ import {
 } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import LoginPage from "./LoginPage";
+import LoadingPage from "./LodingPage";
+import ErrorPage from "./ErrorPage";
 
 export default function LoginWrapper({ children }) {
 
@@ -15,10 +17,10 @@ export default function LoginWrapper({ children }) {
         return children;
     }
     if (loading) {
-        return <div>Loading...</div>
+        return <LoadingPage />
     }
     if (error) {
-        return <div>Error.</div>
+        return <ErrorPage code={1} message={'We\'re having trouble connecting to Google\'s authentication service.'} />
     }
     console.log('Ready for login')
     return (
