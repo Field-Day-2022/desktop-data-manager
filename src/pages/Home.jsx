@@ -12,6 +12,7 @@ import { useState } from "react";
 export default function Home() {
     const [user, loading, error] = useAuthState(auth);
     const [message, setMessage] = useState('Sign in with your asurite.')
+    let userImage = <img/>
     return (
         <div className="text-center">
             <div className="flex items-center space-x-5">
@@ -22,11 +23,13 @@ export default function Home() {
             <div className="my-5 p-10 rounded-lg shadow-md bg-white">
                 <div className="flex flex-col space-y-5">
                     <p>
+                        {userImage}
                         {message}
                     </p>
                     <Button
                         text='Login'
                         onClick={() => {
+                            userImage = <img src={user.photoURL}/>
                             if (user && (user.email.slice(-7) === 'asu.edu')) {
                                 setMessage(user.email)
                                 return
