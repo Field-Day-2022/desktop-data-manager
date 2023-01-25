@@ -1,13 +1,11 @@
 import Button from "../components/Button";
 import Logo from "../components/Logo";
-import { useState } from "react";
 
 export default function LoginPage( loginEvent ) {
     return(
         <div className="text-center">
                 <div className="flex items-center space-x-5">
-                    <a href='/'><Logo className="text-asu-maroon h-28" /></a>
-                    
+                    <Logo className="text-asu-maroon h-28" />
                     <h1 className="text-7xl py-10">Field Day</h1>
                 </div>
 

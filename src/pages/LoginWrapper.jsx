@@ -15,17 +15,15 @@ export default function LoginWrapper({ children }) {
         return children;
     }
     if (loading) {
-        console.log('Loading...')
         return <div>Loading...</div>
-    } else if (error) {
-        console.log('Error')
-        return <div>Error.</div>
-    } else {
-        console.log('Ready for login')
-        return (
-            <LoginPage loginEvent={signInWithRedirect(auth, new GoogleAuthProvider())} />
-        );
     }
+    if (error) {
+        return <div>Error.</div>
+    }
+    console.log('Ready for login')
+    return (
+        <LoginPage loginEvent={signInWithRedirect(auth, new GoogleAuthProvider())} />
+    );
 
 
 }
