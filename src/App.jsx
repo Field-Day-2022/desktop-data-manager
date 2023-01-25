@@ -5,7 +5,7 @@ export default function App() {
         <div className="absolute h-screen inset-0 flex flex-col items-center bg-slate-400">
             <Table 
                 tableName="Session"
-                collectionName="SessionEntries"
+                collectionName="GatewaySession"
             />
         </div>
     );

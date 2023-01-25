@@ -12,6 +12,19 @@ export default function Table ({
     const [ lastVisibleDocument, setLastVisibleDocument ] = useState();
     const [ batchSize, setBatchSize ] = useState(15);
 
+    const sessionLabels = [
+        'Date/Time',
+        'Recorder',
+        'Handler',
+        'Site',
+        'Array',
+        'No Captures',
+        'Trap Status',
+        'Comments',
+    ]
+
+    
+
     useEffect(() => {
         const loadInitialEntries = async () => {
             const initialQuery = query(
@@ -24,7 +37,7 @@ export default function Table ({
             const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
             setLastVisibleDocument(lastVisibleDoc);
         }
-        // loadInitialEntries();
+        loadInitialEntries();
     }, [])
 
     const loadNextBatch = async () => {
@@ -40,9 +53,54 @@ export default function Table ({
         setLastVisibleDocument(lastVisibleDoc);
     }
 
+ 
+
     return (
-        <div className="bg-slate-200 w-11/12 h-full rounded-3xl p-4 my-12">
-            <p>{`${tableName} - Entries`}</p>
-        </div>
+        <table className="bg-slate-200 border-separate border-spacing-2 border border-black">
+            <thead>
+                <tr>
+                    <TableHeading label="Actions" />
+                    {tableName === 'Session' && sessionLabels.map(label => <TableHeading key={label} label={label} />)}
+                </tr>
+            </thead>
+            <tbody>
+                {entries.map(entry => <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />)}
+            </tbody>
+        </table>
+    )
+}
+
+const TableHeading = ({ label }) => {
+    return (
+        <th className="border border-gray-800 p-2">{label}</th>
+    )
+}
+
+const Entry = ({ entrySnapshot, tableName }) => {
+
+    console.log(entrySnapshot.data())
+
+    const sessionKeys = [
+        'dateTime',
+        'recorder',
+        'handler',
+        'site',
+        'array',
+        'noCaptures',
+        'trapStatus',
+        'commentsAboutTheArray',
+    ]
+
+    return  (
+        <tr>
+            <td>Action</td>
+            {tableName === 'Session' ?
+                sessionKeys.map(key => (
+                    <td key={key} className="border border-gray-800 p-2">{entrySnapshot.data()[key]}</td>
+                ))
+            :
+            null 
+            }
+        </tr>
     )
 }
