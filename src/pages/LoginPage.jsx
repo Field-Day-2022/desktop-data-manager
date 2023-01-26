@@ -1,4 +1,5 @@
 import Button from "../components/Button";
+import GoogleIcon from "../components/GoogleIcon";
 import Logo from "../components/Logo";
 
 export default function LoginPage({ loading, loginEvent }) {
@@ -21,6 +22,7 @@ export default function LoginPage({ loading, loginEvent }) {
                         enabled={!loading}
                         text={(!loading ? 'Login' : 'Please wait.')}
                         onClick={loginEvent}
+                        icon={<GoogleIcon className="w-6 mx-auto"/>}
                     />
                 </div>
             </div>
