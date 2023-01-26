@@ -2,9 +2,9 @@ export default function Button({ text, onClick, enabled, icon }) {
     return (
         (enabled ?
             <div
-                className={"rounded-md py-3 bg-asu-maroon text-white cursor-pointer"}
+                className={"rounded-md p-3 bg-asu-maroon text-white cursor-pointer"}
                 onClick={onClick}>
-                <div className="absolute px-3">
+                <div className="absolute">
                     {icon ? icon : null}
                 </div>
                 <div className="select-none">{text}</div>
@@ -12,8 +12,8 @@ export default function Button({ text, onClick, enabled, icon }) {
             </div>
             :
             <div
-                className={"rounded-md py-3 bg-neutral-800 text-white"}>
-                <div className="absolute px-3">
+                className={"rounded-md p-3 bg-neutral-800 text-white"}>
+                <div className="absolute">
                     {icon ? icon : null}
                 </div>
                 <div className="select-none">{text}</div>

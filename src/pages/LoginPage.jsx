@@ -5,7 +5,7 @@ import Logo from "../components/Logo";
 export default function LoginPage({ loading, loginEvent }) {
 
     const LOADING_MESSAGE = 'Loading Google\'s authentication.'
-    const LOGIN_MESSAGE = 'Click login to sign in with your asurite.'
+    const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.'
 
     return (
         <div className="text-center">
