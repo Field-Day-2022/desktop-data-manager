@@ -22,7 +22,7 @@ export default function LoginPage({ loading, loginEvent }) {
                         enabled={!loading}
                         text={(!loading ? 'Login' : 'Please wait.')}
                         onClick={loginEvent}
-                        icon={<GoogleIcon className="w-6 mx-auto"/>}
+                        icon={<GoogleIcon className="w-6 mx-auto bg-white p-0.5 rounded-full"/>}
                     />
                 </div>
             </div>
