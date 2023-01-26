@@ -5,7 +5,6 @@ import {
 } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import LoginPage from "./LoginPage";
-import LoadingPage from "./LodingPage";
 import ErrorPage from "./ErrorPage";
 
 export default function LoginWrapper({ children }) {
@@ -20,7 +19,7 @@ export default function LoginWrapper({ children }) {
     }
     return (
         <LoginPage
-            loading={true}
+            loading={loading}
             loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
     );
 

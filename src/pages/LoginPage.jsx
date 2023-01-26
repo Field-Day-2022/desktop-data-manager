@@ -19,6 +19,7 @@ export default function LoginPage({ loading, loginEvent }) {
                         {(loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
                     </p>
                         <Button
+                            enabled={!loading}
                             text={(!loading ? 'Login' : 'Please wait.')}
                             onClick={loginEvent}
                         />
