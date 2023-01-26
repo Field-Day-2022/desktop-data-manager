@@ -15,14 +15,14 @@ export default function LoginWrapper({ children }) {
     if (user && (user.email.slice(-7) === 'asu.edu')) {
         return children;
     }
-    if (loading) {
-        return <LoadingPage />
-    }
     if (error) {
         return <ErrorPage code={1} message={'We\'re having trouble connecting to Google\'s authentication service.'} />
     }
     return (
-        <LoginPage loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
+        <LoginPage
+            loading={true}
+            loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
     );
+
 
 }
