@@ -8,8 +8,7 @@ export default function Button({ text, onClick, enabled }) {
             </div> 
             :
             <div
-                className={"rounded-md py-3 bg-asu-maroon text-white"}
-                onClick={null}>
+                className={"rounded-md py-3 bg-neutral-800 text-white"}>
                 {text}
             </div> 
         )
