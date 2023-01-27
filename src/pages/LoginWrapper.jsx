@@ -2,25 +2,35 @@ import { auth } from "../main";
 import {
     GoogleAuthProvider,
     signInWithRedirect,
+    signOut
 } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import LoginPage from "./LoginPage";
 import ErrorPage from "./ErrorPage";
 
+
 export default function LoginWrapper({ children }) {
 
     const [user, loading, error] = useAuthState(auth);
 
-    if (user && (user.email.slice(-7) === 'asu.edu')) {
-        return children;
+    const LOGIN_PAGE =
+        <LoginPage
+            loading={loading}
+            loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
+
+    if (user) {
+        if (user.email.slice(-7) === 'asu.edu') {
+            return children;
+        } else {
+            signOut();
+            return LOGIN_PAGE;
+        }
     }
     if (error) {
         return <ErrorPage code={1} message={'We\'re having trouble connecting to Google\'s authentication service.'} />
     }
     return (
-        <LoginPage
-            loading={loading}
-            loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
+        LOGIN_PAGE
     );
 
 
