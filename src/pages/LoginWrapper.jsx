@@ -16,7 +16,10 @@ export default function LoginWrapper({ children, loginEnd }) {
     const LOGIN_PAGE =
         <LoginPage
             loading={loading}
-            loginEvent={() => signInWithRedirect(auth, new GoogleAuthProvider())} />
+            loginEvent={() => {
+                signInWithRedirect(auth, new GoogleAuthProvider())
+                loginEnd();
+            }} />
 
     if (user) {
         if (user.email.slice(-7) === 'asu.edu') {

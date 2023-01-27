@@ -8,7 +8,6 @@ export default function Button({ text, onClick, enabled, icon }) {
                     {icon ? icon : null}
                 </div>
                 <div className="select-none">{text}</div>
-
             </div>
             :
             <div

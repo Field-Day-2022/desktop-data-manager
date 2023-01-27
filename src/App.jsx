@@ -10,7 +10,7 @@ function App() {
 
   function loginEnd() {
     i++;
-    console.log()
+    console.log(i)
   }
 
   return (
