@@ -10,7 +10,7 @@ function App() {
 
   function loginEnd(u) {
     user = u;
-    console.log(user);
+    console.log(user.email);
   }
 
   return (
