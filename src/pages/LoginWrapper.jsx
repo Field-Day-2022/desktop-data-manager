@@ -18,11 +18,11 @@ export default function LoginWrapper({ children, loginEnd }) {
             loading={loading}
             loginEvent={() => {
                 signInWithRedirect(auth, new GoogleAuthProvider())
-                loginEnd();
             }} />
 
     if (user) {
         if (user.email.slice(-7) === 'asu.edu') {
+            loginEnd();
             return children;
         } else {
             signOut(auth);
