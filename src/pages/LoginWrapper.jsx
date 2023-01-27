@@ -9,7 +9,7 @@ import LoginPage from "./LoginPage";
 import ErrorPage from "./ErrorPage";
 
 
-export default function LoginWrapper({ children }) {
+export default function LoginWrapper({ children, loginEnd }) {
 
     const [user, loading, error] = useAuthState(auth);
 
