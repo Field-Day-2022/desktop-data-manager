@@ -6,11 +6,11 @@ import { signOut } from 'firebase/auth'
 
 function App() {
 
-  let i = 0;
+  let user = null;
 
-  function loginEnd() {
-    i++;
-    console.log(i)
+  function loginEnd(u) {
+    user = u;
+    console.log(user);
   }
 
   return (
