@@ -22,7 +22,7 @@ export default function LoginWrapper({ children }) {
         if (user.email.slice(-7) === 'asu.edu') {
             return children;
         } else {
-            signOut();
+            signOut(auth);
             return LOGIN_PAGE;
         }
     }
