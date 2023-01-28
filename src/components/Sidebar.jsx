@@ -2,7 +2,7 @@ import {AiFillInfoCircle,AiFillTool} from 'react-icons/ai'
 import {HiDocument} from 'react-icons/hi'
 export default function Sidebar() {
     return (
-        <div className="w-72 max-w-72 bg-white flex-col max-h-[calc(100vh-64px)] divide-y">
+        <div className="w-72 max-w-72 bg-white flex-col max-h-[calc(100vh-64px)] divide-y overflow-scroll">
             <div>
                 <SidebarHeaderElement>Documentation</SidebarHeaderElement>
                 <SidebarElement><AiFillInfoCircle className='text-2xl mr-5'/>About</SidebarElement>
