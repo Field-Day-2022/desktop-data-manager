@@ -10,8 +10,6 @@ import UserImage from "./components/UserImage";
 import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 
-import { SpreadsheetComponent } from '@syncfusion/ej2-react-spreadsheet'
-
 function App() {
 
   const [user, loading, error] = useAuthState(auth);
@@ -46,7 +44,7 @@ function App() {
       <div className="flex flex-grow" >
         <Sidebar />
         {(validateUser(user)) ?
-          <SpreadsheetComponent></SpreadsheetComponent>
+          <div>Hello</div>
           :
           <LoginPage
             loading={loading}
