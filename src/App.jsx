@@ -10,6 +10,7 @@ import UserImage from "./components/UserImage";
 import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 
+import { SpreadsheetComponent } from '@syncfusion/ej2-react-spreadsheet'
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
       />
       <div className="flex flex-grow" >
         <Sidebar />
+        <SpreadsheetComponent></SpreadsheetComponent>
         {(validateUser(user)) ?
           <div>Hello</div>
           :

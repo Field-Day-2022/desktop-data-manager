@@ -7,54 +7,30 @@ import Logo from './Logo';
 
 export default function Sidebar() {
     return (
-        <div className="min-w-64 w-72 max-w-64 bg-white flex-col max-h-[calc(100vh-64px)] divide-y overflow-scroll">
+        <div className="w-72 bg-white flex-col max-h-[calc(100vh-64px)] divide-y overflow-scroll">
             <CollapsibleSidebarSection title="Documentation">
-                <SidebarElement icon={<AiFillInfoCircle />}>
-                    About
-                </SidebarElement>
+                <SidebarElement icon={<AiFillInfoCircle />} text='About' />
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title="Export Data">
-                <SidebarElement icon={<BiExport />}>
-                    Export To CSV
-                </SidebarElement>
+                <SidebarElement icon={<BiExport />} text='Export to CSV' />
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title='Critter Data'>
-                <SidebarElement icon={<GiTurtle />}>
-                    Turtle
-                </SidebarElement>
-                <SidebarElement icon={<Logo className='text-neutral-800 h-6' />}>
-                    Lizard
-                </SidebarElement>
-                <SidebarElement icon={<GiSquirrel />}>
-                    Mammal
-                </SidebarElement>
-                <SidebarElement icon={<GiSandSnake />}>
-                    Snake
-                </SidebarElement>
-                <SidebarElement icon={<GiSpottedBug />}>
-                    Arthropod
-                </SidebarElement>
-                <SidebarElement icon={<GiFrog />}>
-                    Amphibian
-                </SidebarElement>
+                <SidebarElement icon={<GiTurtle />} text='Turtle' />
+                <SidebarElement icon={<Logo className='h-6'/>} text='Lizard' />
+                <SidebarElement icon={<GiSquirrel />} text='Mammal' />
+                <SidebarElement icon={<GiSandSnake />} text='Snake' />
+                <SidebarElement icon={<GiSpottedBug />} text='Arthropod' />
+                <SidebarElement icon={<GiFrog />} text='Amphibian' />
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title='Session Entries'>
-                <SidebarElement icon={<HiDocument />}>
-                    Session
-                </SidebarElement>
+                <SidebarElement icon={<HiDocument />} text='Session' />
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title='Enter Data'>
-                <SidebarElement icon={<HiDocument />}>
-                    New Session
-                </SidebarElement>
-                <SidebarElement icon={<HiDocument />}>
-                    New Data Entry
-                </SidebarElement>
+                <SidebarElement icon={<HiDocument />} text='New Session' />
+                <SidebarElement icon={<HiDocument />} text='New Data Entry' />
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title='Manage Forms'>
-                <SidebarElement icon={<AiFillTool />}>
-                    Form Builder
-                </SidebarElement>
+                <SidebarElement icon={<AiFillTool />} text='Form Builder' />
             </CollapsibleSidebarSection>
 
         </div>
@@ -87,12 +63,12 @@ function SidebarSectionHeading({ children }) {
     )
 }
 
-function SidebarElement({ icon, children }) {
+function SidebarElement({ icon, text }) {
     return (
         <div className="px-4 py-3 flex items-center cursor-pointer hover:bg-neutral-100">
             <div className='text-2xl mr-5'>
                 {icon}
-            </div>{children}
+            </div>{text}
         </div>
     )
 }
