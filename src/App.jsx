@@ -13,8 +13,12 @@ function App() {
   const [user, loading, error] = useAuthState(auth);
 
   function validateUser(user) {
-    if (user && user.email.slice(-7) === 'asu.edu') { return true }
+    if (user && user.email.slice(-7) === 'asu.edu') { 
+      console.log(user.email + ' has been validated')
+      return true;
+    }
     else {
+      console.log('Signing out ' + user.email)
       signOut(auth);
       return false;
     }
@@ -30,7 +34,9 @@ function App() {
           <Button
             text="Logout"
             enabled={user}
-            onClick={() => signOut(auth)} />
+            onClick={() => {
+              signOut(auth)
+            }} />
           ]}
       />
       {(validateUser(user)) ?
@@ -40,6 +46,7 @@ function App() {
           loading={loading}
           loginEvent={() => {
             signInWithRedirect(auth, new GoogleAuthProvider())
+            console.log('Signing in as ' + user.email)
           }} />}
     </div>
   )
