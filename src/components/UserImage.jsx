@@ -1,7 +1,7 @@
-export default function UserImage({user}) {
-    return(
+export default function UserImage({ className, user }) {
+    return (
         (user) ?
-            <img className="rounded-full" src={user.photoURL} />
+            <img className={className + "rounded-full"} src={user.photoURL} />
             :
             null
     )
