@@ -8,6 +8,7 @@ import './index.css'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 // SKD's that are available:
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -26,6 +27,7 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = getAuth(app);
 const analytics = getAnalytics(app);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
