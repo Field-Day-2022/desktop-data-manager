@@ -5,9 +5,10 @@ import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
 import Button from './components/Button'
 import Dropdown from './components/Dropdown'
 import TopNav from './components/TopNav'
+import UserImage from "./components/UserImage";
 
 import LoginPage from "./pages/LoginPage";
-import UserInfoButton from "./components/UserInfoButton";
+
 
 function App() {
 
@@ -30,7 +31,8 @@ function App() {
         title='Field Day'
         subcomponents={
           [<Dropdown />,
-          <UserInfoButton user={user} />,
+          (user) ? <div>{user.email}</div> : null,
+          <UserImage className='h-6' user={user} />,
           <Button
             text="Logout"
             enabled={user}
