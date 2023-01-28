@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { AiFillInfoCircle, AiFillTool } from 'react-icons/ai'
-import { BiArrowFromTop, BiArrowToTop } from 'react-icons/bi'
+import { BiArrowFromTop, BiArrowToTop, BiExport } from 'react-icons/bi'
+import { GiTurtle, GiFrog, GiSpottedBug, GiSandSnake, GiSquirrel } from 'react-icons/gi'
 import { HiDocument } from 'react-icons/hi'
+import Logo from './Logo';
 
 export default function Sidebar() {
     return (
@@ -12,27 +14,27 @@ export default function Sidebar() {
                 </SidebarElement>
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title="Export Data">
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<BiExport />}>
                     Export To CSV
                 </SidebarElement>
             </CollapsibleSidebarSection>
             <CollapsibleSidebarSection title='Critter Data'>
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<GiTurtle />}>
                     Turtle
                 </SidebarElement>
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<Logo className='text-neutral-800 h-6' />}>
                     Lizard
                 </SidebarElement>
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<GiSquirrel />}>
                     Mammal
                 </SidebarElement>
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<GiSandSnake />}>
                     Snake
                 </SidebarElement>
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<GiSpottedBug />}>
                     Arthropod
                 </SidebarElement>
-                <SidebarElement icon={<HiDocument />}>
+                <SidebarElement icon={<GiFrog />}>
                     Amphibian
                 </SidebarElement>
             </CollapsibleSidebarSection>
