@@ -32,7 +32,7 @@ function App() {
         subcomponents={
           [<Dropdown />,
           (user) ? <div>{user.email}</div> : null,
-          <UserImage className='h-6' user={user} />,
+          <UserImage className='h-12' user={user} />,
           <Button
             text="Logout"
             enabled={user}
