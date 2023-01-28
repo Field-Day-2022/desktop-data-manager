@@ -13,6 +13,7 @@ function App() {
   const [user, loading, error] = useAuthState(auth);
 
   function validateUser(user) {
+    if(!user) return false;
     if (user && user.email.slice(-7) === 'asu.edu') { 
       console.log(user.email + ' has been validated')
       return true;
@@ -46,7 +47,7 @@ function App() {
           loading={loading}
           loginEvent={() => {
             signInWithRedirect(auth, new GoogleAuthProvider())
-            console.log('Signing in as ' + user.email)
+            // console.log('Signing in as ' + user.email)
           }} />}
     </div>
   )
