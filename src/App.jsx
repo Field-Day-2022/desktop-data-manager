@@ -1,6 +1,6 @@
 import { auth } from "./main";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { GoogleAuthProvider ,signInWithRedirect, signOut } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
 
 import Button from './components/Button'
 import Dropdown from './components/Dropdown'
@@ -13,13 +13,11 @@ function App() {
   const [user, loading, error] = useAuthState(auth);
 
   function validateUser(user) {
-    if(!user) return false;
-    if (user && user.email.slice(-7) === 'asu.edu') { 
-      console.log(user.email + ' has been validated')
+    if (!user) return false;
+    if (user && user.email.slice(-7) === 'asu.edu') {
       return true;
     }
     else {
-      console.log('Signing out ' + user.email)
       signOut(auth);
       return false;
     }
@@ -31,7 +29,7 @@ function App() {
         title='Field Day'
         subcomponents={
           [<Dropdown />,
-          <div>User</div>,
+          <div>{(user)?user.email:''}</div>,
           <Button
             text="Logout"
             enabled={user}
@@ -47,7 +45,6 @@ function App() {
           loading={loading}
           loginEvent={() => {
             signInWithRedirect(auth, new GoogleAuthProvider())
-            // console.log('Signing in as ' + user.email)
           }} />}
     </div>
   )
