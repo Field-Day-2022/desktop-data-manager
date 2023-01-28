@@ -7,6 +7,7 @@ import Dropdown from './components/Dropdown'
 import TopNav from './components/TopNav'
 
 import LoginPage from "./pages/LoginPage";
+import UserInfoButton from "./components/UserInfoButton";
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
         title='Field Day'
         subcomponents={
           [<Dropdown />,
-          <div>{(user)?user.email:''}</div>,
+          <UserInfoButton user={user} />,
           <Button
             text="Logout"
             enabled={user}
