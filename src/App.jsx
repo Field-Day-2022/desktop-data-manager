@@ -27,7 +27,7 @@ function App() {
   }
 
   return (
-    <div className="absolute w-full bg-neutral-100 text-neutral-800">
+    <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800">
       <TopNav
         title='Field Day'
         subcomponents={
@@ -42,16 +42,16 @@ function App() {
             }} />
           ]}
       />
-      <div className="flex min-h-screen flex-row" >
+      <div className="flex flex-grow" >
         <Sidebar />
-          {(validateUser(user)) ?
-            <div>Hello</div>
-            :
-            <LoginPage
-              loading={loading}
-              loginEvent={() => {
-                signInWithRedirect(auth, new GoogleAuthProvider())
-              }} />}
+        {(validateUser(user)) ?
+          <div>Hello</div>
+          :
+          <LoginPage
+            loading={loading}
+            loginEvent={() => {
+              signInWithRedirect(auth, new GoogleAuthProvider())
+            }} />}
 
       </div>
 
