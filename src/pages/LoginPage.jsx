@@ -8,12 +8,12 @@ export default function LoginPage({ loading, loginEvent }) {
     const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.'
 
     return (
-        <div className="text-center">
+        <div className="w-full text-center">
             <div className="pt-10">
                 <h1 className="text-7xl pt-5">Field Day</h1>
                 <h2 className="text-xl pb-10">Data Management Tool</h2>
             </div>
-            <div className="my-5 p-10 rounded-lg shadow-md bg-white">
+            <div className="my-5 p-10 rounded-lg shadow-md bg-white mx-auto w-96">
                 <div className="flex flex-col space-y-5">
                     <p>
                         {(loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
