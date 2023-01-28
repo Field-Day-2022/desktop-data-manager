@@ -45,9 +45,8 @@ function App() {
       />
       <div className="flex flex-grow" >
         <Sidebar />
-        <SpreadsheetComponent></SpreadsheetComponent>
         {(validateUser(user)) ?
-          <div>Hello</div>
+          <SpreadsheetComponent></SpreadsheetComponent>
           :
           <LoginPage
             loading={loading}
