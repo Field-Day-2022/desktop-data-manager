@@ -11,11 +11,7 @@ import { AiFillTool, AiFillPlusSquare } from 'react-icons/ai'
 import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 
-import { useAlert } from 'react-alert'
-
 function App() {
-
-  const alert = useAlert()
 
   const [user, loading, error] = useAuthState(auth);
 
@@ -25,7 +21,6 @@ function App() {
       return true;
     }
     else {
-      alert.show('Only email addresses ending in \'asu.edu\' are allowed.')
       signOut(auth);
       return false;
     }
