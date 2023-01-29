@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
+import { transitions, positions, Provider as AlertProvider } from '@blaumaus/react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+
 // Firebase import 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -25,6 +28,15 @@ const firebaseConfig = {
   measurementId: "G-4NXHBQ69GK"
 };
 
+const alertOptions = {
+  // you can also just use 'bottom center'
+  position: positions.BOTTOM_CENTER,
+  timeout: 5000,
+  offset: '30px',
+  // you can also just use 'scale'
+  transition: transitions.SCALE
+}
+
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
@@ -32,6 +44,8 @@ const analytics = getAnalytics(app);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <AlertProvider template={AlertTemplate} {...alertOptions}>
+      <App />
+    </AlertProvider>
   </React.StrictMode>,
 )
