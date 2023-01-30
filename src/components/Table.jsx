@@ -157,7 +157,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
         <td key={dbKey} className="text-center border-b border-gray-400 p-2">
             <input
                 disabled={disabled}
-                className="text-center transition focus:underline outline-none"
+                className="text-center transition disabled:bg-transparent outline-none rounded-lg"
                 type="text"
                 value={entryData[dbKey]}
                 onChange={(e) => {
