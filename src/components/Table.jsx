@@ -103,7 +103,7 @@ const Entry = ({ entrySnapshot, tableName }) => {
 
     const onCancelClickedHandler = () => {
         console.log('Cancel clicked');
-        setCurrentState('viewing')
+        setCurrentState('viewing');
     };
 
     return (
@@ -162,9 +162,10 @@ const EntryItem = ({
         return (
             <td
                 key={dbKey}
-                className="text-center border-b border-gray-400 p-2"
+                className="text-center border-b border-gray-400 py-1 px-2"
             >
                 <input
+                    className="text-center bg-white/50 rounded-xl p-1 focus:bg-white transition w-full"
                     type="text"
                     value={entryData[dbKey]}
                     onChange={(e) => {
