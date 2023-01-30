@@ -108,40 +108,34 @@ const Entry = ({ entrySnapshot, tableName }) => {
 
     return (
         <tr>
-            {currentState === 'viewing' ? 
-                <EditDeleteActions 
+            {currentState === 'viewing' ? (
+                <EditDeleteActions
                     onEditClickedHandler={onEditClickedHandler}
                     onDeleteClickedHandler={onDeleteClickedHandler}
                 />
-            : currentState === 'editing' ? 
-                <SaveCancelActions 
+            ) : currentState === 'editing' ? (
+                <SaveCancelActions
                     onSaveClickedHandler={onSaveClickedHandler}
                     onCancelClickedHandler={onCancelClickedHandler}
                 />
-            : null
-            }
-            {tableName === 'Session'  ? 
-                sessionKeys.map(key => <EntryItem 
-                    entrySnapshot={entrySnapshot}
-                    currentState={currentState}
-                    dbKey={key}
-                    entryData={entryData}
-                    setEntryData={setEntryData}
-                    key={key}
-                />)
-            : null
-            }
+            ) : null}
+            {tableName === 'Session'
+                ? sessionKeys.map((key) => (
+                      <EntryItem
+                          entrySnapshot={entrySnapshot}
+                          currentState={currentState}
+                          dbKey={key}
+                          entryData={entryData}
+                          setEntryData={setEntryData}
+                          key={key}
+                      />
+                  ))
+                : null}
         </tr>
-    )
+    );
 };
 
-const EntryItem = ({ 
-    entrySnapshot, 
-    dbKey, 
-    currentState,
-    setEntryData,
-    entryData 
-}) => {
+const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData }) => {
     const [displayText, setDisplayText] = useState('');
     const [editable, setEditable] = useState(true);
 
@@ -154,39 +148,28 @@ const EntryItem = ({
         }
     }, []);
 
-    if (currentState === 'viewing') {
-        return <td className="text-center border-b border-gray-400 p-2">{displayText}</td>;
-    }
+    let disabled = false;
 
-    if (currentState === 'editing' && editable) {
-        return (
-            <td
-                key={dbKey}
-                className="text-center border-b border-gray-400 py-1 px-2"
-            >
-                <input
-                    className="text-center bg-white/50 rounded-xl p-1 focus:bg-white transition w-full"
-                    type="text"
-                    value={entryData[dbKey]}
-                    onChange={(e) => {
-                        setEntryData((prevEntryData) => ({
-                            ...prevEntryData,
-                            [dbKey]: e.target.value,
-                        }));
-                    }}
-                />
-            </td>
-        );
-    } else if (currentState === 'editing' && !editable) {
-        return (
-            <td
-                key={dbKey}
-                className="text-center border-b border-gray-400 p-2"
-            >
-                {displayText}
-            </td>
-        );
+    if (currentState === 'viewing' || (currentState === 'editing' && !editable)) {
+        disabled = true;
     }
+    return (
+        <td key={dbKey} className="text-center border-b border-gray-400 p-2">
+            <input
+                disabled={disabled}
+                className="text-center transition focus:underline outline-none"
+                type="text"
+                value={entryData[dbKey]}
+                onChange={(e) => {
+                    setEntryData((prevEntryData) => ({
+                        ...prevEntryData,
+                        [dbKey]: e.target.value,
+                    }));
+                }}
+                size={entryData[dbKey].length}
+            />
+        </td>
+    );
 };
 
 const EditDeleteActions = ({ onEditClickedHandler, onDeleteClickedHandler }) => {
