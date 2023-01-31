@@ -9,6 +9,7 @@ import UserImage from "./components/UserImage";
 
 import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
+import HomePage from "./pages/HomePage";
 
 function App() {
 
@@ -48,7 +49,7 @@ function App() {
       <div className="flex flex-grow" >
         <Sidebar />
         {(validateUser(user)) ?
-          <div>Hello</div>
+          <HomePage />
           :
           <LoginPage
             loading={loading}

@@ -64,7 +64,7 @@ function SidebarSectionHeading({ children }) {
 
 function SidebarElement({ icon, text }) {
     return (
-        <div className="px-4 py-3 flex items-center cursor-pointer hover:bg-neutral-100 hover:border-asu-gold border-transparent border-b-2">
+        <div className="px-4 py-3 flex items-center cursor-pointer hover:bg-neutral-100 hover:border-asu-gold border-transparent border-b-2 active:bg-neutral-200">
             <div className='text-2xl mr-5'>
                 {icon}
             </div>{text}
