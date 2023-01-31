@@ -7,7 +7,7 @@ import Logo from './Logo';
 
 export default function Sidebar() {
     return (
-        <div className="w-72 bg-white flex-col max-h-[calc(100vh-64px)] divide-y overflow-scroll">
+        <div className="w-72 bg-white flex-col max-h-full-minus-nav divide-y overflow-scroll">
             <CollapsibleSidebarSection title="Documentation">
                 <SidebarElement icon={<AiFillInfoCircle />} text='About' />
             </CollapsibleSidebarSection>

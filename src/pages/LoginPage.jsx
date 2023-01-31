@@ -1,4 +1,5 @@
 import Button from "../components/Button";
+import Card from "../components/Card";
 import GoogleIcon from "../components/GoogleIcon";
 import Logo from "../components/Logo";
 
@@ -8,12 +9,12 @@ export default function LoginPage({ loading, loginEvent }) {
     const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.'
 
     return (
-        <div className="w-full text-center">
+        <div className="w-full text-center overflow-scroll max-h-full-minus-nav">
             <div className="pt-10">
                 <h1 className="text-7xl pt-5">Field Day</h1>
                 <h2 className="text-xl pb-10">Data Management Tool</h2>
             </div>
-            <div className="my-5 p-10 rounded-lg shadow-md bg-white mx-auto w-96">
+            <Card className='bg-white mx-auto w-96'>
                 <div className="flex flex-col space-y-5">
                     <p>
                         {(loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
@@ -25,7 +26,7 @@ export default function LoginPage({ loading, loginEvent }) {
                         icon={<GoogleIcon className="w-6 mx-auto bg-white p-0.5 rounded-full"/>}
                     />
                 </div>
-            </div>
+            </Card>
             <Logo className="text-asu-maroon h-48 mx-auto rotate-45" />
         </div>
     );

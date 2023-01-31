@@ -39,7 +39,7 @@ function App() {
             <UserImage className='h-12' user={user} />,
             <Button
               text="Logout"
-              enabled={user}
+              enabled={true}
               onClick={() => {
                 signOut(auth)
               }} />

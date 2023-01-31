@@ -15,4 +15,7 @@
     .border-asu-gold {
         border-color: #ffc627;
     }
+    .max-h-full-minus-nav {
+        max-height: calc(100vh - 64px);
+    }
 }
