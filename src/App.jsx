@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800">
+    <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
       <TopNav
         title='Field Day'
         subcomponents={
