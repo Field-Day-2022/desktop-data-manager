@@ -30,15 +30,19 @@ function App() {
       <TopNav
         title='Field Day'
         subcomponents={
-          [<Dropdown />,
-          (user) ? <div>{user.email}</div> : null,
-          <UserImage className='h-12' user={user} />,
-          <Button
-            text="Logout"
-            enabled={user}
-            onClick={() => {
-              signOut(auth)
-            }} />
+          [<div>Project: </div>,
+            <Dropdown
+              options={
+                ["Gateway", "Virgin River", "San Pedro"]
+              } />,
+            (user) ? <div>{user.email}</div> : null,
+            <UserImage className='h-12' user={user} />,
+            <Button
+              text="Logout"
+              enabled={user}
+              onClick={() => {
+                signOut(auth)
+              }} />
           ]}
       />
       <div className="flex flex-grow" >

@@ -2,7 +2,7 @@ export default function Button({ text, onClick, enabled, icon }) {
     return (
         (enabled ?
             <div
-                className={"rounded-md p-3 bg-asu-maroon text-white cursor-pointer"}
+                className={"rounded-md p-3 bg-asu-maroon text-white cursor-pointer border-transparent border-2 active:border-asu-gold"}
                 onClick={onClick}>
                 <div className="absolute">
                     {icon ? icon : null}

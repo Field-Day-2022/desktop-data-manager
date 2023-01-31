@@ -9,4 +9,10 @@
     .text-asu-maroon {
         color: #8c1d40;
     }
+    .bg-asu-gold {
+        background: #FFC627;
+    }
+    .border-asu-gold {
+        border-color: #FFC627;   
+    }
 }
