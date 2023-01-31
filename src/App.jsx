@@ -8,7 +8,7 @@ import TopNav from './components/TopNav'
 import UserImage from "./components/UserImage";
 
 import LoginPage from "./pages/LoginPage";
-
+import Sidebar from "./components/Sidebar";
 
 function App() {
 
@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center bg-neutral-100 text-neutral-800">
+    <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800">
       <TopNav
         title='Field Day'
         subcomponents={
@@ -41,14 +41,19 @@ function App() {
             }} />
           ]}
       />
-      {(validateUser(user)) ?
-        <div>Hello</div>
-        :
-        <LoginPage
-          loading={loading}
-          loginEvent={() => {
-            signInWithRedirect(auth, new GoogleAuthProvider())
-          }} />}
+      <div className="flex flex-grow" >
+        <Sidebar />
+        {(validateUser(user)) ?
+          <div>Hello</div>
+          :
+          <LoginPage
+            loading={loading}
+            loginEvent={() => {
+              signInWithRedirect(auth, new GoogleAuthProvider())
+            }} />}
+
+      </div>
+
     </div>
   )
 }

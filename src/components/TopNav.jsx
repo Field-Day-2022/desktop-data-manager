@@ -8,7 +8,7 @@ import Logo from "./Logo";
  */
 export default function TopNav({ title, subcomponents }) {
     return (
-        <div className='px-5 bg-neutral-800 text-neutral-100 w-full shadow-md'>
+        <div className='px-5 bg-neutral-800 text-neutral-100 w-full shadow-md max-h-16'>
             <nav className='py-2 flex justify-between' >
                 <ul className='flex items-center space-x-5'>
                     <li>
