@@ -13,4 +13,8 @@
         padding-bottom: 2.5rem;
         line-height: 1.75rem;
     }
+    .heading {
+        font-size: 1.5rem;
+        padding-bottom:1.5rem;
+    }
 }

@@ -48,7 +48,7 @@ function App() {
       />
       <div className="flex flex-grow" >
         <Sidebar />
-        {(validateUser(user)) ?
+        {(true) ?
           <HomePage />
           :
           <LoginPage
