@@ -16,7 +16,6 @@
     "framer-motion": "^8.5.0",
     "jotai": "^1.13.1",
     "react": "^18.2.0",
-    "react-alert": "^7.0.3",
     "react-alert-template-basic": "^1.0.2",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",

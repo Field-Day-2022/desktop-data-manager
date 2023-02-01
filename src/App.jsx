@@ -6,7 +6,6 @@ import Button from './components/Button'
 import Dropdown from './components/Dropdown'
 import TopNav from './components/TopNav'
 import UserImage from "./components/UserImage";
-import { AiFillTool, AiFillPlusSquare } from 'react-icons/ai'
 
 import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
