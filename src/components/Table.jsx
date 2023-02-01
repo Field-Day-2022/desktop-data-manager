@@ -188,7 +188,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
                 type="text"
                 value={entryData[dbKey]}
                 onChange={e => onChangeHandler(e)}
-                size={entryData[dbKey].length}
+                size={entryData[dbKey].length || 1}
             />
         </td>
     );
