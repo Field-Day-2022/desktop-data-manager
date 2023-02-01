@@ -10,7 +10,7 @@ export default function Table({ tableName, collectionName }) {
     const [batchSize, setBatchSize] = useState(15);
 
     const sessionLabels = [
-        'Date/Time',
+        'Date & Time',
         'Recorder',
         'Handler',
         'Site',
@@ -49,25 +49,41 @@ export default function Table({ tableName, collectionName }) {
     };
 
     return (
-        <table className="bg-slate-200 border-spacing-2 border border-black">
-            <thead>
-                <tr>
-                    <TableHeading label="Actions" />
-                    {tableName === 'Session' &&
-                        sessionLabels.map((label) => <TableHeading key={label} label={label} />)}
-                </tr>
-            </thead>
-            <tbody>
-                {entries.map((entry) => (
-                    <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
-                ))}
-            </tbody>
-        </table>
+        <div  className="bg-slate-200 border-spacing-2 border border-black">
+            <table>
+                <thead>
+                    <tr>
+                        <TableHeading label="Actions" />
+                        {tableName === 'Session' &&
+                            sessionLabels.map((label) => <TableHeading key={label} label={label} />)}
+                    </tr>
+                </thead>
+                <tbody>
+                    {entries.map((entry) => (
+                        <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
+                    ))}
+                </tbody>
+            </table>
+            <Pagination />
+        </div>
     );
 }
 
+const Pagination = ({
+    setBatchSize,
+    loadNextBatch
+}) => {
+    return (
+        <div className="w-full p-2 flex justify-end">
+            <p>Hello there</p>
+        </div>
+    )
+}
+
+
+
 const TableHeading = ({ label }) => {
-    return <th className="border-b border-gray-800 p-2">{label}</th>;
+    return <th className="border-b border-gray-800 p-2 text-sm text-gray-600 font-semibold">{label}</th>;
 };
 
 const Entry = ({ entrySnapshot, tableName }) => {
