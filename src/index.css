@@ -3,10 +3,18 @@
 @tailwind utilities;
 
 @layer components {
-    .bg-asu-maroon {
-        background: #8c1d40;
+    .title {
+        font-size: 4.5rem;
+        padding-top: 1.25rem;
+        line-height: 1;
     }
-    .text-asu-maroon {
-        color: #8c1d40;
+    .subtitle {
+        font-size: 1.25rem;
+        padding-bottom: 2.5rem;
+        line-height: 1.75rem;
+    }
+    .heading {
+        font-size: 1.5rem;
+        padding-bottom: 1.5rem;
     }
 }

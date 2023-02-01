@@ -7,7 +7,7 @@ import Logo from './Logo';
 
 export default function Sidebar() {
     return (
-        <div className="w-72 bg-white flex-col max-h-[calc(100vh-64px)] divide-y overflow-scroll">
+        <div className="w-72 bg-white flex-col max-h-full-minus-nav divide-y overflow-scroll">
             <CollapsibleSidebarSection title="Documentation">
                 <SidebarElement icon={<AiFillInfoCircle />} text='About' />
             </CollapsibleSidebarSection>
@@ -32,7 +32,6 @@ export default function Sidebar() {
             <CollapsibleSidebarSection title='Manage Forms'>
                 <SidebarElement icon={<AiFillTool />} text='Form Builder' />
             </CollapsibleSidebarSection>
-
         </div>
     );
 }
@@ -65,7 +64,7 @@ function SidebarSectionHeading({ children }) {
 
 function SidebarElement({ icon, text }) {
     return (
-        <div className="px-4 py-3 flex items-center cursor-pointer hover:bg-neutral-100">
+        <div className="px-4 py-3 flex items-center cursor-pointer hover:bg-neutral-100 hover:border-asu-gold border-transparent border-b-2 active:bg-neutral-200">
             <div className='text-2xl mr-5'>
                 {icon}
             </div>{text}
