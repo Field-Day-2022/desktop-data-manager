@@ -49,8 +49,7 @@ function App() {
           <LoginPage
             loading={authenticator.loading}
             loginEvent={() => {
-              authenticator.login()
-              if (authenticator.validateUser()) {
+              if (authenticator.login()) {
                 notify(Type.success, "Welcome to Field Day, " + user.displayName + "!")
               } else {
                 notify(Type.error, "Field Day requires a valid ASU email address.")

@@ -1,13 +1,13 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
+import { getRedirectResult, GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
 
 export default class Authenticator {
     constructor(auth) {
         this.auth = auth;
-        this.state = useAuthState(this.auth);
-        this.user = this.state.user;
-        this.loading = this.state.loading;
-        this.error = this.state.error;
+        const [user, loading, error] = useAuthState(auth);
+        this.user = user;
+        this.loading = loading;
+        this.error = error;
     }
 
     validateUser() {
@@ -21,8 +21,13 @@ export default class Authenticator {
         }
     }
     
-    login() {
+    async login() {
         signInWithRedirect(this.auth, new GoogleAuthProvider())
+        const result = await getRedirectResult(auth);
+        if (result) {
+            this.user = result.user;
+            return this.validateUser();
+        }
     }
     
     logout() {
