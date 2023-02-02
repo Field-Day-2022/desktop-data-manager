@@ -44,18 +44,14 @@ function App() {
             } />,
           (user) ? <div>{user.email}</div> : null,
           <UserImage className='h-12' user={user} />,
+          (user) ? 
           <Button
             text="Logout"
             enabled={true}
             onClick={() => {
-              if (user) {
-                signOut(auth)
-                notify(Type.success, "Sign out successful!")
-              } else {
-                notify(Type.error, "There is no user to log out.")
-              }
-
-            }} />
+              signOut(auth)
+              notify(Type.success, "Sign out successful!")
+            }} /> : null
           ]}
       />
       <div className="flex flex-grow" >

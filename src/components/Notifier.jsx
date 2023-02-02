@@ -6,9 +6,14 @@ const Type = {
     plain: 2
 }
 
-const config = {
-    duration: 2000,
+const style = {
     padding: '8px'
+}
+
+const config = {
+    duration: 2000, 
+    style: style,
+
 }
 
 function notify(type, text) {
