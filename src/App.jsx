@@ -1,7 +1,3 @@
-import { auth } from "./main";
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
-
 import Button from './components/Button'
 import Dropdown from './components/Dropdown'
 import TopNav from './components/TopNav'
@@ -11,25 +7,14 @@ import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
+import { auth } from "./main";
 import React from "react";
 import { notify, Notifier, Type } from "./components/Notifier";
+import Authenticator from './utils/authenticator';
 
 function App() {
 
-  const [user, loading, error] = useAuthState(auth);
-
-  function validateUser(user) {
-    if (!user) return false;
-    if (user && user.email.slice(-7) === 'asu.edu') {
-      notify(Type.success, "Welcome to Field Day, " + user.displayName + "!")
-      return true;
-    }
-    else {
-      signOut(auth);
-      notify(Type.error, "Field Day requires a valid ASU email address.")
-      return false;
-    }
-  }
+  const authenticator = new Authenticator(auth);
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
@@ -42,27 +27,34 @@ function App() {
             options={
               ["Gateway", "Virgin River", "San Pedro"]
             } />,
-          (user) ? <div>{user.email}</div> : null,
-          <UserImage className='h-12' user={user} />,
-          (user) ? 
-          <Button
-            text="Logout"
-            enabled={true}
-            onClick={() => {
-              signOut(auth)
-              notify(Type.success, "Sign out successful!")
-            }} /> : null
+          (authenticator.user) ? <div>{authenticator.user.email}</div> : null,
+          <UserImage className='h-12' user={authenticator.user} />,
+          (authenticator.user) ?
+            <Button
+              text="Logout"
+              enabled={true}
+              onClick={() => {
+                authenticator.logout()
+                if (!user) {
+                  notify(Type.success, "Sign out successful!")
+                }
+              }} /> : null
           ]}
       />
       <div className="flex flex-grow" >
         <Sidebar />
-        {(validateUser(user)) ?
+        {(authenticator.validateUser()) ?
           <HomePage />
           :
           <LoginPage
-            loading={loading}
+            loading={authenticator.loading}
             loginEvent={() => {
-              signInWithRedirect(auth, new GoogleAuthProvider())
+              authenticator.login()
+              if (authenticator.validateUser()) {
+                notify(Type.success, "Welcome to Field Day, " + user.displayName + "!")
+              } else {
+                notify(Type.error, "Field Day requires a valid ASU email address.")
+              }
             }} />}
 
       </div>
