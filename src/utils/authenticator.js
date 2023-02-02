@@ -1,5 +1,5 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getRedirectResult, GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
+import { getRedirectResult, GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth';
 
 export default class Authenticator {
     constructor(auth) {
@@ -19,9 +19,9 @@ export default class Authenticator {
             return false;
         }
     }
-    
+
     async login() {
-        signInWithRedirect(this.auth, new GoogleAuthProvider())
+        signInWithRedirect(this.auth, new GoogleAuthProvider());
         const result = await getRedirectResult(auth);
         if (result) {
             this.user = result.user;
