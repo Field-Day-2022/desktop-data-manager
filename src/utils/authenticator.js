@@ -14,8 +14,7 @@ export default class Authenticator {
         if (!this.user) return false;
         if (this.user && this.user.email.slice(-7) === 'asu.edu') {
             return true;
-        }
-        else {
+        } else {
             logout();
             return false;
         }
@@ -29,9 +28,8 @@ export default class Authenticator {
             return this.validateUser();
         }
     }
-    
+
     logout() {
         signOut(this.auth);
     }
-
 }
