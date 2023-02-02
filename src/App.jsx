@@ -49,6 +49,7 @@ function App() {
             enabled={true}
             onClick={() => {
               signOut(auth)
+              notify(1, "Sign out successful!")
             }} />
           ]}
       />
