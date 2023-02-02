@@ -1,4 +1,4 @@
-import { toast, Toaster } from "react-hot-toast/dist";
+import toast, {Toaster} from "react-hot-toast";
 
 const Type = {
     error: 0,
@@ -6,21 +6,21 @@ const Type = {
     plain: 2
 }
 
-export function notify(type, text) {
+function notify(type, text) {
     switch (type) {
         case Type.error:
-            toast.error(text);
+            toast.error(text, {duration: 2000});
         case Type.success:
-            toast.success(text);
+            toast.success(text, {duration: 2000});
         case Type.plain:
-            toast(text);
+            toast(text, {duration: 2000});
         default:
 
 
     }
 }
 
-export default function Notifier() {
+function Notifier() {
     return (
         <Toaster position="bottom-center" />
     );
@@ -29,3 +29,5 @@ export default function Notifier() {
 function Notification() {
 
 }
+
+export {notify, Notifier}
