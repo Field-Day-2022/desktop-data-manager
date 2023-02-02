@@ -12,7 +12,7 @@ import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
 import React from "react";
-import {notify, Notifier, Type} from "./components/Notifier";
+import { notify, Notifier, Type } from "./components/Notifier";
 
 function App() {
 
@@ -48,8 +48,13 @@ function App() {
             text="Logout"
             enabled={true}
             onClick={() => {
-              signOut(auth)
-              notify(Type.success, "Sign out successful!")
+              if (user) {
+                signOut(auth)
+                notify(Type.success, "Sign out successful!")
+              } else {
+                notify(Type.error, "There is no user to log out.")
+              }
+
             }} />
           ]}
       />

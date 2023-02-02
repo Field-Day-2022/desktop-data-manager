@@ -8,7 +8,7 @@ const Type = {
 
 const config = {
     duration: 2000,
-    padding: 3
+    padding: '8px'
 }
 
 function notify(type, text) {
