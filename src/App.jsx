@@ -12,7 +12,7 @@ import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
 import React from "react";
-import {notify, Notifier} from "./components/Notifier";
+import {notify, Notifier, Type} from "./components/Notifier";
 
 function App() {
 
@@ -21,12 +21,12 @@ function App() {
   function validateUser(user) {
     if (!user) return false;
     if (user && user.email.slice(-7) === 'asu.edu') {
-      notify(1, "Welcome to Field Day, " + user.displayName + "!")
+      notify(Type.success, "Welcome to Field Day, " + user.displayName + "!")
       return true;
     }
     else {
       signOut(auth);
-      notify(0, "Field Day requires a valid ASU email address.")
+      notify(Type.error, "Field Day requires a valid ASU email address.")
       return false;
     }
   }
@@ -49,7 +49,7 @@ function App() {
             enabled={true}
             onClick={() => {
               signOut(auth)
-              notify(1, "Sign out successful!")
+              notify(Type.success, "Sign out successful!")
             }} />
           ]}
       />

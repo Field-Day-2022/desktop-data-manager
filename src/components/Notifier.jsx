@@ -1,4 +1,4 @@
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Type = {
     error: 0,
@@ -9,14 +9,11 @@ const Type = {
 function notify(type, text) {
     switch (type) {
         case Type.error:
-            toast.error(text, {duration: 2000});
+            toast.error(text, { duration: 2000 });
         case Type.success:
-            toast.success(text, {duration: 2000});
-        case Type.plain:
-            toast(text, {duration: 2000});
+            toast.success(text, { duration: 2000 });
         default:
-
-
+            toast(text, { duration: 2000 });
     }
 }
 
@@ -30,4 +27,4 @@ function Notification() {
 
 }
 
-export {notify, Notifier}
+export { notify, Notifier, Type }
