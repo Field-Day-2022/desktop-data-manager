@@ -27,7 +27,7 @@ function App() {
       return true;
     }
     else {
-      toast(<div className="p-3">Field Day requires a valid ASU email address.</div>)
+      toast.error(<div className="p-3">Field Day requires a valid ASU email address.</div>)
       signOut(auth);
       return false;
     }
