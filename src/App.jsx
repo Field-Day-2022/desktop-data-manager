@@ -11,6 +11,12 @@ import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
+import React from "react";
+import classNames from "classnames";
+import toast, { Toaster } from "react-hot-toast";
+import { MdOutlineClose } from "react-icons/md";
+import { HiLightningBolt } from "react-icons/hi";
+
 function App() {
 
   const [user, loading, error] = useAuthState(auth);
@@ -21,6 +27,7 @@ function App() {
       return true;
     }
     else {
+      toast(<div className="p-3">Field Day requires a valid ASU email address.</div>)
       signOut(auth);
       return false;
     }
@@ -28,22 +35,23 @@ function App() {
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
+      <Toaster />
       <TopNav
         title='Field Day'
         subcomponents={
           [<div>Project: </div>,
-            <Dropdown
-              options={
-                ["Gateway", "Virgin River", "San Pedro"]
-              } />,
-            (user) ? <div>{user.email}</div> : null,
-            <UserImage className='h-12' user={user} />,
-            <Button
-              text="Logout"
-              enabled={true}
-              onClick={() => {
-                signOut(auth)
-              }} />
+          <Dropdown
+            options={
+              ["Gateway", "Virgin River", "San Pedro"]
+            } />,
+          (user) ? <div>{user.email}</div> : null,
+          <UserImage className='h-12' user={user} />,
+          <Button
+            text="Logout"
+            enabled={true}
+            onClick={() => {
+              signOut(auth)
+            }} />
           ]}
       />
       <div className="flex flex-grow" >
