@@ -1,5 +1,5 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth';
 
 export default class Authenticator {
     constructor(auth) {
@@ -14,19 +14,17 @@ export default class Authenticator {
         if (!this.user) return false;
         if (this.user && this.user.email.slice(-7) === 'asu.edu') {
             return true;
-        }
-        else {
+        } else {
             logout();
             return false;
         }
     }
-    
+
     login() {
-        signInWithRedirect(this.auth, new GoogleAuthProvider())
+        signInWithRedirect(this.auth, new GoogleAuthProvider());
     }
-    
+
     logout() {
         signOut(this.auth);
     }
-
 }
