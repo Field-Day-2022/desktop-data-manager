@@ -6,16 +6,21 @@ const Type = {
     plain: 2
 }
 
+const config = {
+    duration: 2000,
+    padding: 3
+}
+
 function notify(type, text) {
     switch (type) {
         case Type.error:
-            toast.error(text, { duration: 2000 });
+            toast.error(text, config);
             return;
         case Type.success:
-            toast.success(text, { duration: 2000 });
+            toast.success(text, config);
             return;
         default:
-            toast(text, { duration: 2000 });
+            toast(text, config);
             return;
     }
 }
