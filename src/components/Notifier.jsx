@@ -6,7 +6,7 @@ const Type = {
     plain: 2
 }
 
-export default function notify(type, text) {
+export function notify(type, text) {
     switch (type) {
         case Type.error:
             toast.error(text);
@@ -15,7 +15,7 @@ export default function notify(type, text) {
         case Type.plain:
             toast(text);
         default:
-            
+
 
     }
 }
