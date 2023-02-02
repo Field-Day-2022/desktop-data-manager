@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@blaumaus/react-alert": "^7.0.5",
     "@material-tailwind/react": "^1.2.5",
     "@syncfusion/ej2-react-spreadsheet": "^20.4.44",
     "firebase": "^9.15.0",
@@ -17,6 +18,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
+    "react-hot-toast": "^2.4.0",
     "react-icons": "^4.7.1"
   },
   "devDependencies": {
