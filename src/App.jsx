@@ -12,7 +12,6 @@ import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
 import React from "react";
-import classNames from "classnames";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineClose } from "react-icons/md";
 import { HiLightningBolt } from "react-icons/hi";
@@ -27,8 +26,8 @@ function App() {
       return true;
     }
     else {
-      toast.error(<div className="p-3">Field Day requires a valid ASU email address.</div>)
       signOut(auth);
+      toast.error("Field Day requires a valid ASU email address.")
       return false;
     }
   }
