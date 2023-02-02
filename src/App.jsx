@@ -12,9 +12,7 @@ import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
 import React from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { MdOutlineClose } from "react-icons/md";
-import { HiLightningBolt } from "react-icons/hi";
+import {notify, Notifier} from "./components/Notifier";
 
 function App() {
 
@@ -23,18 +21,19 @@ function App() {
   function validateUser(user) {
     if (!user) return false;
     if (user && user.email.slice(-7) === 'asu.edu') {
+      notify(1, "Welcome to Field Day, " + user.displayName + "!")
       return true;
     }
     else {
       signOut(auth);
-      toast.error("Field Day requires a valid ASU email address.")
+      notify(0, "Field Day requires a valid ASU email address.")
       return false;
     }
   }
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
-      <Toaster position='bottom-center'/>
+      <Notifier />
       <TopNav
         title='Field Day'
         subcomponents={
