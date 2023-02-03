@@ -5,9 +5,6 @@ export default class Authenticator {
     constructor(auth) {
         this.auth = auth;
         const [user, loading, error] = useAuthState(auth);
-        this.user = user;
-        this.loading = loading;
-        this.error = error;
     }
 
     validateUser() {
@@ -24,6 +21,7 @@ export default class Authenticator {
         signInWithRedirect(this.auth, new GoogleAuthProvider());
         const result = await getRedirectResult(auth);
         if (result) {
+            console.log(this.user.email)
             this.user = result.user;
             return this.validateUser();
         }
