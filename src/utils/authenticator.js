@@ -21,7 +21,7 @@ export default class Authenticator {
         signInWithRedirect(this.auth, new GoogleAuthProvider());
         const result = await getRedirectResult(auth);
         if (result) {
-            console.log(this.user.email)
+            console.log(this.user.email);
             this.user = result.user;
             return this.validateUser();
         }
