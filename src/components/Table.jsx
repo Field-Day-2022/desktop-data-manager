@@ -64,18 +64,47 @@ export default function Table({ tableName, collectionName }) {
                     ))}
                 </tbody>
             </table>
-            <Pagination />
+            <Pagination 
+                batchSize={batchSize}
+                setBatchSize={setBatchSize}
+                loadNextBatch={loadNextBatch}
+            />
         </div>
     );
 }
 
 const Pagination = ({
+    batchSize,
     setBatchSize,
-    loadNextBatch
+    loadNextBatch,
 }) => {
+    const [ batchSizeOptionsShown, setBatchSizeOptionsShown ] = useState(false);
+
+
     return (
-        <div className="w-full p-2 flex justify-end">
-            <p>Hello there</p>
+        <div className="w-full p-2 flex justify-end items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+
+            <div className='relative p-2'>
+                <button 
+                    className="peer cursor-pointer border-[1px] border-gray-400 rounded-xl drop-shadow-lg p-2 active:scale-100 transition hover:scale-110"
+                    onClick={() => setBatchSizeOptionsShown(!batchSizeOptionsShown)}
+                >{`${batchSize} Rows`}</button>            
+                {batchSizeOptionsShown && 
+                <ul className="absolute p-2 rounded-xl w-24 -left-1 text-center bg-white/90 drop-shadow-2xl">
+                    <li>15 Rows</li>
+                    <li>50 Rows</li>
+                    <li>100 Rows</li>
+                    <li>All Rows</li>
+                </ul>}
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+
         </div>
     )
 }
