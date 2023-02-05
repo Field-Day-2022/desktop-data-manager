@@ -94,14 +94,16 @@ const Pagination = ({
                 >{`${batchSize} Rows`}</button>            
                 {batchSizeOptionsShown && 
                 <ul className="absolute p-2 rounded-xl w-24 -left-1 text-center bg-white/90 drop-shadow-2xl">
-                    <li>15 Rows</li>
-                    <li>50 Rows</li>
-                    <li>100 Rows</li>
-                    <li>All Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize(15)}>15 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize(50)}>50 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize(100)}>100 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize('all')}>All Rows</li>
                 </ul>}
             </div>
 
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
+                onClick={() => loadNextBatch}
+            >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
 
