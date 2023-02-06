@@ -9,9 +9,10 @@ import HomePage from "./pages/HomePage";
 
 import React from "react";
 import { notify, Notifier, Type } from "./components/Notifier";
-import {Authenticator} from './utils/authenticator'
+import { Authenticator } from './utils/authenticator'
 
 function App() {
+
   const auth = new Authenticator();
 
   return (
@@ -19,25 +20,7 @@ function App() {
       <Notifier />
       <TopNav
         title='Field Day'
-        subcomponents={
-          [<div>Project: </div>,
-          <Dropdown
-            options={
-              ["Gateway", "Virgin River", "San Pedro"]
-            } />,
-          (auth.user) ? <div>{auth.user.email}</div> : null,
-          <UserImage className='h-12' user={auth.user} />,
-          (auth.user) ?
-            <Button
-              text="Logout"
-              enabled={true}
-              onClick={() => {
-                auth.logout()
-                if (!auth.user) {
-                  notify(Type.success, "Sign out successful!")
-                }
-              }} /> : null
-          ]}
+        auth={auth}
       />
       <div className="flex flex-grow" >
         <Sidebar />
@@ -51,6 +34,7 @@ function App() {
                 notify(Type.success, "Welcome to Field Day, " + auth.user.displayName + "!")
               } else {
                 notify(Type.error, "Field Day requires a valid ASU email address.")
+                auth.logout()
               }
             }} />}
 

@@ -1,4 +1,6 @@
+import Dropdown from "./Dropdown";
 import Logo from "./Logo";
+import LogoutButton from "./LogoutButton";
 
 /**
  * 
@@ -6,7 +8,7 @@ import Logo from "./Logo";
  * @param {string} title Title to be displayed on the left of the nav bar.
  * @returns 
  */
-export default function TopNav({ title, subcomponents }) {
+export default function TopNav({ title, auth }) {
     return (
         <div className='px-5 bg-neutral-800 text-neutral-100 w-full shadow-md max-h-16'>
             <nav className='py-2 flex justify-between' >
@@ -22,10 +24,21 @@ export default function TopNav({ title, subcomponents }) {
                 </ul>
 
                 <ul className='flex items-center space-x-5'>
-                    {subcomponents}
+                    <div>Project: </div>
+                    <Dropdown
+                        options={
+                            ["Gateway", "Virgin River", "San Pedro"]
+                        } />
+                    <UserController user={auth.user} />
                 </ul>
             </nav >
         </div>
 
+    );
+}
+
+function UserController({user}) {
+    return(
+        (user) ? [<div>{user.email}</div>,<UserImage className='h-12' user={user} />, <LogoutButton auth={auth} />] : null
     );
 }
