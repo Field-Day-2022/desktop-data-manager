@@ -2,11 +2,12 @@
 // https://firebase.google.com/docs/firestore/query-data/order-limit-data
 import { useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
-import { collection, query, orderBy, startAfter, limit, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, startAfter, limit, getDocs, startAt } from 'firebase/firestore';
 
 export default function Table({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
-    const [lastVisibleDocument, setLastVisibleDocument] = useState();
+    const [documentQueryCursor, setDocumentQueryCursor] = useState();
+    const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [batchSize, setBatchSize] = useState(15);
 
     const sessionLabels = [
@@ -30,22 +31,45 @@ export default function Table({ tableName, collectionName }) {
             const initialQuerySnapshot = await getDocs(initialQuery);
             setEntries(initialQuerySnapshot.docs);
             const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
-            setLastVisibleDocument(lastVisibleDoc);
+            setDocumentQueryCursor(lastVisibleDoc);
         };
         loadInitialEntries();
     }, []);
 
+    const loadPrevBatch = async () => {
+        console.log(`loading previous batch of ${batchSize} entries`);
+        const prevBatchQuery = query(
+            collection(db, collectionName),
+            orderBy('dateTime', 'desc'),
+            startAt(queryCursorStack[queryCursorStack.length - 1]),
+            limit(batchSize)
+        );
+        const prevBatchSnapshot = await getDocs(prevBatchQuery);
+        setEntries(prevBatchSnapshot.docs);
+        setDocumentQueryCursor(prevBatchSnapshot.docs[prevBatchSnapshot.docs.length - 1]);
+        let tempStack = queryCursorStack;
+        tempStack.pop();
+        setQueryCursorStack(tempStack)
+    }
+
+    console.log(queryCursorStack)
+
     const loadNextBatch = async () => {
+        setQueryCursorStack([
+            ...queryCursorStack,
+            entries[0]
+        ])
+        console.log(`loading next batch of ${batchSize} entries`)
         const nextBatchQuery = query(
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
-            startAfter(lastVisibleDocument),
+            startAfter(documentQueryCursor),
             limit(batchSize)
         );
         const nextBatchSnapshot = await getDocs(nextBatchQuery);
         setEntries(nextBatchSnapshot.docs);
         const lastVisibleDoc = nextBatchSnapshot.docs[nextBatchSnapshot.docs.length - 1];
-        setLastVisibleDocument(lastVisibleDoc);
+        setDocumentQueryCursor(lastVisibleDoc);
     };
 
     return (
@@ -67,6 +91,7 @@ export default function Table({ tableName, collectionName }) {
             <Pagination 
                 batchSize={batchSize}
                 setBatchSize={setBatchSize}
+                loadPrevBatch={loadPrevBatch}
                 loadNextBatch={loadNextBatch}
             />
         </div>
@@ -77,13 +102,16 @@ const Pagination = ({
     batchSize,
     setBatchSize,
     loadNextBatch,
+    loadPrevBatch
 }) => {
     const [ batchSizeOptionsShown, setBatchSizeOptionsShown ] = useState(false);
 
 
     return (
         <div className="w-full p-2 flex justify-end items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
+                onClick={() => loadPrevBatch()}
+            >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
 
@@ -102,7 +130,7 @@ const Pagination = ({
             </div>
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
-                onClick={() => loadNextBatch}
+                onClick={() => loadNextBatch()}
             >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
