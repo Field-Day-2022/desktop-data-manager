@@ -119,6 +119,10 @@ const Pagination = ({
 }) => {
     const [ batchSizeOptionsShown, setBatchSizeOptionsShown ] = useState(false);
 
+    const onClickHandler = (batchSize) => {
+        changeBatchSize(batchSize)
+        setBatchSizeOptionsShown(false);
+    }
 
     return (
         <div className="w-full p-2 flex justify-end items-center">
@@ -135,10 +139,10 @@ const Pagination = ({
                 >{`${batchSize} Rows`}</button>            
                 {batchSizeOptionsShown && 
                 <ul className="absolute p-2 rounded-xl w-24 -left-1 text-center bg-white/90 drop-shadow-2xl">
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize(15)}>15 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize(50)}>50 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize(100)}>100 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize('all')}>All Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(15)}>15 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(50)}>50 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(100)}>100 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler('all')}>All Rows</li>
                 </ul>}
             </div>
 
