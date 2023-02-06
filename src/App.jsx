@@ -28,15 +28,8 @@ function App() {
           <HomePage />
           :
           <LoginPage
-            loading={auth.loading}
-            loginEvent={() => {
-              if (auth.login()) {
-                notify(Type.success, "Welcome to Field Day, " + auth.user.displayName + "!")
-              } else {
-                notify(Type.error, "Field Day requires a valid ASU email address.")
-                auth.logout()
-              }
-            }} />}
+            auth={auth}
+          />}
 
       </div>
 

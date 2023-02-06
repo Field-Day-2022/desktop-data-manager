@@ -4,7 +4,7 @@ import GoogleIcon from "../components/GoogleIcon";
 import Logo from "../components/Logo";
 import PageWrapper from "./PageWrapper";
 
-export default function LoginPage({ loading, loginEvent }) {
+export default function LoginPage({ auth }) {
 
     const LOADING_MESSAGE = 'Loading Google\'s authentication.'
     const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.'
@@ -18,12 +18,12 @@ export default function LoginPage({ loading, loginEvent }) {
             <Card className='bg-white mx-auto w-96'>
                 <div className="flex flex-col space-y-5">
                     <p>
-                        {(loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
+                        {(auth.loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
                     </p>
                     <Button
-                        enabled={!loading}
-                        text={(!loading ? 'Login' : 'Please wait.')}
-                        onClick={loginEvent}
+                        enabled={!auth.loading}
+                        text={(!auth.loading ? 'Login' : 'Please wait.')}
+                        onClick={auth.login}
                         icon={<GoogleIcon className="w-6 mx-auto bg-white p-0.5 rounded-full"/>}
                     />
                 </div>
