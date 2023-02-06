@@ -65,7 +65,6 @@ export default function Table({ tableName, collectionName }) {
         setQueryCursorStack(tempStack)
     }
 
-    console.log(queryCursorStack)
 
     const loadNextBatch = async () => {
         setQueryCursorStack([
@@ -199,13 +198,13 @@ const Entry = ({ entrySnapshot, tableName }) => {
     };
 
     return (
-        <tr>
+        <tr className="relative">
             {currentState === 'viewing' ? (
                 <EditDeleteActions
                     onEditClickedHandler={onEditClickedHandler}
                     onDeleteClickedHandler={onDeleteClickedHandler}
                 />
-            ) : currentState === 'editing' ? (
+            ) : currentState === 'editing' || currentState === 'deleting' ? (
                 <SaveCancelActions
                     onSaveClickedHandler={onSaveClickedHandler}
                     onCancelClickedHandler={onCancelClickedHandler}
@@ -222,7 +221,13 @@ const Entry = ({ entrySnapshot, tableName }) => {
                           key={key}
                       />
                   ))
-                : null}
+                : null
+            }
+            {currentState === 'deleting' &&
+                <p className="absolute left-20 top-2 z-10 bg-white/95 px-2 rounded-2xl">
+                    Are you sure you want to delete this row?
+                </p>
+            }
         </tr>
     );
 };
@@ -268,7 +273,11 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
 
     let disabled = false;
 
-    if (currentState === 'viewing' || (currentState === 'editing' && !editable)) {
+    if (
+        currentState === 'viewing' || 
+        (currentState === 'editing' && !editable) ||
+        currentState === 'deleting'
+    ) {
         disabled = true;
     }
 
