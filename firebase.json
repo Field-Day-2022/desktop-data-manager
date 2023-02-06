@@ -4,13 +4,21 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+<<<<<<< HEAD
     "target": "webui",
     "public": "dist",
+=======
+    "public": "build",
+>>>>>>> dev
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
+<<<<<<< HEAD
+=======
+    "target": "webui",
+>>>>>>> dev
     "rewrites": [
       {
         "source": "**",
