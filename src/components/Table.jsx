@@ -36,6 +36,19 @@ export default function Table({ tableName, collectionName }) {
         loadInitialEntries();
     }, []);
 
+    const changeBatchSize = async (newBatchSize) => {
+        setBatchSize(newBatchSize)
+        const initialQuery = query(
+            collection(db, collectionName),
+            orderBy('dateTime', 'desc'),
+            limit(newBatchSize)
+        );
+        const initialQuerySnapshot = await getDocs(initialQuery);
+        setEntries(initialQuerySnapshot.docs);
+        const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
+        setDocumentQueryCursor(lastVisibleDoc);
+    }
+
     const loadPrevBatch = async () => {
         console.log(`loading previous batch of ${batchSize} entries`);
         const prevBatchQuery = query(
@@ -73,7 +86,7 @@ export default function Table({ tableName, collectionName }) {
     };
 
     return (
-        <div  className="bg-slate-200 border-spacing-2 border border-black">
+        <div className="bg-slate-200 border-spacing-2 border border-black">
             <table>
                 <thead>
                     <tr>
@@ -90,7 +103,7 @@ export default function Table({ tableName, collectionName }) {
             </table>
             <Pagination 
                 batchSize={batchSize}
-                setBatchSize={setBatchSize}
+                changeBatchSize={changeBatchSize}
                 loadPrevBatch={loadPrevBatch}
                 loadNextBatch={loadNextBatch}
             />
@@ -100,7 +113,7 @@ export default function Table({ tableName, collectionName }) {
 
 const Pagination = ({
     batchSize,
-    setBatchSize,
+    changeBatchSize,
     loadNextBatch,
     loadPrevBatch
 }) => {
@@ -122,10 +135,10 @@ const Pagination = ({
                 >{`${batchSize} Rows`}</button>            
                 {batchSizeOptionsShown && 
                 <ul className="absolute p-2 rounded-xl w-24 -left-1 text-center bg-white/90 drop-shadow-2xl">
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize(15)}>15 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize(50)}>50 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize(100)}>100 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => setBatchSize('all')}>All Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize(15)}>15 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize(50)}>50 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize(100)}>100 Rows</li>
+                    <li className='cursor-pointer hover:text-blue-400' onClick={() => changeBatchSize('all')}>All Rows</li>
                 </ul>}
             </div>
 
