@@ -33,7 +33,7 @@ function App() {
               enabled={true}
               onClick={() => {
                 auth.logout()
-                if (!user) {
+                if (!auth.user) {
                   notify(Type.success, "Sign out successful!")
                 }
               }} /> : null
@@ -48,7 +48,7 @@ function App() {
             loading={auth.loading}
             loginEvent={() => {
               if (auth.login()) {
-                notify(Type.success, "Welcome to Field Day, " + user.displayName + "!")
+                notify(Type.success, "Welcome to Field Day, " + auth.user.displayName + "!")
               } else {
                 notify(Type.error, "Field Day requires a valid ASU email address.")
               }
