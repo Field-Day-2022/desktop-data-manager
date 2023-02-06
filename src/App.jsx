@@ -7,14 +7,12 @@ import LoginPage from "./pages/LoginPage";
 import Sidebar from "./components/Sidebar";
 import HomePage from "./pages/HomePage";
 
-import { auth } from "./main";
 import React from "react";
 import { notify, Notifier, Type } from "./components/Notifier";
-import Authenticator from './utils/authenticator';
+import {Authenticator} from './utils/authenticator'
 
 function App() {
-
-  const authenticator = new Authenticator(auth);
+  const auth = new Authenticator();
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
@@ -27,14 +25,14 @@ function App() {
             options={
               ["Gateway", "Virgin River", "San Pedro"]
             } />,
-          (authenticator.user) ? <div>{authenticator.user.email}</div> : null,
-          <UserImage className='h-12' user={authenticator.user} />,
-          (authenticator.user) ?
+          (auth.user) ? <div>{auth.user.email}</div> : null,
+          <UserImage className='h-12' user={auth.user} />,
+          (auth.user) ?
             <Button
               text="Logout"
               enabled={true}
               onClick={() => {
-                authenticator.logout()
+                auth.logout()
                 if (!user) {
                   notify(Type.success, "Sign out successful!")
                 }
@@ -43,13 +41,13 @@ function App() {
       />
       <div className="flex flex-grow" >
         <Sidebar />
-        {(authenticator.validateUser()) ?
+        {(auth.validateUser()) ?
           <HomePage />
           :
           <LoginPage
-            loading={authenticator.loading}
+            loading={auth.loading}
             loginEvent={() => {
-              if (authenticator.login()) {
+              if (auth.login()) {
                 notify(Type.success, "Welcome to Field Day, " + user.displayName + "!")
               } else {
                 notify(Type.error, "Field Day requires a valid ASU email address.")
