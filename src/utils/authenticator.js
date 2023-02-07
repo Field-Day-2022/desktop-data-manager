@@ -26,5 +26,4 @@ export class Authenticator {
         signOut(auth);
         return !this.user;
     }
-
 }
