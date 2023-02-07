@@ -23,9 +23,10 @@ function App() {
         auth={auth}
       />
       <div className="flex flex-grow" >
-        <Sidebar />
+
         {(auth.validateUser()) ?
-          <HomePage />
+          [<Sidebar />,
+          <HomePage />]
           :
           <LoginPage
             auth={auth}
