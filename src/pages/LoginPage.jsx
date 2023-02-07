@@ -23,7 +23,9 @@ export default function LoginPage({ auth }) {
                     <Button
                         enabled={!auth.loading}
                         text={(!auth.loading ? 'Login' : 'Please wait.')}
-                        onClick={auth.login}
+                        onClick={
+                            auth.login
+                        }
                         icon={<GoogleIcon className="w-6 mx-auto bg-white p-0.5 rounded-full"/>}
                     />
                 </div>
