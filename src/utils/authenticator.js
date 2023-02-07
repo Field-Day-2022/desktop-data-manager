@@ -19,7 +19,13 @@ export class Authenticator {
 
     login() {
         signInWithRedirect(auth, new GoogleAuthProvider());
+<<<<<<< HEAD
         return this.validateUser;
+=======
+        if (!this.validateUser()) {
+            this.logout();
+        }
+>>>>>>> 05327d64d4bb3b38cf43fb18652d5945d8e0a4fe
     }
 
     logout() {
