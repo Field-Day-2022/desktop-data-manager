@@ -1,6 +1,8 @@
+import Button from "./Button";
+
 export default function LogoutButton({auth}) {
     return (
-        <button
+        <Button
             text="Logout"
             disabled={!auth.loading}
             onClick={() => {
