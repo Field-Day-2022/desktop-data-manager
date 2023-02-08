@@ -2,13 +2,15 @@
 // https://firebase.google.com/docs/firestore/query-data/order-limit-data
 import { useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
-import { collection, query, orderBy, startAfter, limit, getDocs, startAt } from 'firebase/firestore';
+import { collection, query, orderBy, startAfter, limit, getDocs, startAt, where } from 'firebase/firestore';
 
 export default function Table({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [batchSize, setBatchSize] = useState(15);
+    const [labels, setLabels] = useState();
+    const [whereClause, setWhereClause] = useState();
 
     const sessionLabels = [
         'Date & Time',
@@ -21,28 +23,190 @@ export default function Table({ tableName, collectionName }) {
         'Comments',
     ];
 
+    const turtleLabels = [
+        'Date & Time',
+        'Site',
+        'Array',
+        'Fence Trap',
+        'Taxa',
+        'Species Code',
+        'Genus',
+        'Species',
+        'Mass(g)',
+        'Sex',
+        'Dead?',
+        'Comments',
+    ]
+
+    const lizardLabels = [
+        'Date & Time',
+        'Site',
+        'Array',
+        'Fence Trap',
+        'Taxa',
+        'Species Code',
+        'Genus',
+        'Species',
+        'Toe-clip Code',
+        'Recapture',
+        'SVL(mm)',
+        'VTL(mm)',
+        'Regen Tail?',
+        'OTL(mm)',
+        'Hatchling?',
+        'Mass(g)',
+        'Sex',
+        'Dead?',
+        'Comments',
+    ]
+
+    const mammalLabels = [
+        'Date & Time',
+        'Site',
+        'Array',
+        'Fence Trap',
+        'Taxa',
+        'Species Code',
+        'Genus',
+        'Species',
+        'Mass(g)',
+        'Sex',
+        'Dead?',
+        'Comments',
+    ]
+
+    const snakeLabels = [
+        'Date & Time',
+        'Site',
+        'Array',
+        'Fence Trap',
+        'Taxa',
+        'Species Code',
+        'Genus',
+        'Species',
+        'SVL(mm)',
+        'VTM(mm)',
+        'Mass(g)',
+        'Sex',
+        'Dead?',
+        'Comments',
+    ]
+
+    const arthropodLabels = [
+        'Date & Time',
+        'Site',
+        'Array',
+        'Fence Trap',
+        'Predator?',
+        'ARAN',
+        'AUCH',
+        'BLAT',
+        'CHIL',
+        'COLE',
+        'CRUS',
+        'DERM',
+        'DIEL',
+        'DIPT',
+        'HETE',
+        'HYMA',
+        'HYMB',
+        'LEPI',
+        'MANT',
+        'ORTH',
+        'PSEU',
+        'SCOR',
+        'SOLI',
+        'THYS',
+        'UNKI',
+        'MICRO',
+        'Comments'
+    ]
+
+    const amphibianLabels = [
+        'Date & Time',
+        'Site',
+        'Array',
+        'Fence Trap',
+        'Taxa',
+        'Species Code',
+        'Genus',
+        'Species',
+        'HD-Body',
+        'Mass(g)',
+        'Sex',
+        'Dead',
+        'Comments',
+    ]
+
     useEffect(() => {
-        const loadInitialEntries = async () => {
-            const initialQuery = query(
-                collection(db, collectionName),
-                orderBy('dateTime', 'desc'),
-                limit(batchSize)
-            );
+        const loadInitialEntries = async (initialWhereClause) => {
+            let initialQuery;
+            if (tableName !== 'Session') {
+                initialQuery = query(
+                    collection(db, collectionName),
+                    where(initialWhereClause[0], '==', initialWhereClause[1]),
+                    orderBy('dateTime', 'desc'),
+                    limit(batchSize)
+                );
+            } else {
+                initialQuery = query(
+                    collection(db, collectionName),
+                    orderBy('dateTime', 'desc'),
+                    limit(batchSize)
+                );
+            }
             const initialQuerySnapshot = await getDocs(initialQuery);
             setEntries(initialQuerySnapshot.docs);
             const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
             setDocumentQueryCursor(lastVisibleDoc);
         };
-        loadInitialEntries();
+        if (tableName === 'Session') {
+            setLabels(sessionLabels);
+            loadInitialEntries();
+        } else if (tableName === 'Turtle') {
+            setLabels(turtleLabels);
+            setWhereClause(['taxa', 'Turtle'])
+            loadInitialEntries(['taxa', 'Turtle'])
+        } else if (tableName === 'Lizard') {
+            setLabels(lizardLabels);
+            setWhereClause(['taxa', 'Lizard'])
+            loadInitialEntries(['taxa', 'Lizard'])
+        } else if (tableName === 'Mammal') {
+            setLabels(mammalLabels);
+            setWhereClause(['taxa', 'Mammal'])
+            loadInitialEntries(['taxa', 'Mammal'])
+        } else if (tableName === 'Snake') {
+            setLabels(snakeLabels);
+            setWhereClause(['taxa', 'Snake'])
+            loadInitialEntries(['taxa', 'Snake'])
+        } else if (tableName === 'Arthropod') {
+            setLabels(arthropodLabelsLabels);
+            setWhereClause(['taxa', 'Arthropod'])
+            loadInitialEntries(['taxa', 'Arthropod'])
+        } else if (tableName === 'Amphibian') {
+            setLabels(amphibianLabels);
+            setWhereClause(['taxa', 'Amphibian'])
+            loadInitialEntries(['taxa', 'Amphibian'])
+        }
     }, []);
 
     const changeBatchSize = async (newBatchSize) => {
         setBatchSize(newBatchSize)
-        const initialQuery = query(
-            collection(db, collectionName),
-            orderBy('dateTime', 'desc'),
-            limit(newBatchSize)
-        );
+        let initialQuery;
+        if (tableName !== 'Session') {
+            initialQuery = query(
+                collection(db, collectionName),
+                where(whereClause[0], '==', whereClause[1]),
+                orderBy('dateTime', 'desc'),
+                limit(newBatchSize)
+            );
+        } else {
+            initialQuery = query(
+                collection(db, collectionName),
+                orderBy('dateTime', 'desc'),
+                limit(newBatchSize)
+            );
+        }
         const initialQuerySnapshot = await getDocs(initialQuery);
         setEntries(initialQuerySnapshot.docs);
         const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
@@ -51,12 +215,21 @@ export default function Table({ tableName, collectionName }) {
 
     const loadPrevBatch = async () => {
         console.log(`loading previous batch of ${batchSize} entries`);
-        const prevBatchQuery = query(
-            collection(db, collectionName),
-            orderBy('dateTime', 'desc'),
-            startAt(queryCursorStack[queryCursorStack.length - 1]),
-            limit(batchSize)
-        );
+        let prevBatchQuery;
+        if (tableName !== 'Session') {
+            prevBatchQuery = query(
+                collection(db, collectionName),
+                where(whereClause[0], '==', whereClause[1]),
+                orderBy('dateTime', 'desc'),
+                limit(batchSize)
+            );
+        } else {
+            prevBatchQuery = query(
+                collection(db, collectionName),
+                orderBy('dateTime', 'desc'),
+                limit(batchSize)
+            );
+        }
         const prevBatchSnapshot = await getDocs(prevBatchQuery);
         setEntries(prevBatchSnapshot.docs);
         setDocumentQueryCursor(prevBatchSnapshot.docs[prevBatchSnapshot.docs.length - 1]);
@@ -72,12 +245,21 @@ export default function Table({ tableName, collectionName }) {
             entries[0]
         ])
         console.log(`loading next batch of ${batchSize} entries`)
-        const nextBatchQuery = query(
-            collection(db, collectionName),
-            orderBy('dateTime', 'desc'),
-            startAfter(documentQueryCursor),
-            limit(batchSize)
-        );
+        let nextBatchQuery;
+        if (tableName !== 'Session') {
+            nextBatchQuery = query(
+                collection(db, collectionName),
+                where(whereClause[0], '==', whereClause[1]),
+                orderBy('dateTime', 'desc'),
+                limit(batchSize)
+            );
+        } else {
+            nextBatchQuery = query(
+                collection(db, collectionName),
+                orderBy('dateTime', 'desc'),
+                limit(batchSize)
+            );
+        }
         const nextBatchSnapshot = await getDocs(nextBatchQuery);
         setEntries(nextBatchSnapshot.docs);
         const lastVisibleDoc = nextBatchSnapshot.docs[nextBatchSnapshot.docs.length - 1];
@@ -85,13 +267,12 @@ export default function Table({ tableName, collectionName }) {
     };
 
     return (
-        <div className="bg-slate-200 border-spacing-2 border border-black">
+        <div className="bg-slate-200 max-w-full border-spacing-2 border border-black">
             <table>
                 <thead>
                     <tr>
                         <TableHeading label="Actions" />
-                        {tableName === 'Session' &&
-                            sessionLabels.map((label) => <TableHeading key={label} label={label} />)}
+                        {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
                     </tr>
                 </thead>
                 <tbody>
@@ -164,6 +345,7 @@ const TableHeading = ({ label }) => {
 const Entry = ({ entrySnapshot, tableName }) => {
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
+    const [keys, setKeys] = useState();
 
     // console.log(entryData);
 
@@ -177,6 +359,121 @@ const Entry = ({ entrySnapshot, tableName }) => {
         'trapStatus',
         'commentsAboutTheArray',
     ];
+
+    const TURTLE_KEYS = [
+        'dateTime',
+        'site',
+        'array',
+        'fenceTrap',
+        'taxa',
+        'speciesCode',
+        'genus',
+        'species',
+        'massG',
+        'sex',
+        'dead',
+        'comments'
+    ]
+
+    const LIZARD_KEYS = [
+        'dateTime',
+        'site',
+        'array',
+        'fenceTrap',
+        'taxa',
+        'speciesCode',
+        'genus',
+        'species',
+        'toeClipCode',
+        'recapture',
+        'svlMm',
+        'vtlMm',
+        'regenTail',
+        'otlMm',
+        'hatchling',
+        'massG',
+        'sex',
+        'dead',
+        'comments',
+    ]
+
+    const MAMMAL_KEYS = [
+        'dateTime',
+        'site',
+        'array',
+        'fenceTrap',
+        'taxa',
+        'speciesCode',
+        'genus',
+        'species',
+        'massG',
+        'sex',
+        'dead',
+        'comments',
+    ]
+
+    const SNAKE_KEYS = [
+        'dateTime',
+        'site',
+        'array',
+        'fenceTrap',
+        'taxa',
+        'speciesCode',
+        'genus',
+        'species',
+        'svlMm',
+        'vtlMm',
+        'massG',
+        'sex',
+        'dead',
+        'comments',
+    ]
+
+    const ARTHROPOD_KEYS = [
+        'dateTime',
+        'site',
+        'array',
+        'fenceTrap',
+        'predator',
+        'aran',
+        'auch',
+        'blat',
+        'chil',
+        'cole',
+        'crus',
+        'derm',
+        'diel',
+        'dipt',
+        'hete',
+        'hyma',
+        'hymb',
+        'lepi',
+        'mant',
+        'orth',
+        'pseu',
+        'scor',
+        'soli',
+        'thys',
+        'unki',
+        'micro',
+        'comments',
+    ]
+
+    const AMPHIBIAN_KEYS = [
+        'dateTime',
+        'site',
+        'array',
+        'fenceTrap',
+        'taxa',
+        'speciesCode',
+        'genus',
+        'species',
+        'hdBody',
+        'massG',
+        'sex',
+        'dead',
+        'comments',
+    ]
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
@@ -197,6 +494,24 @@ const Entry = ({ entrySnapshot, tableName }) => {
         setCurrentState('viewing');
     };
 
+    useEffect(() => {
+        if (tableName === 'Session') {
+            setKeys(SESSION_KEYS);
+        } else if (tableName === 'Turtle') {
+            setKeys(TURTLE_KEYS);
+        } else if (tableName === 'Lizard') {
+            setKeys(LIZARD_KEYS);
+        } else if (tableName === 'Mammal') {
+            setKeys(MAMMAL_KEYS);
+        } else if (tableName === 'Snake') {
+            setKeys(SNAKE_KEYS);
+        } else if (tableName === 'Arthropod') {
+            setKeys(ARTHROPOD_KEYS);
+        } else if (tableName === 'Amphibian') {
+            setKeys(AMPHIBIAN_KEYS);
+        }
+    }, [])
+
     return (
         <tr className="relative">
             {currentState === 'viewing' ? (
@@ -210,19 +525,16 @@ const Entry = ({ entrySnapshot, tableName }) => {
                     onCancelClickedHandler={onCancelClickedHandler}
                 />
             ) : null}
-            {tableName === 'Session'
-                ? SESSION_KEYS.map((key) => (
-                      <EntryItem
-                          entrySnapshot={entrySnapshot}
-                          currentState={currentState}
-                          dbKey={key}
-                          entryData={entryData}
-                          setEntryData={setEntryData}
-                          key={key}
-                      />
-                  ))
-                : null
-            }
+            {keys && keys.map((key) => (
+                    <EntryItem
+                        entrySnapshot={entrySnapshot}
+                        currentState={currentState}
+                        dbKey={key}
+                        entryData={entryData}
+                        setEntryData={setEntryData}
+                        key={key}
+                    />
+                ))}
             {currentState === 'deleting' &&
                 <p className="absolute left-20 top-2 z-10 bg-white/95 px-2 rounded-2xl">
                     Are you sure you want to delete this row?
@@ -236,7 +548,9 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     const [displayText, setDisplayText] = useState('');
     const [editable, setEditable] = useState(true);
 
-    const BINARY_KEYS = ['noCaptures', 'isAlive'];
+    console.log(entryData)
+
+    const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
     const TRUE_KEYS = ['Y', 'y', 'T','t'];
     const FALSE_KEYS = ['N', 'n', 'F', 'f'];
 
