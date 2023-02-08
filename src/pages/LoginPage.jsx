@@ -4,13 +4,16 @@ import GoogleIcon from "../components/GoogleIcon";
 import Logo from "../components/Logo";
 import PageWrapper from "./PageWrapper";
 
-export default function LoginPage({ auth, onSuccess, onFailure }) {
+import { notify, Notifier, Type } from "../components/Notifier";
+
+export default function LoginPage({ auth }) {
 
     const LOADING_MESSAGE = 'Loading Google\'s authentication.'
     const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.'
 
     return (
         <PageWrapper>
+            <Notifier />
             <div className="pt-10">
                 <h1 className="title">Field Day</h1>
                 <h2 className="subtitle">Data Management Tool</h2>
@@ -23,7 +26,7 @@ export default function LoginPage({ auth, onSuccess, onFailure }) {
                     <Button
                         enabled={!auth.loading}
                         text={(!auth.loading ? 'Login' : 'Please wait.')}
-                        onClick={() => {auth.login()}}
+                        onClick={() => auth.login()}
                         icon={<GoogleIcon className="w-6 mx-auto bg-white p-0.5 rounded-full" />}
                     />
                 </div>
