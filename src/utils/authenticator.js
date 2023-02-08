@@ -12,14 +12,14 @@ export class Authenticator {
         if (this.user && this.user.email.slice(-7) === 'asu.edu') {
             return true;
         } else {
-            logout();
+            this.logout();
             return false;
         }
     }
 
     login() {
-        signInWithRedirect(auth, new GoogleAuthProvider());
-        return this.validateUser;
+        signInWithRedirect(auth, new GoogleAuthProvider())
+        return this.validateUser();
     }
 
     logout() {
