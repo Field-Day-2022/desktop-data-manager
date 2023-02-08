@@ -221,12 +221,14 @@ export default function Table({ tableName, collectionName }) {
                 collection(db, collectionName),
                 where(whereClause[0], '==', whereClause[1]),
                 orderBy('dateTime', 'desc'),
+                startAt(queryCursorStack[queryCursorStack.length - 1]),
                 limit(batchSize)
             );
         } else {
             prevBatchQuery = query(
                 collection(db, collectionName),
                 orderBy('dateTime', 'desc'),
+                startAt(queryCursorStack[queryCursorStack.length - 1]),
                 limit(batchSize)
             );
         }
@@ -251,12 +253,14 @@ export default function Table({ tableName, collectionName }) {
                 collection(db, collectionName),
                 where(whereClause[0], '==', whereClause[1]),
                 orderBy('dateTime', 'desc'),
+                startAfter(documentQueryCursor),
                 limit(batchSize)
             );
         } else {
             nextBatchQuery = query(
                 collection(db, collectionName),
                 orderBy('dateTime', 'desc'),
+                startAfter(documentQueryCursor),
                 limit(batchSize)
             );
         }
@@ -548,7 +552,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     const [displayText, setDisplayText] = useState('');
     const [editable, setEditable] = useState(true);
 
-    console.log(entryData)
+    // console.log(entryData)
 
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
     const TRUE_KEYS = ['Y', 'y', 'T','t'];
