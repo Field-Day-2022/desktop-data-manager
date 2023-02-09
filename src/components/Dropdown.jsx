@@ -3,7 +3,7 @@ export default function Dropdown({ options }) {
     function Options() {
         let o = []
         for (let i = 0; i < options.length; i++) {
-            o.push(<option>{options[i]}</option>)
+            o.push(<option key={i}>{options[i]}</option>)
         }
         return o;
     }
