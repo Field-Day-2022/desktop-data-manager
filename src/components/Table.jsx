@@ -138,7 +138,10 @@ export default function Table({ tableName, collectionName }) {
         'Comments',
     ]
 
+    console.log(entries)
+
     useEffect(() => {
+        console.log(`loading ${tableName} from ${collectionName}`)
         const loadInitialEntries = async (initialWhereClause) => {
             let initialQuery;
             if (tableName !== 'Session') {
@@ -180,15 +183,15 @@ export default function Table({ tableName, collectionName }) {
             setWhereClause(['taxa', 'Snake'])
             loadInitialEntries(['taxa', 'Snake'])
         } else if (tableName === 'Arthropod') {
-            setLabels(arthropodLabelsLabels);
-            setWhereClause(['taxa', 'Arthropod'])
-            loadInitialEntries(['taxa', 'Arthropod'])
+            setLabels(arthropodLabels);
+            setWhereClause(['taxa', 'N/A'])
+            loadInitialEntries(['taxa', 'N/A'])
         } else if (tableName === 'Amphibian') {
             setLabels(amphibianLabels);
             setWhereClause(['taxa', 'Amphibian'])
             loadInitialEntries(['taxa', 'Amphibian'])
         }
-    }, []);
+    }, [ collectionName ]);
 
     const changeBatchSize = async (newBatchSize) => {
         setBatchSize(newBatchSize)
@@ -326,7 +329,6 @@ const Pagination = ({
                     <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(15)}>15 Rows</li>
                     <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(50)}>50 Rows</li>
                     <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(100)}>100 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler('all')}>All Rows</li>
                 </ul>}
             </div>
 
