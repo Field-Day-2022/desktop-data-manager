@@ -277,7 +277,7 @@ export default function Table({ tableName, collectionName }) {
         <div className="bg-white m-4 w-full-minus-sideBar rounded-xl p-4 drop-shadow-2xl">
             <h1 className='text-3xl'>{tableName} - Entries</h1>
             <div className='overflow-auto w-full'>
-                <table>
+                <table className='w-full'>
                     <thead>
                         <tr>
                             <TableHeading label="Actions" />
@@ -621,7 +621,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
 const EditDeleteActions = ({ onEditClickedHandler, onDeleteClickedHandler }) => {
     return (
         <td className="border-b border-gray-400 p-2">
-            <div className="flex flex-row w-full justify-between">
+            <div className="flex flex-row w-full justify-around">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -660,7 +660,7 @@ const EditDeleteActions = ({ onEditClickedHandler, onDeleteClickedHandler }) => 
 const SaveCancelActions = ({ onSaveClickedHandler, onCancelClickedHandler }) => {
     return (
         <td className="border-b border-gray-400 p-2">
-            <div className="flex flex-row w-full justify-between">
+            <div className="flex flex-row w-full justify-around">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
