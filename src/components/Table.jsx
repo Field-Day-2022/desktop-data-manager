@@ -274,20 +274,23 @@ export default function Table({ tableName, collectionName }) {
     };
 
     return (
-        <div className="bg-slate-200 max-w-full border-spacing-2 border border-black">
-            <table>
-                <thead>
-                    <tr>
-                        <TableHeading label="Actions" />
-                        {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
-                    </tr>
-                </thead>
-                <tbody>
-                    {entries.map((entry) => (
-                        <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
-                    ))}
-                </tbody>
-            </table>
+        <div className="bg-white m-4 w-full-minus-sideBar rounded-xl p-4 drop-shadow-2xl">
+            <h1 className='text-3xl'>{tableName} - Entries</h1>
+            <div className='overflow-auto w-full'>
+                <table>
+                    <thead>
+                        <tr>
+                            <TableHeading label="Actions" />
+                            {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {entries.map((entry) => (
+                            <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <Pagination 
                 batchSize={batchSize}
                 changeBatchSize={changeBatchSize}

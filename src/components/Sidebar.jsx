@@ -12,7 +12,7 @@ export default function Sidebar() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
 
     return (
-        <div className="w-72 bg-white flex-col max-h-full-minus-nav divide-y overflow-scroll">
+        <div className="w-72 bg-white flex-col max-h-full-minus-nav divide-y overflow-auto">
             <CollapsibleSidebarSection title="Documentation">
                 <SidebarElement icon={<AiFillInfoCircle />} text="About" />
             </CollapsibleSidebarSection>

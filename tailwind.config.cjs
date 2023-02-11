@@ -15,6 +15,7 @@ module.exports = {
       },
       spacing: {
         'full-minus-nav': 'calc(100vh - 64px)',
+        'full-minus-sideBar': 'calc(100vw - 18rem)',
       }
     },
   },
