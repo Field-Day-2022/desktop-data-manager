@@ -4,7 +4,7 @@ import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
 
 import { useAtom } from 'jotai';
-import { currentProjectName } from '../utils/jotai';
+import { currentPageName, currentProjectName } from '../utils/jotai';
 
 /**
  *
@@ -14,13 +14,14 @@ import { currentProjectName } from '../utils/jotai';
  */
 export default function TopNav({ title, auth }) {
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
+    const [currentPage, setCurrentPage] = useAtom(currentPageName)
 
     return (
         <div className="px-5 bg-neutral-800 text-neutral-100 w-full shadow-md max-h-16">
             <nav className="py-2 flex justify-between">
                 <ul className="flex items-center space-x-5">
-                    <li>
-                        <Logo className="text-asu-maroon fill-current h-12" />
+                    <li onClick={() => setCurrentPage('Home')}>
+                        <Logo className="text-asu-maroon fill-current h-12 cursor-pointer" />
                     </li>
                     <li>
                         <p className="text-lg font-bold">{title}</p>
