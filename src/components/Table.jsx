@@ -6,6 +6,8 @@ import { collection, query, orderBy, startAfter, limit, getDocs, startAt, where 
 import PageWrapper from '../pages/PageWrapper';
 import Card from './Card';
 
+import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../utils/tableLabels'
+
 export default function Table({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
@@ -13,134 +15,6 @@ export default function Table({ tableName, collectionName }) {
     const [batchSize, setBatchSize] = useState(15);
     const [labels, setLabels] = useState();
     const [whereClause, setWhereClause] = useState();
-
-    const sessionLabels = [
-        'Date & Time',
-        'Recorder',
-        'Handler',
-        'Site',
-        'Array',
-        'No Captures',
-        'Trap Status',
-        'Comments',
-    ];
-
-    const turtleLabels = [
-        'Date & Time',
-        'Site',
-        'Array',
-        'Fence Trap',
-        'Taxa',
-        'Species Code',
-        'Genus',
-        'Species',
-        'Mass(g)',
-        'Sex',
-        'Dead?',
-        'Comments',
-    ]
-
-    const lizardLabels = [
-        'Date & Time',
-        'Site',
-        'Array',
-        'Fence Trap',
-        'Taxa',
-        'Species Code',
-        'Genus',
-        'Species',
-        'Toe-clip Code',
-        'Recapture',
-        'SVL(mm)',
-        'VTL(mm)',
-        'Regen Tail?',
-        'OTL(mm)',
-        'Hatchling?',
-        'Mass(g)',
-        'Sex',
-        'Dead?',
-        'Comments',
-    ]
-
-    const mammalLabels = [
-        'Date & Time',
-        'Site',
-        'Array',
-        'Fence Trap',
-        'Taxa',
-        'Species Code',
-        'Genus',
-        'Species',
-        'Mass(g)',
-        'Sex',
-        'Dead?',
-        'Comments',
-    ]
-
-    const snakeLabels = [
-        'Date & Time',
-        'Site',
-        'Array',
-        'Fence Trap',
-        'Taxa',
-        'Species Code',
-        'Genus',
-        'Species',
-        'SVL(mm)',
-        'VTM(mm)',
-        'Mass(g)',
-        'Sex',
-        'Dead?',
-        'Comments',
-    ]
-
-    const arthropodLabels = [
-        'Date & Time',
-        'Site',
-        'Array',
-        'Fence Trap',
-        'Predator?',
-        'ARAN',
-        'AUCH',
-        'BLAT',
-        'CHIL',
-        'COLE',
-        'CRUS',
-        'DERM',
-        'DIEL',
-        'DIPT',
-        'HETE',
-        'HYMA',
-        'HYMB',
-        'LEPI',
-        'MANT',
-        'ORTH',
-        'PSEU',
-        'SCOR',
-        'SOLI',
-        'THYS',
-        'UNKI',
-        'MICRO',
-        'Comments'
-    ]
-
-    const amphibianLabels = [
-        'Date & Time',
-        'Site',
-        'Array',
-        'Fence Trap',
-        'Taxa',
-        'Species Code',
-        'Genus',
-        'Species',
-        'HD-Body',
-        'Mass(g)',
-        'Sex',
-        'Dead',
-        'Comments',
-    ]
-
-    console.log(entries)
 
     useEffect(() => {
         console.log(`loading ${tableName} from ${collectionName}`)
@@ -219,7 +93,6 @@ export default function Table({ tableName, collectionName }) {
     }
 
     const loadPrevBatch = async () => {
-        console.log(`loading previous batch of ${batchSize} entries`);
         let prevBatchQuery;
         if (tableName !== 'Session') {
             prevBatchQuery = query(
@@ -251,7 +124,6 @@ export default function Table({ tableName, collectionName }) {
             ...queryCursorStack,
             entries[0]
         ])
-        console.log(`loading next batch of ${batchSize} entries`)
         let nextBatchQuery;
         if (tableName !== 'Session') {
             nextBatchQuery = query(
@@ -355,136 +227,12 @@ const TableHeading = ({ label }) => {
     return <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold">{label}</th>;
 };
 
+import {SESSION_KEYS, TURTLE_KEYS, LIZARD_KEYS, MAMMAL_KEYS,SNAKE_KEYS, ARTHROPOD_KEYS, AMPHIBIAN_KEYS} from '../utils/keys'
+
 const Entry = ({ entrySnapshot, tableName }) => {
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
-
-    const SESSION_KEYS = [
-        'dateTime',
-        'recorder',
-        'handler',
-        'site',
-        'array',
-        'noCaptures',
-        'trapStatus',
-        'commentsAboutTheArray',
-    ];
-
-    const TURTLE_KEYS = [
-        'dateTime',
-        'site',
-        'array',
-        'fenceTrap',
-        'taxa',
-        'speciesCode',
-        'genus',
-        'species',
-        'massG',
-        'sex',
-        'dead',
-        'comments'
-    ]
-
-    const LIZARD_KEYS = [
-        'dateTime',
-        'site',
-        'array',
-        'fenceTrap',
-        'taxa',
-        'speciesCode',
-        'genus',
-        'species',
-        'toeClipCode',
-        'recapture',
-        'svlMm',
-        'vtlMm',
-        'regenTail',
-        'otlMm',
-        'hatchling',
-        'massG',
-        'sex',
-        'dead',
-        'comments',
-    ]
-
-    const MAMMAL_KEYS = [
-        'dateTime',
-        'site',
-        'array',
-        'fenceTrap',
-        'taxa',
-        'speciesCode',
-        'genus',
-        'species',
-        'massG',
-        'sex',
-        'dead',
-        'comments',
-    ]
-
-    const SNAKE_KEYS = [
-        'dateTime',
-        'site',
-        'array',
-        'fenceTrap',
-        'taxa',
-        'speciesCode',
-        'genus',
-        'species',
-        'svlMm',
-        'vtlMm',
-        'massG',
-        'sex',
-        'dead',
-        'comments',
-    ]
-
-    const ARTHROPOD_KEYS = [
-        'dateTime',
-        'site',
-        'array',
-        'fenceTrap',
-        'predator',
-        'aran',
-        'auch',
-        'blat',
-        'chil',
-        'cole',
-        'crus',
-        'derm',
-        'diel',
-        'dipt',
-        'hete',
-        'hyma',
-        'hymb',
-        'lepi',
-        'mant',
-        'orth',
-        'pseu',
-        'scor',
-        'soli',
-        'thys',
-        'unki',
-        'micro',
-        'comments',
-    ]
-
-    const AMPHIBIAN_KEYS = [
-        'dateTime',
-        'site',
-        'array',
-        'fenceTrap',
-        'taxa',
-        'speciesCode',
-        'genus',
-        'species',
-        'hdBody',
-        'massG',
-        'sex',
-        'dead',
-        'comments',
-    ]
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
