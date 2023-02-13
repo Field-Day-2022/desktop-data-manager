@@ -45,7 +45,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
     }, [])
 
     return (
-        <tr className="relative">
+        <tr className="relative hover:bg-neutral-100">
             {currentState === 'viewing' ? (
                 <EditDeleteActions
                     onEditClickedHandler={onEditClickedHandler}
