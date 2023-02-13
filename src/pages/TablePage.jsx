@@ -11,6 +11,7 @@ import DataTable from '../components/DataTable';
 import { useAtom } from 'jotai';
 import { currentProjectName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
+import { notify, Type } from '../components/Notifier';
 
 export default function TablePage({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
@@ -100,6 +101,10 @@ export default function TablePage({ tableName, collectionName }) {
 
     const loadPrevBatch = async () => {
         let prevBatchQuery;
+        if (queryCursorStack.length - 1 < 0) {
+            notify(Type.error, 'Unable to go back. This is the first page.')
+            return
+        }
         if (tableName !== 'Session') {
             prevBatchQuery = query(
                 collection(db, collectionName),

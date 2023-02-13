@@ -1,4 +1,3 @@
-import Dropdown from './Dropdown';
 import Logo from './Logo';
 import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';

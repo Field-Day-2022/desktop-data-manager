@@ -1,6 +1,6 @@
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getRedirectResult, GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth';
 
 export class Authenticator {
     constructor() {

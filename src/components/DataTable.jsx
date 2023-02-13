@@ -8,9 +8,7 @@ export default function DataTable({ name, labels, entries }) {
             <div className='flex justify-between px-5 space-x-5 items-center'>
                 <h1 className='heading pt-4'>{name} - Entries</h1>
                 <div className='flex px-5 space-x-5 items-center'>
-                    <div className='border-b border-neutral-800'>
-                        <input type="text" name="search" />
-                    </div>
+                    <input className='border-b border-neutral-800 p-2' type="text" name="search" />
                     <MdViewColumn className='text-2xl' />
                     <BiExport className='text-2xl' />
                 </div>

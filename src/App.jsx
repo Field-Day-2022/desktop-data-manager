@@ -23,28 +23,28 @@ function App() {
             <div className="flex flex-grow">
                 {auth.validateUser() ? (
                     <>
-                        
+
                         {currentPage === 'Home' && <HomePage />}
                         {currentPage === 'Turtle' && (
-                            <TablePage tableName="Turtle" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Turtle" collectionName={`${currentProject}Data`} />
                         )}
                         {currentPage === 'Lizard' && (
-                            <TablePage tableName="Lizard" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Lizard" collectionName={`${currentProject}Data`} />
                         )}
                         {currentPage === 'Mammal' && (
-                            <TablePage tableName="Mammal" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Mammal" collectionName={`${currentProject}Data`} />
                         )}
                         {currentPage === 'Snake' && (
-                            <TablePage tableName="Snake" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Snake" collectionName={`${currentProject}Data`} />
                         )}
                         {currentPage === 'Arthropod' && (
-                            <TablePage tableName="Arthropod" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Arthropod" collectionName={`${currentProject}Data`} />
                         )}
                         {currentPage === 'Amphibian' && (
-                            <TablePage tableName="Amphibian" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Amphibian" collectionName={`${currentProject}Data`} />
                         )}
                         {currentPage === 'Session' && (
-                            <TablePage tableName="Session" collectionName={`${currentProject}Session`}/>
+                            <TablePage tableName="Session" collectionName={`${currentProject}Session`} />
                         )}
                     </>
                 ) : (
