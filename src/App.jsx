@@ -1,6 +1,5 @@
 import TopNav from './components/TopNav';
 import LoginPage from './pages/LoginPage';
-import Sidebar from './components/Sidebar';
 import HomePage from './pages/HomePage';
 import { useAtom } from 'jotai';
 import { currentPageName, currentProjectName } from './utils/jotai';
@@ -8,6 +7,7 @@ import Table from './components/Table';
 
 import React from 'react';
 import { Authenticator } from './utils/authenticator';
+import { Notifier } from './components/Notifier';
 
 function App() {
 
@@ -18,6 +18,7 @@ function App() {
 
     return (
         <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
+            <Notifier />
             <TopNav title="Field Day" auth={auth} />
             <div className="flex flex-grow">
                 {auth.validateUser() ? (
