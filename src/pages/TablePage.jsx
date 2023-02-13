@@ -7,7 +7,7 @@ import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../const/tableLabels'
-import { TableEntry } from '../components/TableEntry';
+import DataTable from '../components/DataTable';
 
 export default function TablePage({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
@@ -152,22 +152,7 @@ export default function TablePage({ tableName, collectionName }) {
         <PageWrapper>
             <TabBar />
             <div className='bg-white'>
-                <h1 className='text-3xl p-4 bg-white'>{tableName} - Entries</h1>
-                <div className='overflow-auto scrollbar-hide w-full h-full-table'>
-                    <table className='w-full table-auto border-separate border-spacing-0'>
-                        <thead>
-                            <tr>
-                                <TableHeading label="Actions" />
-                                {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {entries.map((entry) => (
-                                <TableEntry key={entry.id} entrySnapshot={entry} tableName={tableName} />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <DataTable name={tableName} labels={labels} entries={entries} />
                 <Pagination
                     batchSize={batchSize}
                     changeBatchSize={changeBatchSize}
