@@ -3,7 +3,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import { useAtom } from 'jotai';
 import { currentPageName, currentProjectName } from './utils/jotai';
-import Table from './components/Table';
+import TablePage from './pages/TablePage';
 
 import React from 'react';
 import { Authenticator } from './utils/authenticator';
@@ -26,25 +26,25 @@ function App() {
                         
                         {currentPage === 'Home' && <HomePage />}
                         {currentPage === 'Turtle' && (
-                            <Table tableName="Turtle" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Turtle" collectionName={`${currentProject}Data`}/>
                         )}
                         {currentPage === 'Lizard' && (
-                            <Table tableName="Lizard" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Lizard" collectionName={`${currentProject}Data`}/>
                         )}
                         {currentPage === 'Mammal' && (
-                            <Table tableName="Mammal" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Mammal" collectionName={`${currentProject}Data`}/>
                         )}
                         {currentPage === 'Snake' && (
-                            <Table tableName="Snake" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Snake" collectionName={`${currentProject}Data`}/>
                         )}
                         {currentPage === 'Arthropod' && (
-                            <Table tableName="Arthropod" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Arthropod" collectionName={`${currentProject}Data`}/>
                         )}
                         {currentPage === 'Amphibian' && (
-                            <Table tableName="Amphibian" collectionName={`${currentProject}Data`}/>
+                            <TablePage tableName="Amphibian" collectionName={`${currentProject}Data`}/>
                         )}
                         {currentPage === 'Session' && (
-                            <Table tableName="Session" collectionName={`${currentProject}Session`}/>
+                            <TablePage tableName="Session" collectionName={`${currentProject}Session`}/>
                         )}
                     </>
                 ) : (
