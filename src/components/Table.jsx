@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
 import { collection, query, orderBy, startAfter, limit, getDocs, startAt, where } from 'firebase/firestore';
+import PageWrapper from '../pages/PageWrapper';
+import Card from './Card';
 
 export default function Table({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
@@ -191,7 +193,7 @@ export default function Table({ tableName, collectionName }) {
             setWhereClause(['taxa', 'Amphibian'])
             loadInitialEntries(['taxa', 'Amphibian'])
         }
-    }, [ collectionName ]);
+    }, [collectionName]);
 
     const changeBatchSize = async (newBatchSize) => {
         setBatchSize(newBatchSize)
@@ -274,30 +276,32 @@ export default function Table({ tableName, collectionName }) {
     };
 
     return (
-        <div className="bg-white m-4 w-full-minus-sideBar rounded-xl p-4 drop-shadow-2xl">
-            <h1 className='text-3xl'>{tableName} - Entries</h1>
-            <div className='overflow-auto w-full'>
-                <table className='w-full'>
-                    <thead>
-                        <tr>
-                            <TableHeading label="Actions" />
-                            {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {entries.map((entry) => (
-                            <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <Pagination 
-                batchSize={batchSize}
-                changeBatchSize={changeBatchSize}
-                loadPrevBatch={loadPrevBatch}
-                loadNextBatch={loadNextBatch}
-            />
-        </div>
+        <PageWrapper>
+            <Card className='bg-white'>
+                <h1 className='text-3xl pb-4'>{tableName} - Entries</h1>
+                <div className='overflow-auto w-full max-h-full-table'>
+                    <table className='w-full table-auto border-separate border-spacing-0'>
+                        <thead>
+                            <tr>
+                                <TableHeading label="Actions" />
+                                {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
+                            </tr>
+                        </thead>
+                        <tbody className='overflow-auto'>
+                            {entries.map((entry) => (
+                                <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <Pagination
+                    batchSize={batchSize}
+                    changeBatchSize={changeBatchSize}
+                    loadPrevBatch={loadPrevBatch}
+                    loadNextBatch={loadNextBatch}
+                />
+            </Card>
+        </PageWrapper>
     );
 }
 
@@ -307,7 +311,7 @@ const Pagination = ({
     loadNextBatch,
     loadPrevBatch
 }) => {
-    const [ batchSizeOptionsShown, setBatchSizeOptionsShown ] = useState(false);
+    const [batchSizeOptionsShown, setBatchSizeOptionsShown] = useState(false);
 
     const onClickHandler = (batchSize) => {
         changeBatchSize(batchSize)
@@ -323,16 +327,16 @@ const Pagination = ({
             </svg>
 
             <div className='relative p-2'>
-                <button 
+                <button
                     className="peer cursor-pointer border-[1px] border-gray-400 rounded-xl drop-shadow-lg p-2 active:scale-100 transition hover:scale-110"
                     onClick={() => setBatchSizeOptionsShown(!batchSizeOptionsShown)}
-                >{`${batchSize} Rows`}</button>            
-                {batchSizeOptionsShown && 
-                <ul className="absolute p-2 rounded-xl w-24 -left-1 text-center bg-white/90 drop-shadow-2xl">
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(15)}>15 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(50)}>50 Rows</li>
-                    <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(100)}>100 Rows</li>
-                </ul>}
+                >{`${batchSize} Rows`}</button>
+                {batchSizeOptionsShown &&
+                    <ul className="absolute p-2 rounded-xl w-24 -left-1 text-center bg-white/90 drop-shadow-2xl">
+                        <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(15)}>15 Rows</li>
+                        <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(50)}>50 Rows</li>
+                        <li className='cursor-pointer hover:text-blue-400' onClick={() => onClickHandler(100)}>100 Rows</li>
+                    </ul>}
             </div>
 
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
@@ -348,15 +352,13 @@ const Pagination = ({
 
 
 const TableHeading = ({ label }) => {
-    return <th className="border-b border-gray-800 p-2 text-sm text-gray-600 font-semibold">{label}</th>;
+    return <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold">{label}</th>;
 };
 
 const Entry = ({ entrySnapshot, tableName }) => {
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
-
-    // console.log(entryData);
 
     const SESSION_KEYS = [
         'dateTime',
@@ -535,15 +537,15 @@ const Entry = ({ entrySnapshot, tableName }) => {
                 />
             ) : null}
             {keys && keys.map((key) => (
-                    <EntryItem
-                        entrySnapshot={entrySnapshot}
-                        currentState={currentState}
-                        dbKey={key}
-                        entryData={entryData}
-                        setEntryData={setEntryData}
-                        key={key}
-                    />
-                ))}
+                <EntryItem
+                    entrySnapshot={entrySnapshot}
+                    currentState={currentState}
+                    dbKey={key}
+                    entryData={entryData}
+                    setEntryData={setEntryData}
+                    key={key}
+                />
+            ))}
             {currentState === 'deleting' &&
                 <p className="absolute left-20 top-2 z-10 bg-white/95 px-2 rounded-2xl">
                     Are you sure you want to delete this row?
@@ -560,7 +562,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     // console.log(entryData)
 
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
-    const TRUE_KEYS = ['Y', 'y', 'T','t'];
+    const TRUE_KEYS = ['Y', 'y', 'T', 't'];
     const FALSE_KEYS = ['N', 'n', 'F', 'f'];
 
     useEffect(() => {
@@ -597,7 +599,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     let disabled = false;
 
     if (
-        currentState === 'viewing' || 
+        currentState === 'viewing' ||
         (currentState === 'editing' && !editable) ||
         currentState === 'deleting'
     ) {
