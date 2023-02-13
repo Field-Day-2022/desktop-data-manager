@@ -21,8 +21,8 @@ export const TURTLE_KEYS = [
     'massG',
     'sex',
     'dead',
-    'comments'
-]
+    'comments',
+];
 
 export const LIZARD_KEYS = [
     'dateTime',
@@ -44,7 +44,7 @@ export const LIZARD_KEYS = [
     'sex',
     'dead',
     'comments',
-]
+];
 
 export const MAMMAL_KEYS = [
     'dateTime',
@@ -59,7 +59,7 @@ export const MAMMAL_KEYS = [
     'sex',
     'dead',
     'comments',
-]
+];
 
 export const SNAKE_KEYS = [
     'dateTime',
@@ -76,7 +76,7 @@ export const SNAKE_KEYS = [
     'sex',
     'dead',
     'comments',
-]
+];
 
 export const ARTHROPOD_KEYS = [
     'dateTime',
@@ -106,7 +106,7 @@ export const ARTHROPOD_KEYS = [
     'unki',
     'micro',
     'comments',
-]
+];
 
 export const AMPHIBIAN_KEYS = [
     'dateTime',
@@ -122,4 +122,4 @@ export const AMPHIBIAN_KEYS = [
     'sex',
     'dead',
     'comments',
-]
+];

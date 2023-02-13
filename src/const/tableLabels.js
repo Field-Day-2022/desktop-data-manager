@@ -22,7 +22,7 @@ export const turtleLabels = [
     'Sex',
     'Dead?',
     'Comments',
-]
+];
 
 export const lizardLabels = [
     'Date & Time',
@@ -44,7 +44,7 @@ export const lizardLabels = [
     'Sex',
     'Dead?',
     'Comments',
-]
+];
 
 export const mammalLabels = [
     'Date & Time',
@@ -59,7 +59,7 @@ export const mammalLabels = [
     'Sex',
     'Dead?',
     'Comments',
-]
+];
 
 export const snakeLabels = [
     'Date & Time',
@@ -76,7 +76,7 @@ export const snakeLabels = [
     'Sex',
     'Dead?',
     'Comments',
-]
+];
 
 export const arthropodLabels = [
     'Date & Time',
@@ -105,8 +105,8 @@ export const arthropodLabels = [
     'THYS',
     'UNKI',
     'MICRO',
-    'Comments'
-]
+    'Comments',
+];
 
 export const amphibianLabels = [
     'Date & Time',
@@ -122,4 +122,4 @@ export const amphibianLabels = [
     'Sex',
     'Dead',
     'Comments',
-]
+];
