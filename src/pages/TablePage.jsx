@@ -8,6 +8,9 @@ import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../const/tableLabels'
 import DataTable from '../components/DataTable';
+import { useAtom } from 'jotai';
+import { currentProjectName } from '../utils/jotai';
+import Dropdown from '../components/Dropdown';
 
 export default function TablePage({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
@@ -16,6 +19,8 @@ export default function TablePage({ tableName, collectionName }) {
     const [batchSize, setBatchSize] = useState(15);
     const [labels, setLabels] = useState();
     const [whereClause, setWhereClause] = useState();
+
+    const [currentProject, setCurrentProject] = useAtom(currentProjectName);
 
     useEffect(() => {
         console.log(`loading ${tableName} from ${collectionName}`)
@@ -150,7 +155,21 @@ export default function TablePage({ tableName, collectionName }) {
 
     return (
         <PageWrapper>
-            <TabBar />
+            <div className='flex justify-between items-center'>
+                <TabBar />
+                <div className='flex items-center px-2 space-x-4'>
+                    <div>Project: </div>
+                    <Dropdown
+                        onClickHandler={(selectedOption) => {
+                            if (selectedOption !== currentProject)
+                                setCurrentProject(selectedOption.replace(/\s/g, ''));
+                        }}
+                        options={['Gateway', 'Virgin River', 'San Pedro']}
+                    />
+                </div>
+
+            </div>
+
             <div className='bg-white'>
                 <DataTable name={tableName} labels={labels} entries={entries} />
                 <Pagination

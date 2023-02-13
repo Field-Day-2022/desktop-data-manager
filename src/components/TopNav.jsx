@@ -13,7 +13,6 @@ import { currentPageName, currentProjectName } from '../utils/jotai';
  * @returns
  */
 export default function TopNav({ title, auth }) {
-    const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [currentPage, setCurrentPage] = useAtom(currentPageName)
 
     return (
@@ -27,18 +26,7 @@ export default function TopNav({ title, auth }) {
                         <p className="text-lg font-bold">{title}</p>
                     </li>
                 </ul>
-
-                <ul className="flex items-center space-x-5">
-                    <div>Project: </div>
-                    <Dropdown
-                        onClickHandler={(selectedOption) => {
-                            if (selectedOption !== currentProject)
-                                setCurrentProject(selectedOption.replace(/\s/g, ''));
-                        }}
-                        options={['Gateway', 'Virgin River', 'San Pedro']}
-                    />
-                    <UserController key="userController" user={auth.user} auth={auth} />
-                </ul>
+                <UserController key="userController" user={auth.user} auth={auth} />
             </nav>
         </div>
     );
@@ -46,10 +34,10 @@ export default function TopNav({ title, auth }) {
 
 function UserController({ user, auth }) {
     return user
-        ? [
-            <div key="email">{user.email}</div>,
-            <UserImage key="profilePicture" className="h-12" user={user} />,
-            <LogoutButton key="logoutBtn" auth={auth} />,
-        ]
+        ? <div className='flex items-center space-x-5'>
+            <div key="email">{user.email}</div>
+            <UserImage key="profilePicture" className="h-12" user={user} />
+            <LogoutButton key="logoutBtn" auth={auth} />
+        </div>
         : null;
 }
