@@ -1,9 +1,22 @@
+import { BiExport } from 'react-icons/bi';
+import { MdViewColumn } from 'react-icons/md'
 import { TableEntry } from '../components/TableEntry';
 
 export default function DataTable({ name, labels, entries }) {
     return (
-        <div>
-            <h1 className='heading pt-4 bg-white'>{name} - Entries</h1>
+        <div className='bg-white'>
+            <div className='flex justify-between px-5 space-x-5 items-center'>
+                <h1 className='heading pt-4'>{name} - Entries</h1>
+                <div className='flex px-5 space-x-5 items-center'>
+                    <div className='border-b border-neutral-800'>
+                        <input type="text" name="search" />
+                    </div>
+                    <MdViewColumn className='text-2xl' />
+                    <BiExport className='text-2xl' />
+                </div>
+
+            </div>
+
             <div className='overflow-auto w-full h-full-table'>
                 <table className='w-full table-auto border-separate border-spacing-0'>
                     <thead>

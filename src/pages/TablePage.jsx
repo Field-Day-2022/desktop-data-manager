@@ -157,7 +157,7 @@ export default function TablePage({ tableName, collectionName }) {
         <PageWrapper>
             <div className='flex justify-between items-center'>
                 <TabBar />
-                <div className='flex items-center px-2 space-x-4'>
+                <div className='flex items-center px-5 space-x-5'>
                     <div>Project: </div>
                     <Dropdown
                         onClickHandler={(selectedOption) => {
@@ -170,7 +170,7 @@ export default function TablePage({ tableName, collectionName }) {
 
             </div>
 
-            <div className='bg-white'>
+            <div>
                 <DataTable name={tableName} labels={labels} entries={entries} />
                 <Pagination
                     batchSize={batchSize}
