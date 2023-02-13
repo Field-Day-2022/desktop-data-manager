@@ -20,9 +20,7 @@ export default function TopNav({ title, auth }) {
             <nav className="py-2 flex justify-between">
                 <ul className="flex items-center space-x-5">
                     <li>
-                        <a href="/">
-                            <Logo className="text-asu-maroon fill-current h-12" />
-                        </a>
+                        <Logo className="text-asu-maroon fill-current h-12" />
                     </li>
                     <li>
                         <p className="text-lg font-bold">{title}</p>
@@ -33,7 +31,7 @@ export default function TopNav({ title, auth }) {
                     <div>Project: </div>
                     <Dropdown
                         onClickHandler={(selectedOption) => {
-                            if (selectedOption !== currentProject) 
+                            if (selectedOption !== currentProject)
                                 setCurrentProject(selectedOption.replace(/\s/g, ''));
                         }}
                         options={['Gateway', 'Virgin River', 'San Pedro']}
@@ -48,9 +46,9 @@ export default function TopNav({ title, auth }) {
 function UserController({ user, auth }) {
     return user
         ? [
-              <div key="email">{user.email}</div>,
-              <UserImage key="profilePicture" className="h-12" user={user} />,
-              <LogoutButton key="logoutBtn" auth={auth} />,
-          ]
+            <div key="email">{user.email}</div>,
+            <UserImage key="profilePicture" className="h-12" user={user} />,
+            <LogoutButton key="logoutBtn" auth={auth} />,
+        ]
         : null;
 }

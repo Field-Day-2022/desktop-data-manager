@@ -22,7 +22,7 @@ function App() {
             <div className="flex flex-grow">
                 {auth.validateUser() ? (
                     <>
-                        <Sidebar />
+                        
                         {currentPage === 'Home' && <HomePage />}
                         {currentPage === 'Turtle' && (
                             <Table tableName="Turtle" collectionName={`${currentProject}Data`}/>

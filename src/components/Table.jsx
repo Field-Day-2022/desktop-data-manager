@@ -6,7 +6,7 @@ import { collection, query, orderBy, startAfter, limit, getDocs, startAt, where 
 import PageWrapper from '../pages/PageWrapper';
 import Card from './Card';
 
-import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../utils/tableLabels'
+import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../const/tableLabels'
 
 export default function Table({ tableName, collectionName }) {
     const [entries, setEntries] = useState([]);
@@ -149,30 +149,32 @@ export default function Table({ tableName, collectionName }) {
 
     return (
         <PageWrapper>
-            <Card className='bg-white'>
-                <h1 className='text-3xl pb-4'>{tableName} - Entries</h1>
-                <div className='overflow-auto w-full max-h-full-table'>
-                    <table className='w-full table-auto border-separate border-spacing-0'>
-                        <thead>
-                            <tr>
-                                <TableHeading label="Actions" />
-                                {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
-                            </tr>
-                        </thead>
-                        <tbody className='overflow-auto'>
-                            {entries.map((entry) => (
-                                <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                <Pagination
-                    batchSize={batchSize}
-                    changeBatchSize={changeBatchSize}
-                    loadPrevBatch={loadPrevBatch}
-                    loadNextBatch={loadNextBatch}
-                />
-            </Card>
+            
+            <TabBar />
+            <div className='bg-white'>
+            <h1 className='text-3xl p-4 bg-white'>{tableName} - Entries</h1>
+            <div className='overflow-auto scrollbar-hide w-full h-full-table'>
+                <table className='w-full table-auto border-separate border-spacing-0'>
+                    <thead>
+                        <tr>
+                            <TableHeading label="Actions" />
+                            {labels && labels.map((label) => <TableHeading key={label} label={label} />)}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {entries.map((entry) => (
+                            <Entry key={entry.id} entrySnapshot={entry} tableName={tableName} />
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <Pagination
+                batchSize={batchSize}
+                changeBatchSize={changeBatchSize}
+                loadPrevBatch={loadPrevBatch}
+                loadNextBatch={loadNextBatch}
+            />
+            </div>
         </PageWrapper>
     );
 }
@@ -227,7 +229,8 @@ const TableHeading = ({ label }) => {
     return <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold">{label}</th>;
 };
 
-import {SESSION_KEYS, TURTLE_KEYS, LIZARD_KEYS, MAMMAL_KEYS,SNAKE_KEYS, ARTHROPOD_KEYS, AMPHIBIAN_KEYS} from '../utils/keys'
+import { SESSION_KEYS, TURTLE_KEYS, LIZARD_KEYS, MAMMAL_KEYS, SNAKE_KEYS, ARTHROPOD_KEYS, AMPHIBIAN_KEYS } from '../const/keys'
+import TabBar from './TabBar';
 
 const Entry = ({ entrySnapshot, tableName }) => {
     const [currentState, setCurrentState] = useState('viewing');
@@ -306,8 +309,6 @@ const Entry = ({ entrySnapshot, tableName }) => {
 const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData }) => {
     const [displayText, setDisplayText] = useState('');
     const [editable, setEditable] = useState(true);
-
-    // console.log(entryData)
 
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
     const TRUE_KEYS = ['Y', 'y', 'T', 't'];
