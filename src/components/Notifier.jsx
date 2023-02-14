@@ -16,7 +16,7 @@ const config = {
 
 }
 
-function notify(type, text) {
+const notify = (type, text) => {
     switch (type) {
         case Type.error:
             toast.error(text, config);
@@ -32,12 +32,8 @@ function notify(type, text) {
 
 function Notifier() {
     return (
-        <Toaster position="bottom-center" />
+        <Toaster  position="bottom-center" />
     );
-}
-
-function Notification() {
-
 }
 
 export { notify, Notifier, Type }
