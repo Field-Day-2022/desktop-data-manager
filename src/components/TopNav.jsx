@@ -1,7 +1,9 @@
-import Dropdown from './Dropdown';
 import Logo from './Logo';
 import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
+
+import { useAtom } from 'jotai';
+import { currentPageName, currentProjectName } from '../utils/jotai';
 
 /**
  *
@@ -10,25 +12,20 @@ import UserImage from './UserImage';
  * @returns
  */
 export default function TopNav({ title, auth }) {
+    const [currentPage, setCurrentPage] = useAtom(currentPageName)
+
     return (
         <div className="px-5 bg-neutral-800 text-neutral-100 w-full shadow-md max-h-16">
             <nav className="py-2 flex justify-between">
                 <ul className="flex items-center space-x-5">
-                    <li>
-                        <a href="/">
-                            <Logo className="text-asu-maroon fill-current h-12" />
-                        </a>
+                    <li onClick={() => setCurrentPage('Home')}>
+                        <Logo className="text-asu-maroon fill-current h-12 cursor-pointer" />
                     </li>
                     <li>
                         <p className="text-lg font-bold">{title}</p>
                     </li>
                 </ul>
-
-                <ul className="flex items-center space-x-5">
-                    <div>Project: </div>
-                    <Dropdown options={['Gateway', 'Virgin River', 'San Pedro']} />
-                    <UserController key="userController" user={auth.user} auth={auth} />
-                </ul>
+                <UserController key="userController" user={auth.user} auth={auth} />
             </nav>
         </div>
     );
@@ -36,10 +33,10 @@ export default function TopNav({ title, auth }) {
 
 function UserController({ user, auth }) {
     return user
-        ? [
-              <div key="email">{user.email}</div>,
-              <UserImage key="profilePicture" className="h-12" user={user} />,
-              <LogoutButton key="logoutBtn" auth={auth} />,
-          ]
+        ? <div className='flex items-center space-x-5'>
+            <div key="email">{user.email}</div>
+            <UserImage key="profilePicture" className="h-12" user={user} />
+            <LogoutButton key="logoutBtn" auth={auth} />
+        </div>
         : null;
 }
