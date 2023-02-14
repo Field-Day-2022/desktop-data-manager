@@ -1,6 +1,6 @@
 export default function Dropdown({ options, onClickHandler }) {
     return (
-        <div className="relative text-neutral-800">
+        <div className="relative text-neutral-800 min-w-max">
             <select 
                 className="w-full p-1.5 bg-neutral-200 rounded-md border-solid border-2 border- focus:border-asu-gold"
                 onChange={(e) => onClickHandler(e.target.value)}

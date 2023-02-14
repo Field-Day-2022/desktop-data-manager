@@ -160,7 +160,7 @@ export default function TablePage({ tableName, collectionName }) {
 
     return (
         <PageWrapper>
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center overflow-auto'>
                 <TabBar />
                 <div className='flex items-center px-5 space-x-5'>
                     <div>Project: </div>
