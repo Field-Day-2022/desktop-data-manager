@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SESSION_KEYS, TURTLE_KEYS, LIZARD_KEYS, MAMMAL_KEYS, SNAKE_KEYS, ARTHROPOD_KEYS, AMPHIBIAN_KEYS } from '../const/keys'
+import { AnimatePresence, motion } from 'framer-motion';
 
 
 export const TableEntry = ({ entrySnapshot, tableName }) => {
@@ -67,11 +68,28 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
                     key={key}
                 />
             ))}
+            <AnimatePresence>
             {currentState === 'deleting' &&
-                <p className="absolute left-20 top-2 z-10 bg-white/95 px-2 rounded-2xl">
-                    Are you sure you want to delete this row?
-                </p>
+
+                    <motion.p 
+                        className="absolute left-8 -top-3 z-10 px-2 rounded-md drop-shadow-xl border-[1px] bg-red-800/10 backdrop-blur border-red-800 shadow-lg  shadow-red-800/25 leading-tight"
+                        initial={{
+                            left: '-2rem',
+                            opacity: 0,
+                        }}
+                        animate={{
+                            left: '2rem',
+                            opacity: 1,
+                        }}
+                        exit={{
+                            left: '-20rem',
+                            opacity: 0,
+                        }}
+                        >
+                        Are you sure you want to delete this row?
+                    </motion.p>
             }
+            </AnimatePresence>
         </tr>
     );
 };
