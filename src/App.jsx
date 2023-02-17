@@ -24,7 +24,6 @@ function App() {
             <div className="flex flex-grow">
                 {auth.validateUser() ? (
                     <>
-
                         {currentPage === 'Home' && <HomePage />}
                         {currentPage === 'Turtle' && getTable(currentPage, currentProject, environment)}
                         {currentPage === 'Lizard' && getTable(currentPage, currentProject, environment)}

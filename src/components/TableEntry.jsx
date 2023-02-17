@@ -150,15 +150,20 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
         disabled = true;
     }
 
+    let size = 1;
+    if (entrySnapshot.data()[dbKey] !== undefined) {
+        size = entrySnapshot.data()[dbKey].length;
+    }
+
     return (
         <td key={dbKey} className="text-center border-b border-gray-400 p-2">
             <input
                 disabled={disabled}
                 className="text-center transition disabled:bg-transparent outline-none rounded-lg"
                 type="text"
-                value={displayText}
+                value={displayText ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
-                size={entryData[dbKey].length || 1}
+                size={size}
             />
         </td>
     );
