@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
-import { SESSION_KEYS, TURTLE_KEYS, LIZARD_KEYS, MAMMAL_KEYS, SNAKE_KEYS, ARTHROPOD_KEYS, AMPHIBIAN_KEYS } from '../const/keys'
+import {
+    SESSION_KEYS,
+    TURTLE_KEYS,
+    LIZARD_KEYS,
+    MAMMAL_KEYS,
+    SNAKE_KEYS,
+    ARTHROPOD_KEYS,
+    AMPHIBIAN_KEYS,
+} from '../const/keys';
 import { AnimatePresence, motion } from 'framer-motion';
-
 
 export const TableEntry = ({ entrySnapshot, tableName }) => {
     const [currentState, setCurrentState] = useState('viewing');
@@ -43,7 +50,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
         } else if (tableName === 'Amphibian') {
             setKeys(AMPHIBIAN_KEYS);
         }
-    }, [])
+    }, []);
 
     return (
         <tr className="relative hover:bg-neutral-100">
@@ -58,20 +65,20 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
                     onCancelClickedHandler={onCancelClickedHandler}
                 />
             ) : null}
-            {keys && keys.map((key) => (
-                <EntryItem
-                    entrySnapshot={entrySnapshot}
-                    currentState={currentState}
-                    dbKey={key}
-                    entryData={entryData}
-                    setEntryData={setEntryData}
-                    key={key}
-                />
-            ))}
+            {keys &&
+                keys.map((key) => (
+                    <EntryItem
+                        entrySnapshot={entrySnapshot}
+                        currentState={currentState}
+                        dbKey={key}
+                        entryData={entryData}
+                        setEntryData={setEntryData}
+                        key={key}
+                    />
+                ))}
             <AnimatePresence>
-            {currentState === 'deleting' &&
-
-                    <motion.p 
+                {currentState === 'deleting' && (
+                    <motion.p
                         className="absolute left-8 -top-3 z-10 px-2 rounded-md drop-shadow-xl border-[1px] bg-red-800/10 backdrop-blur border-red-800 shadow-lg  shadow-red-800/25 leading-tight"
                         initial={{
                             left: '-2rem',
@@ -85,10 +92,10 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
                             left: '-20rem',
                             opacity: 0,
                         }}
-                        >
+                    >
                         Are you sure you want to delete this row?
                     </motion.p>
-            }
+                )}
             </AnimatePresence>
         </tr>
     );
@@ -112,18 +119,18 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     }, []);
 
     const onChangeHandler = (e) => {
-        console.log(e.target.value)
+        console.log(e.target.value);
         if (BINARY_KEYS.includes(dbKey)) {
             if (TRUE_KEYS.includes(e.target.value.slice(-1))) {
                 setEntryData((prevEntryData) => ({
                     ...prevEntryData,
-                    [dbKey]: 'true'
-                }))
+                    [dbKey]: 'true',
+                }));
             } else if (FALSE_KEYS.includes(e.target.value.slice(-1))) {
                 setEntryData((prevEntryData) => ({
                     ...prevEntryData,
-                    [dbKey]: 'false'
-                }))
+                    [dbKey]: 'false',
+                }));
             }
         } else {
             setEntryData((prevEntryData) => ({
@@ -131,7 +138,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
                 [dbKey]: e.target.value,
             }));
         }
-    }
+    };
 
     let disabled = false;
 
@@ -149,8 +156,8 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
                 disabled={disabled}
                 className="text-center transition disabled:bg-transparent outline-none rounded-lg"
                 type="text"
-                value={entryData[dbKey]}
-                onChange={e => onChangeHandler(e)}
+                value={displayText}
+                onChange={(e) => onChangeHandler(e)}
                 size={entryData[dbKey].length || 1}
             />
         </td>
@@ -209,11 +216,7 @@ const SaveCancelActions = ({ onSaveClickedHandler, onCancelClickedHandler }) => 
                     className="w-5 h-5 hover:scale-125 transition hover:cursor-pointer"
                     onClick={() => onSaveClickedHandler()}
                 >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4.5 12.75l6 6 9-13.5"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

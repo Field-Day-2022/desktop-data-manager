@@ -2,17 +2,18 @@ import TopNav from './components/TopNav';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import { useAtom } from 'jotai';
-import { currentPageName, currentProjectName } from './utils/jotai';
+import { currentPageName, currentProjectName, appMode } from './utils/jotai';
 import TablePage from './pages/TablePage';
-
 import React from 'react';
 import { Authenticator } from './utils/authenticator';
 import { Notifier } from './components/Notifier';
+import { getTable } from './utils/TableDbMappings';
 
 function App() {
 
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
+    const [environment, setEnvironment] = useAtom(appMode)
 
     const auth = new Authenticator();
 
@@ -25,27 +26,13 @@ function App() {
                     <>
 
                         {currentPage === 'Home' && <HomePage />}
-                        {currentPage === 'Turtle' && (
-                            <TablePage tableName="Turtle" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Lizard' && (
-                            <TablePage tableName="Lizard" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Mammal' && (
-                            <TablePage tableName="Mammal" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Snake' && (
-                            <TablePage tableName="Snake" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Arthropod' && (
-                            <TablePage tableName="Arthropod" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Amphibian' && (
-                            <TablePage tableName="Amphibian" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Session' && (
-                            <TablePage tableName="Session" collectionName={`${currentProject}Session`} />
-                        )}
+                        {currentPage === 'Turtle' && getTable(currentPage, currentProject, environment)}
+                        {currentPage === 'Lizard' && getTable(currentPage, currentProject, environment)}
+                        {currentPage === 'Mammal' && getTable(currentPage, currentProject, environment)}
+                        {currentPage === 'Snake' && getTable(currentPage, currentProject, environment)}
+                        {currentPage === 'Arthropod' && getTable(currentPage, currentProject, environment)}
+                        {currentPage === 'Amphibian' && getTable(currentPage, currentProject, environment)}
+                        {currentPage === 'Session' && getTable(currentPage, currentProject, environment)}
                     </>
                 ) : (
                     <LoginPage auth={auth} />
