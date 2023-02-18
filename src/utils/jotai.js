@@ -20,6 +20,8 @@ export const pastSessionData = atomWithStorage('pastSessionData', []);
 
 export const currentPageName = atomWithStorage('currentPageName', 'Home');
 
+export const currentTableName = atomWithStorage('currentTableName', 'Turtle');
+
 export const editingPrevious = atomWithStorage('editingPrevious', false);
 
 export const pastEntryIndex = atomWithStorage('pastEntryIndex', -1);

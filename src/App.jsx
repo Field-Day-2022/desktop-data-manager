@@ -25,26 +25,8 @@ function App() {
                     <>
 
                         {currentPage === 'Home' && <HomePage />}
-                        {currentPage === 'Turtle' && (
-                            <TablePage tableName="Turtle" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Lizard' && (
-                            <TablePage tableName="Lizard" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Mammal' && (
-                            <TablePage tableName="Mammal" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Snake' && (
-                            <TablePage tableName="Snake" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Arthropod' && (
-                            <TablePage tableName="Arthropod" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Amphibian' && (
-                            <TablePage tableName="Amphibian" collectionName={`${currentProject}Data`} />
-                        )}
-                        {currentPage === 'Session' && (
-                            <TablePage tableName="Session" collectionName={`${currentProject}Session`} />
+                        {currentPage === 'Table' && (
+                            <TablePage collectionName={`${currentProject}Data`} />
                         )}
                     </>
                 ) : (

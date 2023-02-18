@@ -9,11 +9,11 @@ import TabBar from '../components/TabBar';
 import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../const/tableLabels'
 import DataTable from '../components/DataTable';
 import { useAtom } from 'jotai';
-import { currentProjectName } from '../utils/jotai';
+import { currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 
-export default function TablePage({ tableName, collectionName }) {
+export default function TablePage({ collectionName }) {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
@@ -22,6 +22,7 @@ export default function TablePage({ tableName, collectionName }) {
     const [whereClause, setWhereClause] = useState();
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
+    const [tableName, setTableName] = useAtom(currentTableName);
 
     useEffect(() => {
         console.log(`loading ${tableName} from ${collectionName}`)
@@ -74,7 +75,7 @@ export default function TablePage({ tableName, collectionName }) {
             setWhereClause(['taxa', 'Amphibian'])
             loadInitialEntries(['taxa', 'Amphibian'])
         }
-    }, [collectionName]);
+    }, [collectionName, tableName]);
 
     const changeBatchSize = async (newBatchSize) => {
         setBatchSize(newBatchSize)
@@ -187,7 +188,3 @@ export default function TablePage({ tableName, collectionName }) {
         </PageWrapper>
     );
 }
-
-const TableHeading = ({ label }) => {
-    return <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold">{label}</th>;
-};
