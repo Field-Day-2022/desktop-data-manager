@@ -1,4 +1,4 @@
-export const sessionLabels = [
+const sessionLabels = [
     'Date & Time',
     'Recorder',
     'Handler',
@@ -9,7 +9,7 @@ export const sessionLabels = [
     'Comments',
 ];
 
-export const turtleLabels = [
+const turtleLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -24,7 +24,7 @@ export const turtleLabels = [
     'Comments',
 ];
 
-export const lizardLabels = [
+const lizardLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -46,7 +46,7 @@ export const lizardLabels = [
     'Comments',
 ];
 
-export const mammalLabels = [
+const mammalLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -61,7 +61,7 @@ export const mammalLabels = [
     'Comments',
 ];
 
-export const snakeLabels = [
+const snakeLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -78,7 +78,7 @@ export const snakeLabels = [
     'Comments',
 ];
 
-export const arthropodLabels = [
+const arthropodLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -108,7 +108,7 @@ export const arthropodLabels = [
     'Comments',
 ];
 
-export const amphibianLabels = [
+const amphibianLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -123,3 +123,12 @@ export const amphibianLabels = [
     'Dead',
     'Comments',
 ];
+
+export const TABLE_LABELS = {
+    'Session': sessionLabels,
+    'Turtle': turtleLabels,
+    'Mammal': mammalLabels,
+    'Snake': snakeLabels,
+    'Arthropod': arthropodLabels,
+    'Amphibian': amphibianLabels
+}

@@ -6,7 +6,7 @@ import { collection, query, orderBy, startAfter, limit, getDocs, startAt, where 
 import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
-import { sessionLabels, turtleLabels, lizardLabels, mammalLabels, snakeLabels, amphibianLabels, arthropodLabels } from '../const/tableLabels'
+import { TABLE_LABELS } from '../const/tableLabels'
 import DataTable from '../components/DataTable';
 import { useAtom } from 'jotai';
 import { currentProjectName, currentTableName } from '../utils/jotai';
@@ -47,34 +47,15 @@ export default function TablePage({ collectionName }) {
             const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
             setDocumentQueryCursor(lastVisibleDoc);
         };
-        if (tableName === 'Session') {
-            setLabels(sessionLabels);
+
+        setLabels(TABLE_LABELS[tableName]);
+        if (tableName !== 'Session') {
+            setWhereClause(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
+            loadInitialEntries(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
+        } else {
             loadInitialEntries();
-        } else if (tableName === 'Turtle') {
-            setLabels(turtleLabels);
-            setWhereClause(['taxa', 'Turtle'])
-            loadInitialEntries(['taxa', 'Turtle'])
-        } else if (tableName === 'Lizard') {
-            setLabels(lizardLabels);
-            setWhereClause(['taxa', 'Lizard'])
-            loadInitialEntries(['taxa', 'Lizard'])
-        } else if (tableName === 'Mammal') {
-            setLabels(mammalLabels);
-            setWhereClause(['taxa', 'Mammal'])
-            loadInitialEntries(['taxa', 'Mammal'])
-        } else if (tableName === 'Snake') {
-            setLabels(snakeLabels);
-            setWhereClause(['taxa', 'Snake'])
-            loadInitialEntries(['taxa', 'Snake'])
-        } else if (tableName === 'Arthropod') {
-            setLabels(arthropodLabels);
-            setWhereClause(['taxa', 'N/A'])
-            loadInitialEntries(['taxa', 'N/A'])
-        } else if (tableName === 'Amphibian') {
-            setLabels(amphibianLabels);
-            setWhereClause(['taxa', 'Amphibian'])
-            loadInitialEntries(['taxa', 'Amphibian'])
         }
+
     }, [collectionName, tableName]);
 
     const changeBatchSize = async (newBatchSize) => {

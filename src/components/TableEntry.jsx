@@ -1,11 +1,13 @@
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import { SESSION_KEYS, TURTLE_KEYS, LIZARD_KEYS, MAMMAL_KEYS, SNAKE_KEYS, ARTHROPOD_KEYS, AMPHIBIAN_KEYS } from '../const/keys'
+import { TABLE_KEYS } from '../const/tableKeys'
+import { currentTableName } from '../utils/jotai'
 
-
-export const TableEntry = ({ entrySnapshot, tableName }) => {
+export const TableEntry = ({ entrySnapshot }) => {
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
+    const [tableName, setTableName] = useAtom(currentTableName)
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
@@ -27,21 +29,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
     };
 
     useEffect(() => {
-        if (tableName === 'Session') {
-            setKeys(SESSION_KEYS);
-        } else if (tableName === 'Turtle') {
-            setKeys(TURTLE_KEYS);
-        } else if (tableName === 'Lizard') {
-            setKeys(LIZARD_KEYS);
-        } else if (tableName === 'Mammal') {
-            setKeys(MAMMAL_KEYS);
-        } else if (tableName === 'Snake') {
-            setKeys(SNAKE_KEYS);
-        } else if (tableName === 'Arthropod') {
-            setKeys(ARTHROPOD_KEYS);
-        } else if (tableName === 'Amphibian') {
-            setKeys(AMPHIBIAN_KEYS);
-        }
+        setKeys(TABLE_KEYS[tableName]);
     }, [])
 
     return (
