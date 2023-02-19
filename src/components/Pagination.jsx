@@ -1,17 +1,17 @@
+import { useAtom } from "jotai";
 import { useState } from "react";
+import { currentBatchSize } from "../utils/jotai";
 import Dropdown from "./Dropdown";
 
+
+
 export const Pagination = ({
-    batchSize,
-    changeBatchSize,
     loadNextBatch,
     loadPrevBatch
 }) => {
-    const [batchSizeOptionsShown, setBatchSizeOptionsShown] = useState(false);
-
-    const onClickHandler = (batchSize) => {
-        changeBatchSize(batchSize)
-        setBatchSizeOptionsShown(false);
+    const [batchSize, setBatchSize] = useAtom(currentBatchSize);
+    const onClickHandler = (size) => {
+        setBatchSize(size)
     }
 
     return (

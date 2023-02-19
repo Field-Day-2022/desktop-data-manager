@@ -1,7 +1,6 @@
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { TABLE_KEYS } from '../const/tableKeys'
-import { db } from '../utils/firebase';
 import { currentTableName } from '../utils/jotai'
 
 export const TableEntry = ({ entrySnapshot }) => {
@@ -113,10 +112,6 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     ) {
         disabled = true;
     }
-
-    console.log('EntryData: \n' + entryData)
-
-    console.log('Key: ' + dbKey + ', ' + 'Data: ' + ((entryData[dbKey])?entryData[dbKey]:null) + ', Length: ' + ((entryData[dbKey])?entryData[dbKey].length:null));
 
     return (
         <td key={dbKey} className="text-center border-b border-gray-400 p-2">

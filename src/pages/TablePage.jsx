@@ -9,7 +9,7 @@ import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels'
 import DataTable from '../components/DataTable';
 import { useAtom } from 'jotai';
-import { currentProjectName, currentTableName } from '../utils/jotai';
+import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 
@@ -17,7 +17,7 @@ export default function TablePage({ collectionName }) {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
-    const [batchSize, setBatchSize] = useState(15);
+    const [batchSize, setBatchSize] = useAtom(currentBatchSize);
     const [labels, setLabels] = useState();
     const [whereClause, setWhereClause] = useState();
 
@@ -26,12 +26,13 @@ export default function TablePage({ collectionName }) {
 
     useEffect(() => {
         console.log(`loading ${tableName} from ${collectionName}`)
-        const loadInitialEntries = async (initialWhereClause) => {
+        const loadEntries = async () => {
             let initialQuery;
+            
             if (tableName !== 'Session') {
                 initialQuery = query(
                     collection(db, collectionName),
-                    where(initialWhereClause[0], '==', initialWhereClause[1]),
+                    where(whereClause[0], '==', whereClause[1]),
                     orderBy('dateTime', 'desc'),
                     limit(batchSize)
                 );
@@ -51,35 +52,12 @@ export default function TablePage({ collectionName }) {
         setLabels(TABLE_LABELS[tableName]);
         if (tableName !== 'Session') {
             setWhereClause(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
-            loadInitialEntries(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
+            loadEntries(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
         } else {
-            loadInitialEntries();
+            loadEntries();
         }
 
-    }, [collectionName, tableName]);
-
-    const changeBatchSize = async (newBatchSize) => {
-        setBatchSize(newBatchSize)
-        let initialQuery;
-        if (tableName !== 'Session') {
-            initialQuery = query(
-                collection(db, collectionName),
-                where(whereClause[0], '==', whereClause[1]),
-                orderBy('dateTime', 'desc'),
-                limit(newBatchSize)
-            );
-        } else {
-            initialQuery = query(
-                collection(db, collectionName),
-                orderBy('dateTime', 'desc'),
-                limit(newBatchSize)
-            );
-        }
-        const initialQuerySnapshot = await getDocs(initialQuery);
-        setEntries(initialQuerySnapshot.docs);
-        const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
-        setDocumentQueryCursor(lastVisibleDoc);
-    }
+    }, [collectionName, tableName, batchSize]);
 
     const loadPrevBatch = async () => {
         let prevBatchQuery;
@@ -160,8 +138,6 @@ export default function TablePage({ collectionName }) {
             <div>
                 <DataTable name={tableName} labels={labels} entries={entries} />
                 <Pagination
-                    batchSize={batchSize}
-                    changeBatchSize={changeBatchSize}
                     loadPrevBatch={loadPrevBatch}
                     loadNextBatch={loadNextBatch}
                 />
