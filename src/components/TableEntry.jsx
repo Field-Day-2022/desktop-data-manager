@@ -34,8 +34,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
         setCurrentState('deleting');
     };
 
-    const pushChangeToFirestore = async () => {
-        console.log(entrySnapshot);
+    const pushChangesToFirestore = async () => {
         await setDoc(
             doc(db, getCollectionName(currentPage, currentProject, environment), entrySnapshot.id),
             entryData
@@ -45,8 +44,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
     };
 
     const onSaveClickedHandler = () => {
-        pushChangeToFirestore();
-        console.log('Save clicked');
+        pushChangesToFirestore();
     };
 
     const onCancelClickedHandler = () => {
