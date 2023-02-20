@@ -17,47 +17,54 @@ export default function TablePage({ collectionName }) {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
-    const [batchSize, setBatchSize] = useAtom(currentBatchSize);
     const [labels, setLabels] = useState();
-    const [whereClause, setWhereClause] = useState();
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
+    const [batchSize, setBatchSize] = useAtom(currentBatchSize);
 
     useEffect(() => {
         console.log(`loading ${tableName} from ${collectionName}`)
-        const loadEntries = async () => {
-            let initialQuery;
-            
-            if (tableName !== 'Session') {
-                initialQuery = query(
-                    collection(db, collectionName),
-                    where(whereClause[0], '==', whereClause[1]),
-                    orderBy('dateTime', 'desc'),
-                    limit(batchSize)
-                );
-            } else {
-                initialQuery = query(
-                    collection(db, collectionName),
-                    orderBy('dateTime', 'desc'),
-                    limit(batchSize)
-                );
-            }
-            const initialQuerySnapshot = await getDocs(initialQuery);
-            setEntries(initialQuerySnapshot.docs);
-            const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
-            setDocumentQueryCursor(lastVisibleDoc);
-        };
-
         setLabels(TABLE_LABELS[tableName]);
-        if (tableName !== 'Session') {
-            setWhereClause(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
-            loadEntries(['taxa', (tableName === 'Arthropod') ? 'N/A' : tableName]);
-        } else {
-            loadEntries();
+        loadEntries();
+    }, [collectionName, tableName, batchSize]);
+
+    const generateQueryConstraints = ({ whereClause = null, at = null, after = null }) => {
+        const constraints = [
+            collection(db, collectionName),
+            orderBy('dateTime', 'desc'),
+            limit(batchSize)
+        ]
+        if (whereClause) {
+            console.log('adding where clause')
+            constraints.push(where(...whereClause))
+        }
+        if (at) {
+            constraints.push(startAt(at))
+        } else if (after) {
+            constraints.push(startAfter(after))
         }
 
-    }, [collectionName, tableName, batchSize]);
+        return constraints;
+    }
+
+    const loadEntries = async () => {
+        let initialQuery;
+
+        initialQuery = query(
+            ...generateQueryConstraints(
+                {
+                    whereClause: (tableName !== 'Session')
+                        ? ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
+                        : null
+                })
+        )
+
+        const initialQuerySnapshot = await getDocs(initialQuery);
+        setEntries(initialQuerySnapshot.docs);
+        const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
+        setDocumentQueryCursor(lastVisibleDoc);
+    };
 
     const loadPrevBatch = async () => {
         let prevBatchQuery;
@@ -65,22 +72,17 @@ export default function TablePage({ collectionName }) {
             notify(Type.error, 'Unable to go back. This is the first page.')
             return
         }
-        if (tableName !== 'Session') {
-            prevBatchQuery = query(
-                collection(db, collectionName),
-                where(whereClause[0], '==', whereClause[1]),
-                orderBy('dateTime', 'desc'),
-                startAt(queryCursorStack[queryCursorStack.length - 1]),
-                limit(batchSize)
-            );
-        } else {
-            prevBatchQuery = query(
-                collection(db, collectionName),
-                orderBy('dateTime', 'desc'),
-                startAt(queryCursorStack[queryCursorStack.length - 1]),
-                limit(batchSize)
-            );
-        }
+
+        prevBatchQuery = query(
+            ...generateQueryConstraints(
+                {
+                    whereClause: (tableName !== 'Session')
+                        ? ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
+                        : null,
+                    at: queryCursorStack[queryCursorStack.length - 1]
+                })
+        );
+
         const prevBatchSnapshot = await getDocs(prevBatchQuery);
         setEntries(prevBatchSnapshot.docs);
         setDocumentQueryCursor(prevBatchSnapshot.docs[prevBatchSnapshot.docs.length - 1]);
@@ -89,29 +91,24 @@ export default function TablePage({ collectionName }) {
         setQueryCursorStack(tempStack)
     }
 
-
     const loadNextBatch = async () => {
         setQueryCursorStack([
             ...queryCursorStack,
             entries[0]
         ])
+        
         let nextBatchQuery;
-        if (tableName !== 'Session') {
-            nextBatchQuery = query(
-                collection(db, collectionName),
-                where(whereClause[0], '==', whereClause[1]),
-                orderBy('dateTime', 'desc'),
-                startAfter(documentQueryCursor),
-                limit(batchSize)
-            );
-        } else {
-            nextBatchQuery = query(
-                collection(db, collectionName),
-                orderBy('dateTime', 'desc'),
-                startAfter(documentQueryCursor),
-                limit(batchSize)
-            );
-        }
+
+        nextBatchQuery = query(
+            ...generateQueryConstraints(
+                {
+                    whereClause: (tableName !== 'Session')
+                        ? ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
+                        : null,
+                    after: documentQueryCursor
+                })
+        );
+
         const nextBatchSnapshot = await getDocs(nextBatchQuery);
         setEntries(nextBatchSnapshot.docs);
         const lastVisibleDoc = nextBatchSnapshot.docs[nextBatchSnapshot.docs.length - 1];
@@ -132,7 +129,6 @@ export default function TablePage({ collectionName }) {
                         options={['Gateway', 'Virgin River', 'San Pedro']}
                     />
                 </div>
-
             </div>
 
             <div>
