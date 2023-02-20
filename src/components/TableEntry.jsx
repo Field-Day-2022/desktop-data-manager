@@ -9,11 +9,20 @@ import {
     AMPHIBIAN_KEYS,
 } from '../const/keys';
 import { AnimatePresence, motion } from 'framer-motion';
+import { doc, setDoc } from 'firebase/firestore';
+import { useAtom } from 'jotai';
+import { currentProjectName, currentPageName, appMode } from '../utils/jotai';
+import { getCollectionName } from '../utils/TableDbMappings';
+import { notify, Type } from './Notifier';
+import { db } from '../utils/firebase';
 
 export const TableEntry = ({ entrySnapshot, tableName }) => {
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
+    const [currentProject, setCurrentProject] = useAtom(currentProjectName);
+    const [currentPage, setCurrentPage] = useAtom(currentPageName);
+    const [environment, setEnvironment] = useAtom(appMode);
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
@@ -25,8 +34,18 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
         setCurrentState('deleting');
     };
 
+    const pushChangeToFirestore = async () => {
+        console.log(entrySnapshot);
+        await setDoc(
+            doc(db, getCollectionName(currentPage, currentProject, environment), entrySnapshot.id),
+            entryData
+        ).then(() => {
+            notify(Type.success, 'Changes successfully written to database!');
+        });
+    };
+
     const onSaveClickedHandler = () => {
-        console.log(entryData);
+        pushChangeToFirestore();
         console.log('Save clicked');
     };
 
@@ -160,7 +179,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
                 disabled={disabled}
                 className="text-center transition disabled:bg-transparent outline-none rounded-lg"
                 type="text"
-                value={dbKey === 'dateTime'? displayText : entryData[dbKey] ?? 'N/A'}
+                value={dbKey === 'dateTime' ? displayText : entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 size={size}
             />
