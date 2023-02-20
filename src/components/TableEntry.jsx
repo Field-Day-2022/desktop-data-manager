@@ -40,6 +40,10 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
             entryData
         ).then(() => {
             notify(Type.success, 'Changes successfully written to database!');
+            setCurrentState('viewing')
+        }).catch((e) => {
+            notify(Type.error, `Error writing changes to database: ${e}`);
+            setCurrentState('viewing');
         });
     };
 
