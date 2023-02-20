@@ -24,7 +24,6 @@ export default function TablePage({ tableName, collectionName }) {
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
 
     useEffect(() => {
-        console.log(`loading ${tableName} from ${collectionName}`)
         const loadInitialEntries = async (initialWhereClause) => {
             let initialQuery;
             if (tableName !== 'Session') {

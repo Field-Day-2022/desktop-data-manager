@@ -26,6 +26,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
     };
 
     const onSaveClickedHandler = () => {
+        console.log(entryData);
         console.log('Save clicked');
     };
 
@@ -102,7 +103,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
 };
 
 const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData }) => {
-    const [displayText, setDisplayText] = useState('');
+    const [displayText, setDisplayText] = useState(entrySnapshot.data()[dbKey]);
     const [editable, setEditable] = useState(true);
 
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
@@ -110,7 +111,6 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     const FALSE_KEYS = ['N', 'n', 'F', 'f'];
 
     useEffect(() => {
-        setDisplayText(entrySnapshot.data()[dbKey]);
         if (dbKey === 'dateTime') {
             let tempDate = new Date(entrySnapshot.data()[dbKey]);
             setDisplayText(tempDate.toLocaleString());
@@ -119,7 +119,6 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     }, []);
 
     const onChangeHandler = (e) => {
-        console.log(e.target.value);
         if (BINARY_KEYS.includes(dbKey)) {
             if (TRUE_KEYS.includes(e.target.value.slice(-1))) {
                 setEntryData((prevEntryData) => ({
@@ -161,7 +160,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
                 disabled={disabled}
                 className="text-center transition disabled:bg-transparent outline-none rounded-lg"
                 type="text"
-                value={displayText ?? 'N/A'}
+                value={dbKey === 'dateTime'? displayText : entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 size={size}
             />
