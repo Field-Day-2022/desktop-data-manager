@@ -175,7 +175,7 @@ export default function TablePage({ tableName, collectionName }) {
             </div>
 
             <div>
-                <DataTable name={tableName} labels={labels} entries={entries} />
+                <DataTable name={tableName} labels={labels} entries={entries} setEntries={setEntries} />
                 <Pagination
                     batchSize={batchSize}
                     changeBatchSize={changeBatchSize}

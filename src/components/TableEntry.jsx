@@ -9,14 +9,15 @@ import {
     AMPHIBIAN_KEYS,
 } from '../const/keys';
 import { AnimatePresence, motion } from 'framer-motion';
-import { doc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 import { currentProjectName, currentPageName, appMode } from '../utils/jotai';
 import { getCollectionName } from '../utils/TableDbMappings';
 import { notify, Type } from './Notifier';
 import { db } from '../utils/firebase';
+import { tableRows } from '../utils/variants';
 
-export const TableEntry = ({ entrySnapshot, tableName }) => {
+export const TableEntry = ({ entrySnapshot, tableName, removeEntry, index }) => {
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
@@ -30,25 +31,40 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
     };
 
     const onDeleteClickedHandler = () => {
-        console.log('Delete clicked');
         setCurrentState('deleting');
     };
 
+    const deleteDocumentFromFirestore = async () => {
+        setCurrentState('viewing');
+        removeEntry();
+        // await deleteDoc(
+        //     doc(db, getCollectionName(currentPage, currentProject, environment), entrySnapshot.id)
+        // )
+        //     .then(() => {
+        //         notify(Type.success, 'Document successfully deleted!');
+        //     })
+        //     .catch((e) => {
+        //         notify(Type.error, `Error deleting document: ${e}`);
+        //     });
+    };
+
     const pushChangesToFirestore = async () => {
+        setCurrentState('viewing');
         await setDoc(
             doc(db, getCollectionName(currentPage, currentProject, environment), entrySnapshot.id),
             entryData
-        ).then(() => {
-            notify(Type.success, 'Changes successfully written to database!');
-            setCurrentState('viewing')
-        }).catch((e) => {
-            notify(Type.error, `Error writing changes to database: ${e}`);
-            setCurrentState('viewing');
-        });
+        )
+            .then(() => {
+                notify(Type.success, 'Changes successfully written to database!');
+            })
+            .catch((e) => {
+                notify(Type.error, `Error writing changes to database: ${e}`);
+            });
     };
 
     const onSaveClickedHandler = () => {
-        pushChangesToFirestore();
+        currentState === 'editing' && pushChangesToFirestore();
+        currentState === 'deleting' && deleteDocumentFromFirestore();
     };
 
     const onCancelClickedHandler = () => {
@@ -75,7 +91,14 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
     }, []);
 
     return (
-        <tr className="relative hover:bg-neutral-100">
+        <motion.tr className="relative hover:bg-neutral-100"
+            variants={tableRows}
+            initial='hidden'
+            animate='visible'
+            custom={index}
+            exit='hidden'
+            layout
+        >
             {currentState === 'viewing' ? (
                 <EditDeleteActions
                     onEditClickedHandler={onEditClickedHandler}
@@ -85,10 +108,10 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
                 <SaveCancelActions
                     onSaveClickedHandler={onSaveClickedHandler}
                     onCancelClickedHandler={onCancelClickedHandler}
+                    currentState={currentState}
                 />
             ) : null}
-            {keys &&
-                keys.map((key) => (
+            {keys && keys.map((key) => (
                     <EntryItem
                         entrySnapshot={entrySnapshot}
                         currentState={currentState}
@@ -98,28 +121,7 @@ export const TableEntry = ({ entrySnapshot, tableName }) => {
                         key={key}
                     />
                 ))}
-            <AnimatePresence>
-                {currentState === 'deleting' && (
-                    <motion.p
-                        className="absolute left-8 -top-3 z-10 px-2 rounded-md drop-shadow-xl border-[1px] bg-red-800/10 backdrop-blur border-red-800 shadow-lg  shadow-red-800/25 leading-tight"
-                        initial={{
-                            left: '-2rem',
-                            opacity: 0,
-                        }}
-                        animate={{
-                            left: '2rem',
-                            opacity: 1,
-                        }}
-                        exit={{
-                            left: '-20rem',
-                            opacity: 0,
-                        }}
-                    >
-                        Are you sure you want to delete this row?
-                    </motion.p>
-                )}
-            </AnimatePresence>
-        </tr>
+        </motion.tr>
     );
 };
 
@@ -228,10 +230,31 @@ const EditDeleteActions = ({ onEditClickedHandler, onDeleteClickedHandler }) => 
     );
 };
 
-const SaveCancelActions = ({ onSaveClickedHandler, onCancelClickedHandler }) => {
+const SaveCancelActions = ({ onSaveClickedHandler, onCancelClickedHandler, currentState }) => {
     return (
         <td className="border-b border-gray-400 p-2">
             <div className="flex flex-row w-full justify-around">
+                <AnimatePresence>
+                    {currentState === 'deleting' && (
+                        <motion.span
+                            className="absolute left-8 -top-3 z-10 px-2 rounded-md drop-shadow-xl border-[1px] bg-red-800/10 backdrop-blur border-red-800 shadow-lg  shadow-red-800/25 leading-tight"
+                            initial={{
+                                left: '-2rem',
+                                opacity: 0,
+                            }}
+                            animate={{
+                                left: '2rem',
+                                opacity: 1,
+                            }}
+                            exit={{
+                                left: '-20rem',
+                                opacity: 0,
+                            }}
+                        >
+                            Are you sure you want to delete this row?
+                        </motion.span>
+                    )}
+                </AnimatePresence>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
