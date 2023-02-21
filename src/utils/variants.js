@@ -1,5 +1,8 @@
 export const tableRows = {
-    hidden: {
+    initial: {
+        opacity: 0,
+    },
+    exit: {
         opacity: 0,
     },
     visible: i => ({
