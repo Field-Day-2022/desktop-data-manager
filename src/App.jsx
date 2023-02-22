@@ -16,22 +16,21 @@ function App() {
 
     const auth = new Authenticator();
 
+    const pageMap = {
+        'Home': <HomePage />,
+        'Table': <TablePage />
+    }
+
     return (
         <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
             <Notifier />
             <TopNav title="Field Day" auth={auth} />
             <div className="flex flex-grow">
-                {auth.validateUser() ? (
-                    <>
-
-                        {currentPage === 'Home' && <HomePage />}
-                        {currentPage === 'Table' && (
-                            <TablePage collectionName={`${currentProject}Data`} />
-                        )}
-                    </>
-                ) : (
-                    <LoginPage auth={auth} />
-                )}
+                {
+                    auth.validateUser()
+                        ? pageMap[currentPage]
+                        : <LoginPage auth={auth} />
+                }
             </div>
         </div>
     );
