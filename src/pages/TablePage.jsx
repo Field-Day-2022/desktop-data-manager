@@ -13,7 +13,7 @@ import { currentBatchSize, currentProjectName, currentTableName } from '../utils
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 
-export default function TablePage({ collectionName }) {
+export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
@@ -24,12 +24,13 @@ export default function TablePage({ collectionName }) {
     const [batchSize, setBatchSize] = useAtom(currentBatchSize);
 
     useEffect(() => {
-        console.log(`loading ${tableName} from ${collectionName}`)
         setLabels(TABLE_LABELS[tableName]);
         loadEntries();
-    }, [collectionName, tableName, batchSize]);
+    }, [tableName, batchSize]);
 
     const generateQueryConstraints = ({ whereClause = null, at = null, after = null }) => {
+        const collectionName = currentProject+((tableName==='Session')?'Session':'Data')
+        console.log(`loading ${tableName} from ${collectionName}`)
         const constraints = [
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
@@ -49,6 +50,7 @@ export default function TablePage({ collectionName }) {
     }
 
     const loadEntries = async () => {
+        
         let initialQuery;
 
         initialQuery = query(
