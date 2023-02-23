@@ -125,11 +125,11 @@ const AMPHIBIAN_KEYS = [
 ];
 
 export const TABLE_KEYS = {
-    'Session': SESSION_KEYS,
-    'Turtle': TURTLE_KEYS,
-    'Lizard': LIZARD_KEYS,
-    'Mammal': MAMMAL_KEYS,
-    'Snake': SNAKE_KEYS,
-    'Arthropod': ARTHROPOD_KEYS,
-    'Amphibian': AMPHIBIAN_KEYS
-}
+    Session: SESSION_KEYS,
+    Turtle: TURTLE_KEYS,
+    Lizard: LIZARD_KEYS,
+    Mammal: MAMMAL_KEYS,
+    Snake: SNAKE_KEYS,
+    Arthropod: ARTHROPOD_KEYS,
+    Amphibian: AMPHIBIAN_KEYS,
+};
