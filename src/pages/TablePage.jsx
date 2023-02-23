@@ -27,7 +27,7 @@ export default function TablePage() {
     useEffect(() => {
         setLabels(TABLE_LABELS[tableName]);
         loadEntries();
-    }, [tableName, batchSize]);
+    }, [tableName, batchSize, currentProject]);
 
     const getCollectionName = () => {
         return ((environment === 'test')?'Test':'') + currentProject + ((tableName==='Session')?'Session':'Data')
