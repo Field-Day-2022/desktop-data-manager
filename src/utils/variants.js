@@ -8,14 +8,14 @@ export const tableRows = {
     visible: (i) => ({
         opacity: 1,
         transition: {
-            delay: i * 0.05,
+            delay: i * 0.02,
         },
     }),
 };
 
 export const tableBody = {
     hidden: {
-        opacity: 0,
+        opacity: 1,
     },
     visible: {
         opacity: 1,
