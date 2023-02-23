@@ -7,12 +7,9 @@ import TablePage from './pages/TablePage';
 import React from 'react';
 import { Authenticator } from './utils/authenticator';
 import { Notifier } from './components/Notifier';
-import { getTable } from './utils/TableDbMappings';
 
 function App() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
-    const [currentProject, setCurrentProject] = useAtom(currentProjectName);
-    const [environment, setEnvironment] = useAtom(appMode);
 
     const auth = new Authenticator();
 
