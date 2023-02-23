@@ -25,7 +25,7 @@ export default function DataTable({ name, labels, entries }) {
                     </thead>
                     <tbody>
                         {entries.map((entry) => (
-                            <TableEntry key={entry.id} entrySnapshot={entry} tableName={name} />
+                            <TableEntry key={entry.id} entrySnapshot={entry} />
                         ))}
                     </tbody>
                 </table>
