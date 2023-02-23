@@ -1,4 +1,4 @@
-export const SESSION_KEYS = [
+const SESSION_KEYS = [
     'dateTime',
     'recorder',
     'handler',
@@ -9,7 +9,7 @@ export const SESSION_KEYS = [
     'commentsAboutTheArray',
 ];
 
-export const TURTLE_KEYS = [
+const TURTLE_KEYS = [
     'dateTime',
     'site',
     'array',
@@ -24,7 +24,7 @@ export const TURTLE_KEYS = [
     'comments',
 ];
 
-export const LIZARD_KEYS = [
+const LIZARD_KEYS = [
     'dateTime',
     'site',
     'array',
@@ -46,7 +46,7 @@ export const LIZARD_KEYS = [
     'comments',
 ];
 
-export const MAMMAL_KEYS = [
+const MAMMAL_KEYS = [
     'dateTime',
     'site',
     'array',
@@ -61,7 +61,7 @@ export const MAMMAL_KEYS = [
     'comments',
 ];
 
-export const SNAKE_KEYS = [
+const SNAKE_KEYS = [
     'dateTime',
     'site',
     'array',
@@ -78,7 +78,7 @@ export const SNAKE_KEYS = [
     'comments',
 ];
 
-export const ARTHROPOD_KEYS = [
+const ARTHROPOD_KEYS = [
     'dateTime',
     'site',
     'array',
@@ -108,7 +108,7 @@ export const ARTHROPOD_KEYS = [
     'comments',
 ];
 
-export const AMPHIBIAN_KEYS = [
+const AMPHIBIAN_KEYS = [
     'dateTime',
     'site',
     'array',
@@ -123,3 +123,13 @@ export const AMPHIBIAN_KEYS = [
     'dead',
     'comments',
 ];
+
+export const TABLE_KEYS = {
+    Session: SESSION_KEYS,
+    Turtle: TURTLE_KEYS,
+    Lizard: LIZARD_KEYS,
+    Mammal: MAMMAL_KEYS,
+    Snake: SNAKE_KEYS,
+    Arthropod: ARTHROPOD_KEYS,
+    Amphibian: AMPHIBIAN_KEYS,
+};

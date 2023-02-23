@@ -1,16 +1,9 @@
 import { useEffect, useState, forwardRef } from 'react';
-import {
-    SESSION_KEYS,
-    TURTLE_KEYS,
-    LIZARD_KEYS,
-    MAMMAL_KEYS,
-    SNAKE_KEYS,
-    ARTHROPOD_KEYS,
-    AMPHIBIAN_KEYS,
-} from '../const/keys';
+import { TABLE_KEYS } from '../const/tableKeys';
+import { useAtom } from 'jotai';
+import { currentTableName } from '../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { useAtom } from 'jotai';
 import { currentProjectName, currentPageName, appMode } from '../utils/jotai';
 import { getCollectionName } from '../utils/TableDbMappings';
 import { notify, Type } from './Notifier';
@@ -18,7 +11,7 @@ import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
 
 export const TableEntry = forwardRef((props, ref) => {
-    const { entrySnapshot, tableName, removeEntry, index } = props;
+    const { entrySnapshot, removeEntry, index } = props;
     
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
@@ -26,6 +19,7 @@ export const TableEntry = forwardRef((props, ref) => {
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
     const [environment, setEnvironment] = useAtom(appMode);
+    const [tableName, setTableName] = useAtom(currentTableName);
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
@@ -75,22 +69,8 @@ export const TableEntry = forwardRef((props, ref) => {
     };
 
     useEffect(() => {
-        if (tableName === 'Session') {
-            setKeys(SESSION_KEYS);
-        } else if (tableName === 'Turtle') {
-            setKeys(TURTLE_KEYS);
-        } else if (tableName === 'Lizard') {
-            setKeys(LIZARD_KEYS);
-        } else if (tableName === 'Mammal') {
-            setKeys(MAMMAL_KEYS);
-        } else if (tableName === 'Snake') {
-            setKeys(SNAKE_KEYS);
-        } else if (tableName === 'Arthropod') {
-            setKeys(ARTHROPOD_KEYS);
-        } else if (tableName === 'Amphibian') {
-            setKeys(AMPHIBIAN_KEYS);
-        }
-    }, []);
+        setKeys(TABLE_KEYS[tableName]);
+    }, [])
 
     return (
         <motion.tr className="relative hover:bg-neutral-100"
@@ -102,7 +82,6 @@ export const TableEntry = forwardRef((props, ref) => {
             layout
             ref={ref}
         >
-            {/* <AnimatePresence> */}
             <Actions
                 onEditClickedHandler={onEditClickedHandler}
                 onCancelClickedHandler={onCancelClickedHandler}
