@@ -27,3 +27,5 @@ export const pastEntryIndex = atomWithStorage('pastEntryIndex', -1);
 export const notificationText = atomWithStorage('notificationText', 'text');
 
 export const currentProjectName = atomWithStorage('currentProject', 'Gateway');
+
+export const appMode = atomWithStorage('appMode', 'test');
