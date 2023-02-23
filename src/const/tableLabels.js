@@ -125,11 +125,11 @@ const amphibianLabels = [
 ];
 
 export const TABLE_LABELS = {
-    'Session': sessionLabels,
-    'Turtle': turtleLabels,
-    'Lizard': lizardLabels,
-    'Mammal': mammalLabels,
-    'Snake': snakeLabels,
-    'Arthropod': arthropodLabels,
-    'Amphibian': amphibianLabels
-}
+    Session: sessionLabels,
+    Turtle: turtleLabels,
+    Lizard: lizardLabels,
+    Mammal: mammalLabels,
+    Snake: snakeLabels,
+    Arthropod: arthropodLabels,
+    Amphibian: amphibianLabels,
+};
