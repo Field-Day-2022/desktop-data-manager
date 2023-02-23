@@ -5,13 +5,13 @@ export const tableRows = {
     exit: {
         opacity: 0,
     },
-    visible: i => ({
+    visible: (i) => ({
         opacity: 1,
         transition: {
-            delay: i * .05,
-        }
-    })
-}
+            delay: i * 0.05,
+        },
+    }),
+};
 
 export const tableBody = {
     hidden: {
@@ -19,5 +19,5 @@ export const tableBody = {
     },
     visible: {
         opacity: 1,
-    }
-}
+    },
+};
