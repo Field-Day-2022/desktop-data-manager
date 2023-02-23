@@ -1,30 +1,136 @@
 import PageWrapper from './PageWrapper';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '../utils/firebase';
 
 export default function FormBuilder() {
     const [activeCollection, setActiveCollection] = useState('AnswerSet');
+    const [documents, setDocuments] = useState([]);
+    const [activeDocument, setActiveDocument] = useState();
+    const [documentData, setDocumentData] = useState([])
+    const [activeDocumentData, setActiveDocumentData] = useState();
+    const [activeDocumentDataIndex, setActiveDocumentDataIndex] = useState();
+    const [formData, setFormData] = useState('CRAT');
+
+    useEffect(() => {
+        const getAllDocs = async () => {
+            const querySnapshot = await getDocs(collection(db, activeCollection));
+            let tempDocArray = [];
+            querySnapshot.forEach(doc => tempDocArray.push(doc.data()));
+            setDocuments(tempDocArray);
+        }
+        if (activeCollection) getAllDocs();
+        else {
+            setDocuments([])
+            setDocumentData([])
+        }
+        setActiveDocument('')   
+        setActiveDocumentData('')
+        // setFormData('') // uncomment when done
+    }, [ activeCollection ])
+
+
+    useEffect(() => {
+        if (activeDocument) {
+            let tempDataArray = []
+            if (activeDocument.answers) {
+                for (const answer of activeDocument.answers) {
+                    tempDataArray.push(answer.primary)
+                }
+            }
+            setDocumentData(tempDataArray);
+        } else {
+            setDocumentData([])
+        }   
+        setActiveDocumentData('')
+        // setFormData('') // uncomment when done
+    }, [ activeDocument ])
+
+    activeDocumentData && console.log(activeDocument)
+
+    const renderForm = () => {
+        let output = []
+        if (activeCollection === 'AnswerSet') {
+            output.push(<label 
+                    key="primaryLabel"
+                    htmlFor="primary"
+                    className='text-xl'
+                >Primary: </label>)
+            output.push(<input 
+                    key="primaryInput"
+                    id="primary"
+                    type='text'
+                    className='border-gray-800 border-2 m-2 rounded text-xl p-1'
+                    value={formData.primary}
+                    onChange={e => setFormData({
+                        ...formData,
+                        primary: e.target.value
+                    })}
+                />)
+            if (activeDocumentData.answers[activeDocumentDataIndex].secondary) {
+                for (const key in activeDocumentData.answers[activeDocumentDataIndex].secondary) {
+                           
+                }
+            }
+        }
+        return (
+            <form>
+                {output}
+            </form>
+        )
+    }
 
     return (
         <PageWrapper>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start p-2">
                 <h1 className="text-3xl text-left w-full px-6 py-2">Form Builder</h1>
-                <div className="grid grid-cols-3 w-full">
-                    <div>
+                <div className="grid grid-cols-3 w-full gap-1">
+                    <div className="border-gray-800 border-2 rounded">
                         <h2 className="text-2xl">Collection</h2>
                         <ReusableUnorderedList
                             listItemArray={['AnswerSet', 'DynamicForms']}
                             clickHandler={(listItem) => {
-                                setActiveCollection(listItem);
-                            }}
+                                    if (listItem === activeCollection) setActiveCollection('')
+                                    else setActiveCollection(listItem)
+                                }}
                             selectedItem={activeCollection}
                         />
                     </div>
-                    <div>
+                    <div className='border-gray-800 border-2 h-[calc(100vh-12em)] rounded'>
                         <h2 className="text-2xl">Document</h2>
+                        <ReusableUnorderedList 
+                            listItemArray={documents}
+                            clickHandler={(listItem) => {
+                                    if (listItem === activeDocument) setActiveDocument('')
+                                    else setActiveDocument(listItem)
+                                }}
+                            selectedItem={activeDocument}
+                        />
                     </div>
-                    <div>
-                        <h2 className="text-2xl">Change</h2>
+                    <div className='grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-12em)] rounded'>
+                        <div className='border-gray-800 border-b-2 flex flex-col'>
+                            <h2 className='text-2xl'>Data</h2>
+                            <ReusableUnorderedList 
+                                listItemArray={documentData}
+                                clickHandler={(listItem, index) => {
+                                    if (listItem === activeDocumentData) {
+                                        setActiveDocumentData('')
+                                        setFormData('')
+                                        setActiveDocumentDataIndex(null);
+                                    }
+                                    else {
+                                        setActiveDocumentData(listItem)
+                                        setFormData(activeDocument.answers[index]);
+                                        setActiveDocumentDataIndex(index)
+                                    }
+                                }}
+                                selectedItem={activeDocumentData}
+                            />
+                        </div>
+                        <div>
+                            <h2 className='text-2xl'>Change</h2>
+                            {(activeDocumentData) && renderForm()}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,26 +140,30 @@ export default function FormBuilder() {
 
 const ReusableUnorderedList = ({ listItemArray, clickHandler, selectedItem }) => {
     return (
-        <ul>
-            {listItemArray.map((listItem) => (
+        <ul className='h-[calc(100%-2em)] overflow-y-auto'>
+            {listItemArray.map((listItem, index) => (
                 <ReusableListItem
-                    key={listItem}
+                    key={index}
                     listItem={listItem}
                     clickHandler={clickHandler}
                     selectedItem={selectedItem}
+                    index={index}
                 />
             ))}
         </ul>
     );
 };
 
-const ReusableListItem = ({ listItem, clickHandler, selectedItem }) => {
+const ReusableListItem = ({ listItem, clickHandler, selectedItem, index }) => {
+    let displayText = listItem;
+    if (listItem.set_name) displayText = listItem.set_name
+
     return <li 
-        onClick={() => clickHandler(listItem)}
+        onClick={() => clickHandler(listItem, index)}
         className={
             listItem === selectedItem ?
-            'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 bg-blue-300 cursor-pointer'
+            'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 bg-blue-300 cursor-pointer sticky top-0 rounded'
             :
-            'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 cursor-pointer'}
-    >{listItem}</li>;
+            'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 cursor-pointer rounded'}
+    >{displayText}</li>;
 };

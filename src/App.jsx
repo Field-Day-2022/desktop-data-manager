@@ -1,13 +1,17 @@
 import TopNav from './components/TopNav';
 import { useAtom } from 'jotai';
 import { currentPageName, currentProjectName, appMode } from './utils/jotai';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Authenticator } from './utils/authenticator';
 import { Notifier } from './components/Notifier';
 import { TablePage, FormBuilder, HomePage, LoginPage } from './pages'
 
 function App() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
+
+    useEffect(() => {
+        setCurrentPage('FormBuilder')
+    }, [])
 
     const auth = new Authenticator();
 
