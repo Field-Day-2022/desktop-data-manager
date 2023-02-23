@@ -5,7 +5,6 @@ import { currentTableName } from '../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { currentProjectName, currentPageName, appMode } from '../utils/jotai';
-import { getCollectionName } from '../utils/TableDbMappings';
 import { notify, Type } from './Notifier';
 import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
@@ -30,24 +29,28 @@ export const TableEntry = forwardRef((props, ref) => {
         setCurrentState('deleting');
     };
 
+    const getCollectionName = () => {
+        return ((environment === 'test')?'Test':'') + currentProject + ((tableName==='Session')?'Session':'Data')
+    }
+
     const deleteDocumentFromFirestore = async () => {
         setCurrentState('viewing');
         removeEntry();
-        // await deleteDoc(
-        //     doc(db, getCollectionName(currentPage, currentProject, environment), entrySnapshot.id)
-        // )
-        //     .then(() => {
-        //         notify(Type.success, 'Document successfully deleted!');
-        //     })
-        //     .catch((e) => {
-        //         notify(Type.error, `Error deleting document: ${e}`);
-        //     });
+        await deleteDoc(
+            doc(db, getCollectionName(), entrySnapshot.id)
+        )
+            .then(() => {
+                notify(Type.success, 'Document successfully deleted!');
+            })
+            .catch((e) => {
+                notify(Type.error, `Error deleting document: ${e}`);
+            });
     };
 
     const pushChangesToFirestore = async () => {
         setCurrentState('viewing');
         await setDoc(
-            doc(db, getCollectionName(currentPage, currentProject, environment), entrySnapshot.id),
+            doc(db, getCollectionName(), entrySnapshot.id),
             entryData
         )
             .then(() => {
@@ -234,7 +237,7 @@ const Actions = ({
                     </svg>
                     </>
                 }
-                {currentState === 'editing' || currentState === 'deleting' && 
+                {(currentState === 'editing' || currentState === 'deleting') &&
                 <>
                     <svg
                         key='check'

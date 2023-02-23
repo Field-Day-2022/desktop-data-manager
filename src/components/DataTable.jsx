@@ -26,13 +26,12 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                                 labels.map((label) => <TableHeading key={label} label={label} />)}
                         </tr>
                     </thead>
-                    <LayoutGroup>
                     <motion.tbody
                         initial='hidden'
                         animate='visible'
                         variants={tableBody}
                     >
-                        <AnimatePresence>
+                        {/* <AnimatePresence> */}
                         {entries.map((entry, index) => (
                             <TableEntry
                                 index={index}
@@ -44,9 +43,8 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                                 }}
                             />
                         ))}
-                        </AnimatePresence>
+                        {/* </AnimatePresence> */}
                     </motion.tbody>
-                    </LayoutGroup>
 
                 </table>
             </div>

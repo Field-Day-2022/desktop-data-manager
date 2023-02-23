@@ -30,8 +30,10 @@ export default function TablePage() {
     }, [tableName, batchSize]);
 
     const getCollectionName = () => {
-        return ((environment === 'test')?'Test':null) + currentProject + ((tableName==='Session')?'Session':'Data')
+        return ((environment === 'test')?'Test':'') + currentProject + ((tableName==='Session')?'Session':'Data')
     }
+
+    console.log(getCollectionName())
 
     const generateQueryConstraints = ({ whereClause = null, at = null, after = null }) => {
         const collectionName = getCollectionName();
