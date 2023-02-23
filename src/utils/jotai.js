@@ -31,3 +31,5 @@ export const notificationText = atomWithStorage('notificationText', 'text');
 export const currentProjectName = atomWithStorage('currentProject', 'Gateway');
 
 export const currentBatchSize = atomWithStorage('currentBatchSize', 15)
+
+export const appMode = atomWithStorage('appMode', 'test');

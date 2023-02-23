@@ -9,7 +9,7 @@ import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels'
 import DataTable from '../components/DataTable';
 import { useAtom } from 'jotai';
-import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
+import { appMode, currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 
@@ -22,14 +22,19 @@ export default function TablePage() {
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
     const [batchSize, setBatchSize] = useAtom(currentBatchSize);
+    const [environment, setEnvironment] = useAtom(appMode);
 
     useEffect(() => {
         setLabels(TABLE_LABELS[tableName]);
         loadEntries();
     }, [tableName, batchSize]);
 
+    const getCollectionName = () => {
+        return ((environment === 'test')?'Test':null) + currentProject + ((tableName==='Session')?'Session':'Data')
+    }
+
     const generateQueryConstraints = ({ whereClause = null, at = null, after = null }) => {
-        const collectionName = currentProject+((tableName==='Session')?'Session':'Data')
+        const collectionName = getCollectionName();
         console.log(`loading ${tableName} from ${collectionName}`)
         const constraints = [
             collection(db, collectionName),
