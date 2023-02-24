@@ -36,7 +36,7 @@ export default function TablePage() {
 
     console.log(getCollectionName())
 
-    const generateQueryConstraints = ({ whereClause = null, at = null, after = null }) => {
+    const generateQueryConstraints = ({ whereClause, at, after }) => {
         const collectionName = getCollectionName();
         console.log(`loading ${tableName} from ${collectionName}`)
         const constraints = [
@@ -64,9 +64,9 @@ export default function TablePage() {
         initialQuery = query(
             ...generateQueryConstraints(
                 {
-                    whereClause: (tableName !== 'Session')
-                        ? ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
-                        : null
+                    whereClause: 
+                    (tableName !== 'Session')
+                        && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
                 })
         )
 
@@ -87,8 +87,7 @@ export default function TablePage() {
             ...generateQueryConstraints(
                 {
                     whereClause: (tableName !== 'Session')
-                        ? ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
-                        : null,
+                        && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName],
                     at: queryCursorStack[queryCursorStack.length - 1]
                 })
         );
@@ -113,8 +112,7 @@ export default function TablePage() {
             ...generateQueryConstraints(
                 {
                     whereClause: (tableName !== 'Session')
-                        ? ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
-                        : null,
+                        && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName],
                     after: documentQueryCursor
                 })
         );
