@@ -5,15 +5,19 @@ export default function Button({ className, text, onClick, disabled, icon }) {
     const inactiveClass = 'bg-neutral-800'
 
     return (
-        <div className={(disabled?inactiveClass:activeClass) + ' ' + baseClass + ' ' + className}
+        <div className={(disabled ? inactiveClass : activeClass) + ' ' + baseClass + ' ' + className}
             onClick={onClick}>
-            <div className="flex-none">{icon ? <ButtonIcon>{icon}</ButtonIcon> : null}</div>
-            <div className="flex-grow">{text}</div>
+            {icon && <ButtonIcon>{icon}</ButtonIcon>}
+            <ButtonText>{text}</ButtonText>
         </div>
 
     )
 }
 
-function ButtonIcon({children}) {
-    return( <div className='text-2xl m-auto px-1'>{children}</div>)
+function ButtonIcon({ children }) {
+    return (<div className='flex-none text-2xl m-auto px-1'>{children}</div>)
+}
+
+function ButtonText({children}) {
+    return (<div className="flex-grow">{children}</div>);
 }
