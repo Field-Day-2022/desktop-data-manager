@@ -1,4 +1,4 @@
-import Logo from './Logo';
+import LizardIcon from '../assets/LizardIcon';
 import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
 
@@ -19,7 +19,7 @@ export default function TopNav({ title, auth }) {
             <nav className="py-2 flex justify-between">
                 <ul className="flex items-center space-x-5">
                     <li onClick={() => setCurrentPage('Home')}>
-                        <Logo className="text-asu-maroon fill-current h-12 cursor-pointer" />
+                        <LizardIcon className="text-asu-maroon fill-current h-12 cursor-pointer" />
                     </li>
                     <li>
                         <p className="text-lg font-bold">{title}</p>

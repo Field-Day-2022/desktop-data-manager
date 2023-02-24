@@ -1,6 +1,6 @@
 import { GiTurtle, GiFrog, GiSpottedBug, GiSandSnake, GiSquirrel } from 'react-icons/gi';
 import { FaClipboard } from 'react-icons/fa'
-import Logo from './Logo';
+import LizardIcon from '../assets/LizardIcon';
 
 import { useAtom } from 'jotai';
 import { currentTableName } from '../utils/jotai';
@@ -21,7 +21,7 @@ export default function TabBar() {
     return (
         <div className='flex pt-4 px-2'>
             <Tab key='Turtle' active={currentTable === 'Turtle'} text='Turtle' icon={<GiTurtle />} onClick={() => setCurrentTable('Turtle')} />
-            <Tab key='Lizard' active={currentTable === 'Lizard'} text='Lizard' icon={<Logo className="h-6" />} onClick={() => setCurrentTable('Lizard')} />
+            <Tab key='Lizard' active={currentTable === 'Lizard'} text='Lizard' icon={<LizardIcon className="h-6" />} onClick={() => setCurrentTable('Lizard')} />
             <Tab key='Mammal' active={currentTable === 'Mammal'} text='Mammal' icon={<GiSquirrel />} onClick={() => setCurrentTable('Mammal')} />
             <Tab key='Snake' active={currentTable === 'Snake'} text='Snake' icon={<GiSandSnake />} onClick={() => setCurrentTable('Snake')} />
             <Tab key='Arthropod' active={currentTable === 'Arthropod'} text='Arthropod' icon={<GiSpottedBug />} onClick={() => setCurrentTable('Arthropod')} />
