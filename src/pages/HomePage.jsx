@@ -25,7 +25,7 @@ export default function HomePage() {
                 <Card className='bg-white'>
                     <h1 className="heading">Content Card</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet hendrerit neque, nec sodales lectus. Phasellus aliquet vel orci sed facilisis. Vivamus accumsan ligula ac lorem maximus varius. Aliquam erat volutpat. Suspendisse nisi eros, mollis ac arcu in, feugiat condimentum mauris. Fusce at tempor purus, a tempus arcu. Fusce aliquet nisi at elit ullamcorper porttitor a vitae augue. Integer euismod purus non ante elementum, congue luctus nisi iaculis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
-                    <Button text='Enter App' enabled={true} onClick={() => setCurrentPage('Table')} />
+                    <Button text='Enter App' onClick={() => setCurrentPage('Table')} />
                 </Card>
             </div>
 

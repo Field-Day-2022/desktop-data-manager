@@ -13,8 +13,8 @@ export default function TableTools() {
                 onClick={() => setOpen(!open)} />
             {(open)
                 ? <div className="flex space-x-5 ml-5">
-                    <Button className='w-40' enabled={true} icon={<HiDocument />} text={'Form Builder'} />
-                    <Button className='w-40' enabled={true} icon={<BiExport />} text={'Export to CSV'} />
+                    <Button className='w-40' icon={<HiDocument />} text={'Form Builder'} />
+                    <Button className='w-40' icon={<BiExport />} text={'Export to CSV'} />
                 </div>
                 : null}
         </div>
