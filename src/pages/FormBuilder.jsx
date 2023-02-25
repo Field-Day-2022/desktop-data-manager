@@ -1,84 +1,130 @@
 import PageWrapper from './PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 
 export default function FormBuilder() {
-    const [activeCollection, setActiveCollection] = useState('AnswerSet');
+    const [activeCollection, setActiveCollection] = useState('');
     const [documents, setDocuments] = useState([]);
     const [activeDocument, setActiveDocument] = useState();
-    const [documentData, setDocumentData] = useState([])
+    const [documentData, setDocumentData] = useState([]);
     const [activeDocumentData, setActiveDocumentData] = useState();
-    const [activeDocumentDataIndex, setActiveDocumentDataIndex] = useState();
-    const [formData, setFormData] = useState('CRAT');
+    const [formData, setFormData] = useState();
 
     useEffect(() => {
         const getAllDocs = async () => {
             const querySnapshot = await getDocs(collection(db, activeCollection));
             let tempDocArray = [];
-            querySnapshot.forEach(doc => tempDocArray.push(doc.data()));
+            querySnapshot.forEach((doc) => tempDocArray.push(doc));
             setDocuments(tempDocArray);
-        }
+        };
         if (activeCollection) getAllDocs();
         else {
-            setDocuments([])
-            setDocumentData([])
+            setDocuments([]);
+            setDocumentData([]);
         }
-        setActiveDocument('')   
-        setActiveDocumentData('')
-        // setFormData('') // uncomment when done
-    }, [ activeCollection ])
-
+        setActiveDocument('');
+        setActiveDocumentData('');
+        setFormData('');
+    }, [activeCollection]);
 
     useEffect(() => {
         if (activeDocument) {
-            let tempDataArray = []
-            if (activeDocument.answers) {
-                for (const answer of activeDocument.answers) {
-                    tempDataArray.push(answer.primary)
+            let tempDataArray = [];
+            if (activeDocument.data().answers) {
+                for (const answer of activeDocument.data().answers) {
+                    tempDataArray.push(answer.primary);
                 }
             }
             setDocumentData(tempDataArray);
         } else {
-            setDocumentData([])
-        }   
-        setActiveDocumentData('')
-        // setFormData('') // uncomment when done
-    }, [ activeDocument ])
+            setDocumentData([]);
+        }
+        setActiveDocumentData('');
+        setFormData('');
+    }, [activeDocument]);
 
-    activeDocumentData && console.log(activeDocument)
+    const submitChanges = () => {
+
+        let tempDataObj = activeDocument.data();
+        for (let i = 0; i < activeDocument.data().answers.length; i++) {
+            if (activeDocument.data().answers[i].primary === activeDocumentData) {
+                tempDataObj.answers[i] = formData;
+            }
+        }
+
+        console.log('Submit changes...')
+        console.log('previous data:')
+        console.log(activeDocument.data())
+        console.log('new data:')
+        console.log(tempDataObj)
+    };
 
     const renderForm = () => {
-        let output = []
+        let output = [];
         if (activeCollection === 'AnswerSet') {
-            output.push(<label 
-                    key="primaryLabel"
-                    htmlFor="primary"
-                    className='text-xl'
-                >Primary: </label>)
-            output.push(<input 
-                    key="primaryInput"
-                    id="primary"
-                    type='text'
-                    className='border-gray-800 border-2 m-2 rounded text-xl p-1'
-                    value={formData.primary}
-                    onChange={e => setFormData({
-                        ...formData,
-                        primary: e.target.value
-                    })}
-                />)
-            if (activeDocumentData.answers[activeDocumentDataIndex].secondary) {
-                for (const key in activeDocumentData.answers[activeDocumentDataIndex].secondary) {
-                           
+            output.push(
+                <div key={'primaryForm'}>
+                    <label key="primaryLabel" htmlFor="primary" className="text-xl">
+                        Primary:{' '}
+                    </label>
+
+                    <input
+                        key="primaryInput"
+                        id="primary"
+                        type="text"
+                        className="border-gray-800 border-2 m-2 rounded text-xl p-1"
+                        value={formData.primary}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                primary: e.target.value,
+                            })
+                        }
+                    />
+                </div>
+            );
+            if (formData.secondary) {
+                for (const key in formData.secondary) {
+                    output.push(
+                        <div key={`${key}form`}>
+                            <label key={`${key}label`} htmlFor={`${key}input`} className="text-xl">
+                                {`${key}: `}
+                            </label>
+                            <input
+                                key={`${key}input`}
+                                id={`${key}input`}
+                                type="text"
+                                className="border-gray-800 border-2 m-2 rounded text-xl p-1"
+                                value={formData.secondary[key]}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        secondary: {
+                                            ...formData.secondary,
+                                            [key]: e.target.value,
+                                        }
+                                    })
+                                }
+                            />
+                        </div>
+                    );
                 }
             }
         }
         return (
-            <form>
+            <form className="flex flex-col items-center">
                 {output}
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        submitChanges()
+                    }}
+                    className='border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500'
+                >Submit</button>
             </form>
-        )
-    }
+        );
+    };
 
     return (
         <PageWrapper>
@@ -90,57 +136,54 @@ export default function FormBuilder() {
                         <ReusableUnorderedList
                             listItemArray={['AnswerSet', 'DynamicForms']}
                             clickHandler={(listItem) => {
-                                    if (listItem === activeCollection) setActiveCollection('')
-                                    else setActiveCollection(listItem)
-                                }}
+                                if (listItem === activeCollection) setActiveCollection('');
+                                else setActiveCollection(listItem);
+                            }}
                             selectedItem={activeCollection}
                         />
                     </div>
-                    <div className='border-gray-800 border-2 h-[calc(100vh-12em)] rounded'>
+                    <div className="border-gray-800 border-2 h-[calc(100vh-12em)] rounded">
                         <h2 className="text-2xl">Document</h2>
-                        <ReusableUnorderedList 
+                        <ReusableUnorderedList
                             listItemArray={documents}
                             clickHandler={(listItem) => {
-                                    if (listItem === activeDocument) setActiveDocument('')
-                                    else setActiveDocument(listItem)
-                                }}
+                                if (listItem === activeDocument) setActiveDocument('');
+                                else setActiveDocument(listItem);
+                            }}
                             selectedItem={activeDocument}
                         />
                     </div>
-                    <div className='grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-12em)] rounded'>
-                        <div className='border-gray-800 border-b-2 flex flex-col'>
-                            <h2 className='text-2xl'>Data</h2>
-                            <ReusableUnorderedList 
+                    <div className="grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-12em)] rounded">
+                        <div className="border-gray-800 border-b-2 flex flex-col">
+                            <h2 className="text-2xl">Data</h2>
+                            <ReusableUnorderedList
                                 listItemArray={documentData}
                                 clickHandler={(listItem, index) => {
                                     if (listItem === activeDocumentData) {
-                                        setActiveDocumentData('')
-                                        setFormData('')
-                                        setActiveDocumentDataIndex(null);
-                                    }
-                                    else {
-                                        setActiveDocumentData(listItem)
-                                        setFormData(activeDocument.answers[index]);
-                                        setActiveDocumentDataIndex(index)
+                                        setActiveDocumentData('');
+                                        setFormData('');
+                                    } else {
+                                        setActiveDocumentData(listItem);
+                                        setFormData(activeDocument.data().answers[index]);
                                     }
                                 }}
                                 selectedItem={activeDocumentData}
                             />
                         </div>
                         <div>
-                            <h2 className='text-2xl'>Change</h2>
-                            {(activeDocumentData) && renderForm()}
+                            <h2 className="text-2xl">Change</h2>
+                            {activeDocumentData && renderForm()}
                         </div>
                     </div>
                 </div>
             </div>
         </PageWrapper>
     );
-};
+}
 
 const ReusableUnorderedList = ({ listItemArray, clickHandler, selectedItem }) => {
     return (
-        <ul className='h-[calc(100%-2em)] overflow-y-auto'>
+        <ul className="h-[calc(100%-2em)] overflow-y-auto">
             {listItemArray.map((listItem, index) => (
                 <ReusableListItem
                     key={index}
@@ -156,14 +199,18 @@ const ReusableUnorderedList = ({ listItemArray, clickHandler, selectedItem }) =>
 
 const ReusableListItem = ({ listItem, clickHandler, selectedItem, index }) => {
     let displayText = listItem;
-    if (listItem.set_name) displayText = listItem.set_name
+    if (typeof listItem !== 'string') displayText = listItem.data().set_name;
 
-    return <li 
-        onClick={() => clickHandler(listItem, index)}
-        className={
-            listItem === selectedItem ?
-            'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 bg-blue-300 cursor-pointer sticky top-0 rounded'
-            :
-            'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 cursor-pointer rounded'}
-    >{displayText}</li>;
+    return (
+        <li
+            onClick={() => clickHandler(listItem, index)}
+            className={
+                listItem === selectedItem
+                    ? 'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 bg-blue-300 cursor-pointer sticky top-0 rounded'
+                    : 'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 cursor-pointer rounded'
+            }
+        >
+            {displayText}
+        </li>
+    );
 };
