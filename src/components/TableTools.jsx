@@ -2,31 +2,70 @@ import { useState } from "react";
 import { AiFillTool } from "react-icons/ai";
 import { BiExport } from "react-icons/bi";
 import { HiDocument } from "react-icons/hi";
-import Button from "./Button";
-import { AnimatePresence, motion } from "framer-motion";
+import { BsPlusSquareFill } from 'react-icons/bs'
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 export default function TableTools() {
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
+
 
     return (
-        <div className='flex ml-3 m-auto p-2'>
-            <AiFillTool
-                className='text-4xl rounded-xl h-12 w-12 text-neutral-800 cursor-pointer m-auto z-50 bg-neutral-300'
-                onClick={() => setOpen(!open)} />
-            <AnimatePresence>
-                {(open)
-                    &&
-                    <motion.div
-                        key='toolkit'
-                        initial={{ scaleX:0.5, opacity: 0, x: '-100%' }}
-                        animate={{ scaleX:1, opacity: 1, x: '-8%' }}
-                        exit={{ scaleX:.5, opacity: 0, x: '-100%' }}
-                        transition={{ duration: .2, ease: 'easeOut' }}
-                        className="flex space-x-5 my-auto bg-neutral-300 p-1 px-5 pl-10 rounded-xl">
-                        <Button className='w-40' icon={<HiDocument />} text={'Form Builder'} />
-                        <Button className='w-40' icon={<BiExport />} text={'Export to CSV'} />
-                    </motion.div>}
-            </AnimatePresence>
+        <div className="flex">
+            <LayoutGroup>
+                <motion.div
+                    layout
+                    key='container'
+                    className='flex space-x-5 items-center m-auto p-2 z-50 bg-neutral-200 h-16 w-fit border-r-2 border-asu-maroon active:bg-neutral-300'>
+
+                    <AnimatePresence>
+
+                        {open &&
+                            <motion.div layout key='toolkit' transition={{ duration: .3 }} initial={{ x: '-100%', opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: '-100%', opacity: 0 }} className="flex space-x-5 mx-auto">
+                                <div className='flex-col items-center text-sm w-36 text-center'>
+                                    <HiDocument className="text-4xl mx-auto" />
+                                    {'Form Builder'}
+                                </div>
+                                <div className='flex-col items-center text-sm w-36 text-center'>
+                                    <BiExport className="text-4xl mx-auto" />
+                                    {'Export to CSV'}
+                                </div>
+
+                            </motion.div>}
+                        <motion.div layout key='wrench' onClick={() => setOpen(!open)}>
+                            <AiFillTool className="text-4xl" />
+                        </motion.div>
+
+                    </AnimatePresence>
+                </motion.div >
+            </LayoutGroup>
+            <LayoutGroup>
+                <motion.div
+                    layout
+                    key='container'
+                    className='flex space-x-5 m-auto p-2 items-center bg-neutral-200 h-16 w-fit border-r-2 border-asu-maroon active:bg-neutral-300'>
+
+                    <AnimatePresence>
+
+                        {open2 &&
+                            <motion.div layout key='toolkit' transition={{ duration: .3 }} initial={{ x: '-100%', opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: '-100%', opacity: 0 }} className="flex space-x-5 mx-auto">
+                                <div className='flex-col items-center text-sm w-36 text-center'>
+                                    <HiDocument className="text-4xl mx-auto" />
+                                    {'New Session'}
+                                </div>
+                                <div className='flex-col items-center text-sm w-36 text-center'>
+                                    <HiDocument className="text-4xl mx-auto" />
+                                    {'New Data Entry'}
+                                </div>
+
+                            </motion.div>}
+                        <motion.div layout key='plus' onClick={() => setOpen2(!open2)}>
+                            <BsPlusSquareFill className="text-3xl" />
+                        </motion.div>
+
+                    </AnimatePresence>
+                </motion.div >
+            </LayoutGroup>
         </div>
     );
 }
