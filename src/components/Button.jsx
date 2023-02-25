@@ -1,6 +1,6 @@
 export default function Button({ className, text, onClick, disabled, icon }) {
 
-    const baseClass = 'flex rounded-md p-2 text-white'
+    const baseClass = 'flex rounded-md p-1.5 text-white'
     const activeClass = 'bg-asu-maroon cursor-pointer border-transparent border-2 active:border-asu-gold'
     const inactiveClass = 'bg-neutral-800'
 
