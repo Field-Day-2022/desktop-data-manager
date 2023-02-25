@@ -1,7 +1,7 @@
 import Button from "../components/Button";
 import Card from "../components/Card";
-import GoogleIcon from "../components/GoogleIcon";
-import Logo from "../components/Logo";
+import GoogleIcon from "../assets/GoogleIcon";
+import LizardIcon from "../assets/LizardIcon";
 import PageWrapper from "./PageWrapper";
 
 import { notify, Type } from "../components/Notifier";
@@ -32,7 +32,7 @@ export default function LoginPage({ auth }) {
                     />
                 </div>
             </Card>
-            <Logo className="text-asu-maroon h-48 mx-auto rotate-45" />
+            <LizardIcon className="text-asu-maroon h-48 mx-auto rotate-45" />
         </PageWrapper>
     );
 }
