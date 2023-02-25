@@ -5,7 +5,7 @@ export default function Button({ className, text, onClick, disabled, icon }) {
     const inactiveClass = 'bg-neutral-800'
 
     return (
-        <div className={(disabled ? inactiveClass : activeClass) + ' ' + baseClass + ' ' + className}
+        <div className={(disabled ? inactiveClass : activeClass) + ' ' + baseClass + '  ' + className}
             onClick={onClick}>
             {icon && <ButtonIcon>{icon}</ButtonIcon>}
             <ButtonText>{text}</ButtonText>
