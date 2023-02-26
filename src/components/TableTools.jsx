@@ -12,7 +12,7 @@ export default function TableTools() {
                     <TextRevealIconButton text='Form Builder' icon={<TbTable />} onClick={()=> console.log('Clicked form builder')} />
                     <TextRevealIconButton text='Export to CSV' icon={<BiExport />} onClick={()=> console.log('Clicked export to csv')} />
                     <TextRevealIconButton text='New Session' icon={<HiFolderPlus />} onClick={()=> console.log('Clicked new session')} />
-                    <TextRevealIconButton text='New Data Entry' icon={<HiDocumentPlus onClick={()=> console.log('Clicked new entry')} />} />
+                    <TextRevealIconButton text='New Data Entry' icon={<HiDocumentPlus />} onClick={()=> console.log('Clicked new entry')} />
                 </motion.div>
             </LayoutGroup>
         </AnimatePresence>

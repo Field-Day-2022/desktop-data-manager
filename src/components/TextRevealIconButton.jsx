@@ -26,6 +26,7 @@ function SlideInFromLeft({ children }) {
     return (
         <AnimatePresence>
             <motion.div
+                className="pl-2"
                 key='formbuildertext'
                 initial={{ opacity: 0, x: '-100%' }}
                 animate={{ opacity: 1, x: 0 }}
