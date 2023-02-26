@@ -1,15 +1,17 @@
-export default function Button({ className, text, onClick, disabled, icon }) {
+import { motion } from "framer-motion"
 
-    const baseClass = 'flex rounded-md p-1.5 text-white whitespace-nowrap'
-    const activeClass = 'bg-asu-maroon cursor-pointer border-transparent border-2 active:border-asu-gold'
-    const inactiveClass = 'bg-neutral-800'
+export default function Button({ className, text, onClick, onMouseEnter, onMouseLeave, disabled, icon }) {
 
     return (
-        <div className={(disabled ? inactiveClass : activeClass) + ' ' + baseClass + '  ' + className}
-            onClick={onClick}>
+        <motion.button
+            key={text}
+            className={'button ' + (disabled && 'bg-neutral-800 ') + className}
+            onMouseEnter={() => onMouseEnter()}
+            onMouseLeave={() => onMouseLeave()}
+            onClick={() => onClick()}>
             {icon && <ButtonIcon>{icon}</ButtonIcon>}
-            <ButtonText>{text}</ButtonText>
-        </div>
+            <ButtonText>{(text) && text}</ButtonText>
+        </motion.button>
 
     )
 }
@@ -18,6 +20,6 @@ function ButtonIcon({ children }) {
     return (<div className='flex-none text-2xl m-auto px-1'>{children}</div>)
 }
 
-function ButtonText({children}) {
+function ButtonText({ children }) {
     return (<div className="flex-grow">{children}</div>);
 }
