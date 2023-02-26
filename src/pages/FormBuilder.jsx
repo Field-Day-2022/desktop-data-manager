@@ -1,7 +1,8 @@
 import PageWrapper from './PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase';
+import { notify, Type } from '../components/Notifier';
 
 export default function FormBuilder() {
     const [activeCollection, setActiveCollection] = useState('');
@@ -44,8 +45,18 @@ export default function FormBuilder() {
         setFormData('');
     }, [activeDocument]);
 
-    const submitChanges = () => {
+    const pushChangesToFirestore = async (newData) => {
+        await setDoc(doc(db, activeCollection, activeDocument.id), newData)
+            .then(() => {
+                notify(Type.success, 'Changes successfully written to database!');
+            })
+            .catch((e) => {
+                notify(Type.error, `Error writing to database: ${e}`);
+            });
+        setActiveCollection('');
+    };
 
+    const submitChanges = () => {
         let tempDataObj = activeDocument.data();
         for (let i = 0; i < activeDocument.data().answers.length; i++) {
             if (activeDocument.data().answers[i].primary === activeDocumentData) {
@@ -53,11 +64,7 @@ export default function FormBuilder() {
             }
         }
 
-        console.log('Submit changes...')
-        console.log('previous data:')
-        console.log(activeDocument.data())
-        console.log('new data:')
-        console.log(tempDataObj)
+        pushChangesToFirestore(tempDataObj);
     };
 
     const renderForm = () => {
@@ -103,7 +110,7 @@ export default function FormBuilder() {
                                         secondary: {
                                             ...formData.secondary,
                                             [key]: e.target.value,
-                                        }
+                                        },
                                     })
                                 }
                             />
@@ -118,10 +125,12 @@ export default function FormBuilder() {
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        submitChanges()
+                        submitChanges();
                     }}
-                    className='border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500'
-                >Submit</button>
+                    className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                >
+                    Submit
+                </button>
             </form>
         );
     };
