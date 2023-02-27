@@ -3,7 +3,6 @@ import { AnimatePresence, LayoutGroup, motion, useAnimationControls } from 'fram
 import { useEffect } from 'react';
 
 export default function TextRevealIconButton({ icon, text, onClick }) {
-    const [showText, setShowText] = useState(false);
     const buttonControls = useAnimationControls();
     const textControls = useAnimationControls();
     const ref = useRef(null);
@@ -12,22 +11,16 @@ export default function TextRevealIconButton({ icon, text, onClick }) {
 
     const expand = () => {
         buttonControls.start({ width: `${calculateWidth()}` })
-        setShowText(true);
         textControls.start('visible');
     }
 
     const contract = () => {
         buttonControls.start({ width: '40px' })
-        setShowText(false);
         textControls.start('hidden')
     }
 
     useEffect(() => {
-        textControls.set({
-            visibility: 'hidden',
-            opacity: 0,
-            x: '-25%',
-        })
+        textControls.set('hidden')
     }, [])
     
 
