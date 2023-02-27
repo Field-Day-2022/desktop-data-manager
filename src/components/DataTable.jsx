@@ -1,18 +1,37 @@
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { BiExport } from 'react-icons/bi';
 import { MdViewColumn } from 'react-icons/md';
 import { TableEntry } from '../components/TableEntry';
 import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
+import Modal from './Modal';
+import { useState } from 'react';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
+    const [showColumnToggle, setShowColumnToggle] = useState(false);
+
     return (
         <div className="bg-white">
+            {showColumnToggle &&
+                <Modal
+                    title='Toggle Columns'
+                    text='Choose the columns to display.'
+                    onCancel={() => setShowColumnToggle(false)}
+                >
+                    {labels && labels.map((label) => <div className='flex p-2 space-x-5'>
+                        <input type='checkbox' />
+                        <div>{label}</div>
+                    </div>)}
+                </Modal>
+            }
+
             <div className="flex justify-between px-5 space-x-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 space-x-5 items-center">
                     <input className="border-b border-neutral-800 p-2" type="text" name="search" />
-                    <MdViewColumn className="text-2xl" />
+                    <div onClick={() => setShowColumnToggle(true)}>
+                        <MdViewColumn className="text-2xl" />
+                    </div>
+
                     <BiExport className="text-2xl" />
                 </div>
             </div>
