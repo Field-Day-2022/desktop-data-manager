@@ -1,7 +1,7 @@
 import { BiExport } from 'react-icons/bi';
 import { MdViewColumn } from 'react-icons/md';
 import { TableEntry } from '../components/TableEntry';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import Modal from './Modal';
 import { useState } from 'react';
@@ -10,20 +10,18 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     const [showColumnToggle, setShowColumnToggle] = useState(false);
 
     return (
-        <div className="bg-white">
-            {showColumnToggle &&
-                <Modal
-                    title='Toggle Columns'
-                    text='Choose the columns to display.'
-                    onCancel={() => setShowColumnToggle(false)}
-                >
-                    {labels && labels.map((label) => <div className='flex p-2 space-x-5'>
-                        <input type='checkbox' />
-                        <div>{label}</div>
-                    </div>)}
-                </Modal>
-            }
-
+        <motion.div className="bg-white">
+            <Modal
+                showModal={showColumnToggle}
+                title='Toggle Columns'
+                text='Choose the columns to display.'
+                onCancel={() => setShowColumnToggle(false)}
+            >
+                {labels && labels.map((label) => <div className='flex p-2 space-x-5'>
+                    <input type='checkbox' />
+                    <div>{label}</div>
+                </div>)}
+            </Modal>
             <div className="flex justify-between px-5 space-x-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 space-x-5 items-center">
@@ -67,7 +65,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
 
                 </table>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

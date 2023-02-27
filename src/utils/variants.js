@@ -21,3 +21,22 @@ export const tableBody = {
         opacity: 1,
     },
 };
+
+export const modalVariant = {
+    hidden: {
+        opacity: 0,
+        y: '100%',
+        scaleX: 0,
+        transition: {
+            type: 'tween',
+        },
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scaleX: 1,
+        transition: {
+            type: 'tween',
+        },
+    },
+}
