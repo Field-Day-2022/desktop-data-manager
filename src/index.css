@@ -29,6 +29,7 @@
         background: #8c1d40;
         border-width: 2px;
         border-color: transparent;
+        width: 2.5em;
     }
 
     .button:active {
