@@ -5,66 +5,79 @@ import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
 
 export default function FormBuilder() {
-    const [activeCollection, setActiveCollection] = useState('');
-    const [documents, setDocuments] = useState([]);
-    const [activeDocument, setActiveDocument] = useState();
-    const [documentData, setDocumentData] = useState([]);
-    const [activeDocumentData, setActiveDocumentData] = useState();
-    const [formData, setFormData] = useState();
+    const [activeCollection, setActiveCollection] = useState(''); // current collection selected
+    const [documents, setDocuments] = useState([]);  // array of all documents with just their data
+    const [documentSnapshots, setDocumentSnapshots] = useState([]); // array of all documents, as Firestore document objects
+    const [activeDocument, setActiveDocument] = useState(); // current selected document, just its data
+    const [activeDocumentIndex, setActiveDocumentIndex] = useState(-1); // index of current document out of all documents for easy access
+    const [documentDataPrimaries, setDocumentDataPrimaries] = useState([]); // array of all primary keys for each document
+    const [activeDocumentDataPrimary, setActiveDocumentDataPrimary] = useState(); // currently selected primary key
+    const [formData, setFormData] = useState(); // form data
 
     useEffect(() => {
         const getAllDocs = async () => {
             const querySnapshot = await getDocs(collection(db, activeCollection));
             let tempDocArray = [];
-            querySnapshot.forEach((doc) => tempDocArray.push(doc));
+            let tempDocSnapshotArray = [];
+            querySnapshot.forEach((doc) => {
+                tempDocArray.push(doc.data())
+                tempDocSnapshotArray.push(doc)
+            });
             setDocuments(tempDocArray);
+            setDocumentSnapshots(tempDocSnapshotArray);
         };
         if (activeCollection) getAllDocs();
         else {
             setDocuments([]);
-            setDocumentData([]);
+            setDocumentDataPrimaries([]);
         }
         setActiveDocument('');
-        setActiveDocumentData('');
+        setActiveDocumentDataPrimary('');
         setFormData('');
+        setActiveDocumentIndex(-1);
     }, [activeCollection]);
 
     useEffect(() => {
         if (activeDocument) {
             let tempDataArray = [];
-            if (activeDocument.data().answers) {
-                for (const answer of activeDocument.data().answers) {
+            if (activeDocument.answers) {
+                for (const answer of activeDocument.answers) {
                     tempDataArray.push(answer.primary);
                 }
             }
-            setDocumentData(tempDataArray);
+            setDocumentDataPrimaries(tempDataArray);
         } else {
-            setDocumentData([]);
+            setDocumentDataPrimaries([]);
         }
-        setActiveDocumentData('');
+        setActiveDocumentDataPrimary('');
         setFormData('');
     }, [activeDocument]);
 
-    const pushChangesToFirestore = async (newData) => {
-        await setDoc(doc(db, activeCollection, activeDocument.id), newData)
+    const pushChangesToFirestore = async () => {
+        await setDoc(doc(db, activeCollection, documentSnapshots[activeDocumentIndex].id), documents[activeDocumentIndex])
             .then(() => {
                 notify(Type.success, 'Changes successfully written to database!');
             })
             .catch((e) => {
                 notify(Type.error, `Error writing to database: ${e}`);
             });
-        setActiveCollection('');
     };
 
-    const submitChanges = () => {
-        let tempDataObj = activeDocument.data();
-        for (let i = 0; i < activeDocument.data().answers.length; i++) {
-            if (activeDocument.data().answers[i].primary === activeDocumentData) {
-                tempDataObj.answers[i] = formData;
+    const updateUI = () => {
+        let tempDataPrimaries = documentDataPrimaries;
+        for (let i = 0; i < activeDocument.answers.length; i++) {
+            if (activeDocument.answers[i].primary === activeDocumentDataPrimary) {
+                documents[activeDocumentIndex].answers[i] = formData;
+                tempDataPrimaries[i] = formData.primary;
             }
         }
+        setDocumentDataPrimaries(tempDataPrimaries)
+        setActiveDocumentDataPrimary(formData.primary)
+    }
 
-        pushChangesToFirestore(tempDataObj);
+    const submitChanges = () => {
+        updateUI();
+        pushChangesToFirestore();
     };
 
     const renderForm = () => {
@@ -155,9 +168,12 @@ export default function FormBuilder() {
                         <h2 className="text-2xl">Document</h2>
                         <ReusableUnorderedList
                             listItemArray={documents}
-                            clickHandler={(listItem) => {
+                            clickHandler={(listItem, index) => {
                                 if (listItem === activeDocument) setActiveDocument('');
-                                else setActiveDocument(listItem);
+                                else {
+                                    setActiveDocument(listItem)
+                                    setActiveDocumentIndex(index);
+                                };
                             }}
                             selectedItem={activeDocument}
                         />
@@ -166,22 +182,22 @@ export default function FormBuilder() {
                         <div className="border-gray-800 border-b-2 flex flex-col">
                             <h2 className="text-2xl">Data</h2>
                             <ReusableUnorderedList
-                                listItemArray={documentData}
+                                listItemArray={documentDataPrimaries}
                                 clickHandler={(listItem, index) => {
-                                    if (listItem === activeDocumentData) {
-                                        setActiveDocumentData('');
+                                    if (listItem === activeDocumentDataPrimary) {
+                                        setActiveDocumentDataPrimary('');
                                         setFormData('');
                                     } else {
-                                        setActiveDocumentData(listItem);
-                                        setFormData(activeDocument.data().answers[index]);
+                                        setActiveDocumentDataPrimary(listItem);
+                                        setFormData(activeDocument.answers[index]);
                                     }
                                 }}
-                                selectedItem={activeDocumentData}
+                                selectedItem={activeDocumentDataPrimary}
                             />
                         </div>
                         <div>
                             <h2 className="text-2xl">Change</h2>
-                            {activeDocumentData && renderForm()}
+                            {activeDocumentDataPrimary && renderForm()}
                         </div>
                     </div>
                 </div>
@@ -208,7 +224,7 @@ const ReusableUnorderedList = ({ listItemArray, clickHandler, selectedItem }) =>
 
 const ReusableListItem = ({ listItem, clickHandler, selectedItem, index }) => {
     let displayText = listItem;
-    if (typeof listItem !== 'string') displayText = listItem.data().set_name;
+    if (typeof listItem !== 'string') displayText = listItem.set_name;
 
     return (
         <li
