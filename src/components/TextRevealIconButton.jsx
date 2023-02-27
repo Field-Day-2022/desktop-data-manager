@@ -10,7 +10,7 @@ export default function TextRevealIconButton({ icon, text, onClick }) {
             <motion.button
                 layout
                 key="motionbutton"
-                className="button"
+                className="icon-button"
                 onMouseEnter={() => {
                     controls.start({
                         width: '10em',

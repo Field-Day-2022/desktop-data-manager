@@ -29,7 +29,22 @@
         background: #8c1d40;
         border-width: 2px;
         border-color: transparent;
+    }
+
+    .icon-button {
+        display: flex;
+        border-radius: 0.375rem;
+        padding: 0.357rem;
+        color: white;
+        white-space: nowrap;
+        background: #8c1d40;
+        border-width: 2px;
+        border-color: transparent;
         width: 2.5em;
+    }
+
+    .icon-button:active {
+        border-color: #ffc627;
     }
 
     .button:active {
