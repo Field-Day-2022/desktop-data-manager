@@ -23,7 +23,7 @@ export default function LoginPage({ auth }) {
                         {(auth.loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
                     </p>
                     <Button
-                        enabled={!auth.loading}
+                        disabled={auth.loading}
                         text={(!auth.loading ? 'Login' : 'Please wait.')}
                         onClick={() =>
                             auth.login()
