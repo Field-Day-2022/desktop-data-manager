@@ -1,5 +1,5 @@
-import { useState, useRef, forwardRef } from 'react';
-import { AnimatePresence, LayoutGroup, motion, useAnimationControls } from 'framer-motion';
+import { useRef, forwardRef } from 'react';
+import { LayoutGroup, motion, useAnimationControls } from 'framer-motion';
 import { useEffect } from 'react';
 
 export default function TextRevealIconButton({ icon, text, onClick }) {
