@@ -1,4 +1,3 @@
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { BiExport } from 'react-icons/bi';
 import { MdViewColumn } from 'react-icons/md';
 import { TableEntry } from '../components/TableEntry';
