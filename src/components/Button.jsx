@@ -1,16 +1,23 @@
-export default function Button({ text, onClick, enabled, icon }) {
+import { motion } from "framer-motion"
+
+export default function Button({ className, text, onClick, disabled, icon }) {
+
     return (
-        (enabled ?
-            <div className={"flex rounded-md p-2 bg-asu-maroon text-white cursor-pointer border-transparent border-2 active:border-asu-gold"}
-                onClick={onClick}>
-                <div className="flex-none">{icon ? icon : null}</div>
-                <div className="flex-grow">{text}</div>
-            </div>
-            :
-            <div className={"flex rounded-md p-2 bg-neutral-800 text-white"}>
-                <div className="flex-none">{icon ? icon : null}</div>
-                <div className="flex-grow">{text}</div>
-            </div>
-        )
+        <motion.button
+            key={text}
+            className={'button ' + (disabled && 'bg-neutral-800 ') + className}
+            onClick={() => onClick()}>
+            {icon && <ButtonIcon>{icon}</ButtonIcon>}
+            <ButtonText>{(text) && text}</ButtonText>
+        </motion.button>
+
     )
+}
+
+function ButtonIcon({ children }) {
+    return (<div className='flex-none text-2xl m-auto px-1'>{children}</div>)
+}
+
+function ButtonText({ children }) {
+    return (<div className="flex-grow">{children}</div>);
 }

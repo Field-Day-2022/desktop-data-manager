@@ -6,9 +6,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'grand-canyon': "url('./assets/grandcanyon.png')"
-      },
       colors: {
         'asu-maroon': '#8c1d40',
         'asu-gold': '#ffc627'
