@@ -18,7 +18,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                 onCancel={() => setShowColumnToggle(false)}
             >
                 {labels && labels.map((label) => <div className='flex p-2 space-x-5'>
-                    <input type='checkbox' />
+                    <input className='accent-asu-maroon w-4' type='checkbox' />
                     <div>{label}</div>
                 </div>)}
             </Modal>
