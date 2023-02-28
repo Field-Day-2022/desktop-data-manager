@@ -3,16 +3,18 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, setDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
+import { LayoutGroup, motion } from 'framer-motion';
 
 export default function FormBuilder() {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
-    const [documents, setDocuments] = useState([]);  // array of all documents with just their data
+    const [documents, setDocuments] = useState([]); // array of all documents with just their data
     const [documentSnapshots, setDocumentSnapshots] = useState([]); // array of all documents, as Firestore document objects
     const [activeDocument, setActiveDocument] = useState(); // current selected document, just its data
     const [activeDocumentIndex, setActiveDocumentIndex] = useState(-1); // index of current document out of all documents for easy access
     const [documentDataPrimaries, setDocumentDataPrimaries] = useState([]); // array of all primary keys for each document
     const [activeDocumentDataPrimary, setActiveDocumentDataPrimary] = useState(); // currently selected primary key
     const [formData, setFormData] = useState(); // form data
+    const [changeBoxTitle, setChangeBoxTitle] = useState('Change');
 
     useEffect(() => {
         const getAllDocs = async () => {
@@ -20,8 +22,8 @@ export default function FormBuilder() {
             let tempDocArray = [];
             let tempDocSnapshotArray = [];
             querySnapshot.forEach((doc) => {
-                tempDocArray.push(doc.data())
-                tempDocSnapshotArray.push(doc)
+                tempDocArray.push(doc.data());
+                tempDocSnapshotArray.push(doc);
             });
             setDocuments(tempDocArray);
             setDocumentSnapshots(tempDocSnapshotArray);
@@ -51,10 +53,14 @@ export default function FormBuilder() {
         }
         setActiveDocumentDataPrimary('');
         setFormData('');
+        setChangeBoxTitle('Edit Data')
     }, [activeDocument]);
 
     const pushChangesToFirestore = async () => {
-        await setDoc(doc(db, activeCollection, documentSnapshots[activeDocumentIndex].id), documents[activeDocumentIndex])
+        await setDoc(
+            doc(db, activeCollection, documentSnapshots[activeDocumentIndex].id),
+            documents[activeDocumentIndex]
+        )
             .then(() => {
                 notify(Type.success, 'Changes successfully written to database!');
             })
@@ -71,13 +77,20 @@ export default function FormBuilder() {
                 tempDataPrimaries[i] = formData.primary;
             }
         }
-        setDocumentDataPrimaries(tempDataPrimaries)
-        setActiveDocumentDataPrimary(formData.primary)
-    }
+        setDocumentDataPrimaries(tempDataPrimaries);
+        setActiveDocumentDataPrimary(formData.primary);
+    };
 
     const submitChanges = () => {
-        updateUI();
-        pushChangesToFirestore();
+        if (changeBoxTitle === 'Edit Data') {
+            updateUI();
+            pushChangesToFirestore();
+        } else if (changeBoxTitle === 'Add New Data') {
+            activeDocument.answers.push(formData);
+            documents[activeDocumentIndex] = activeDocument;
+            setDocumentDataPrimaries([...documentDataPrimaries, formData.primary]);
+            pushChangesToFirestore();
+        }
     };
 
     const renderForm = () => {
@@ -148,6 +161,22 @@ export default function FormBuilder() {
         );
     };
 
+    const addNewData = () => {
+        setChangeBoxTitle('Add New Data');
+        setActiveDocumentDataPrimary('');
+        let formTemplate = {};
+        if (activeCollection === 'AnswerSet') {
+            formTemplate.primary = '';
+            if (activeDocument.answers[0].secondary) {
+                formTemplate.secondary = {};
+                for (const secondaryKey in activeDocument.answers[0].secondary) {
+                    formTemplate.secondary[secondaryKey] = '';
+                }
+            }
+        }
+        setFormData(formTemplate);
+    };
+
     return (
         <PageWrapper>
             <div className="flex flex-col items-start p-2">
@@ -165,22 +194,34 @@ export default function FormBuilder() {
                         />
                     </div>
                     <div className="border-gray-800 border-2 h-[calc(100vh-12em)] rounded">
-                        <h2 className="text-2xl">Document</h2>
+                        <div className="flex justify-around items-center">
+                            <h2 className="text-2xl">Document</h2>
+                            {activeCollection && (
+                                <AddNewButton
+                                    clickHandler={() => console.log('clicked add new document')}
+                                />
+                            )}
+                        </div>
                         <ReusableUnorderedList
                             listItemArray={documents}
                             clickHandler={(listItem, index) => {
                                 if (listItem === activeDocument) setActiveDocument('');
                                 else {
-                                    setActiveDocument(listItem)
+                                    setActiveDocument(listItem);
                                     setActiveDocumentIndex(index);
-                                };
+                                }
                             }}
                             selectedItem={activeDocument}
                         />
                     </div>
                     <div className="grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-12em)] rounded">
                         <div className="border-gray-800 border-b-2 flex flex-col">
-                            <h2 className="text-2xl">Data</h2>
+                            <div className="flex justify-around items-center">
+                                <h2 className="text-2xl">Data</h2>
+                                {activeDocument && (
+                                    <AddNewButton clickHandler={() => addNewData()} />
+                                )}
+                            </div>
                             <ReusableUnorderedList
                                 listItemArray={documentDataPrimaries}
                                 clickHandler={(listItem, index) => {
@@ -190,14 +231,16 @@ export default function FormBuilder() {
                                     } else {
                                         setActiveDocumentDataPrimary(listItem);
                                         setFormData(activeDocument.answers[index]);
+                                        setChangeBoxTitle('Edit Data');
                                     }
                                 }}
                                 selectedItem={activeDocumentDataPrimary}
                             />
                         </div>
                         <div>
-                            <h2 className="text-2xl">Change</h2>
-                            {activeDocumentDataPrimary && renderForm()}
+                            <h2 className="text-2xl">{changeBoxTitle}</h2>
+                            {(activeDocumentDataPrimary || changeBoxTitle === 'Add New Data') &&
+                                renderForm()}
                         </div>
                     </div>
                 </div>
@@ -208,7 +251,7 @@ export default function FormBuilder() {
 
 const ReusableUnorderedList = ({ listItemArray, clickHandler, selectedItem }) => {
     return (
-        <ul className="h-[calc(100%-2em)] overflow-y-auto">
+        <ul className="h-[calc(100%-4em)] overflow-y-auto">
             {listItemArray.map((listItem, index) => (
                 <ReusableListItem
                     key={index}
@@ -237,5 +280,17 @@ const ReusableListItem = ({ listItem, clickHandler, selectedItem, index }) => {
         >
             {displayText}
         </li>
+    );
+};
+
+const AddNewButton = ({ clickHandler }) => {
+    return (
+        <motion.button
+            layout
+            onClick={() => clickHandler()}
+            className="border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500  cursor-pointer rounded"
+        >
+            Add new
+        </motion.button>
     );
 };
