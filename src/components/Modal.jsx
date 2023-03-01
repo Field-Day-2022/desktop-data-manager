@@ -53,13 +53,16 @@ export default function Modal({ title, text, onOkay, onCancel, children, showMod
 }
 
 function ModalOverlay() {
-    <motion.div
-        className="fixed inset-0 bg-neutral-300 opacity-0"
-        key="overlay"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.75 }}
-        exit={{ opacity: 0 }}
-    />
+    return (
+        <motion.div
+            className="fixed inset-0 bg-neutral-300 opacity-0"
+            key="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.75 }}
+            exit={{ opacity: 0 }}
+        />
+    );
+
 }
 
 function ModalBuffer({ children }) {
