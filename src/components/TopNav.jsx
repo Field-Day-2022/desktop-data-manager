@@ -1,7 +1,6 @@
-import LizardIcon from '../assets/LizardIcon';
+import {LizardIcon} from '../assets/icons';
 import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
-
 import { useAtom } from 'jotai';
 import { currentPageName } from '../utils/jotai';
 

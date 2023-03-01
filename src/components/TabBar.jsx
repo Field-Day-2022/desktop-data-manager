@@ -1,7 +1,4 @@
-import { GiTurtle, GiFrog, GiSpottedBug, GiSandSnake, GiSquirrel } from 'react-icons/gi';
-import { FaClipboard } from 'react-icons/fa'
-import LizardIcon from '../assets/LizardIcon';
-
+import { AmphibianIcon, ArthropodIcon, LizardIcon, MammalIcon, SessionIcon, SnakeIcon, TurtleIcon } from '../assets/icons';
 import { useAtom } from 'jotai';
 import { currentTableName } from '../utils/jotai';
 
@@ -20,13 +17,13 @@ export default function TabBar() {
 
     return (
         <div className='flex pt-4 px-2'>
-            <Tab key='Turtle' active={currentTable === 'Turtle'} text='Turtle' icon={<GiTurtle />} onClick={() => setCurrentTable('Turtle')} />
+            <Tab key='Turtle' active={currentTable === 'Turtle'} text='Turtle' icon={<TurtleIcon />} onClick={() => setCurrentTable('Turtle')} />
             <Tab key='Lizard' active={currentTable === 'Lizard'} text='Lizard' icon={<LizardIcon className="h-6" />} onClick={() => setCurrentTable('Lizard')} />
-            <Tab key='Mammal' active={currentTable === 'Mammal'} text='Mammal' icon={<GiSquirrel />} onClick={() => setCurrentTable('Mammal')} />
-            <Tab key='Snake' active={currentTable === 'Snake'} text='Snake' icon={<GiSandSnake />} onClick={() => setCurrentTable('Snake')} />
-            <Tab key='Arthropod' active={currentTable === 'Arthropod'} text='Arthropod' icon={<GiSpottedBug />} onClick={() => setCurrentTable('Arthropod')} />
-            <Tab key='Amphibian' active={currentTable === 'Amphibian'} text='Amphibian' icon={<GiFrog />} onClick={() => setCurrentTable('Amphibian')} />
-            <Tab key='Session' active={currentTable === 'Session'} text='Session' icon={<FaClipboard />} onClick={() => setCurrentTable('Session')} />
+            <Tab key='Mammal' active={currentTable === 'Mammal'} text='Mammal' icon={<MammalIcon />} onClick={() => setCurrentTable('Mammal')} />
+            <Tab key='Snake' active={currentTable === 'Snake'} text='Snake' icon={<SnakeIcon />} onClick={() => setCurrentTable('Snake')} />
+            <Tab key='Arthropod' active={currentTable === 'Arthropod'} text='Arthropod' icon={<ArthropodIcon />} onClick={() => setCurrentTable('Arthropod')} />
+            <Tab key='Amphibian' active={currentTable === 'Amphibian'} text='Amphibian' icon={<AmphibianIcon />} onClick={() => setCurrentTable('Amphibian')} />
+            <Tab key='Session' active={currentTable === 'Session'} text='Session' icon={<SessionIcon />} onClick={() => setCurrentTable('Session')} />
         </div>
     );
 }

@@ -13,11 +13,12 @@ import { appMode, currentBatchSize, currentProjectName, currentTableName } from 
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 import TableTools from '../components/TableTools';
-import Modal from '../components/Modal';
 import TextRevealIconButton from '../components/TextRevealIconButton';
-import { TbTable } from 'react-icons/tb';
-import { BiExport } from 'react-icons/bi';
-import { HiDocumentPlus, HiFolderPlus } from 'react-icons/hi2';
+import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon } from '../assets/icons';
+import FormBuilderModal from '../modals/FormBuilderModal';
+import ExportModal from '../modals/ExportModal';
+import NewSessionModal from '../modals/NewSessionModal';
+import NewDataModal from '../modals/NewDataModal'
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -131,30 +132,10 @@ export default function TablePage() {
 
     return (
         <PageWrapper>
-            <Modal
-                showModal={activeTool === 'formBuilder'}
-                title='Form Builder'
-                text='Create a custom form below.'
-                onCancel={() => setActiveTool('none')}
-            />
-            <Modal
-                showModal={activeTool === 'export'}
-                title='Export'
-                text='Choose export options.'
-                onCancel={() => setActiveTool('none')}
-            />
-            <Modal
-                showModal={activeTool === 'newSession'}
-                title='New Session'
-                text='Create a new session entry.'
-                onCancel={() => setActiveTool('none')}
-            />
-            <Modal
-                showModal={activeTool === 'newData'}
-                title='New Data Entry'
-                text='Create a new data entry.'
-                onCancel={() => setActiveTool('none')}
-            />
+            <FormBuilderModal showModal={activeTool === 'formBuilder'} onCancel={() => setActiveTool('none')} />
+            <ExportModal showModal={activeTool === 'export'} onCancel={() => setActiveTool('none')} />
+            <NewSessionModal showModal={activeTool === 'newSession'} onCancel={() => setActiveTool('none')} />
+            <NewDataModal showModal={activeTool === 'newData'} onCancel={() => setActiveTool('none')} />
             <div className='flex justify-between items-center overflow-auto'>
                 <TabBar />
                 <div className='flex items-center px-5 space-x-5'>
@@ -173,10 +154,10 @@ export default function TablePage() {
                 <DataTable name={tableName} labels={labels} entries={entries} setEntries={setEntries} />
                 <div className='flex justify-between overflow-auto'>
                     <TableTools>
-                        <TextRevealIconButton text='Form Builder' icon={<TbTable />} onClick={() => setActiveTool('formBuilder')} />
-                        <TextRevealIconButton text='Export to CSV' icon={<BiExport />} onClick={() => setActiveTool('export')} />
-                        <TextRevealIconButton text='New Session' icon={<HiFolderPlus />} onClick={() => setActiveTool('newSession')} />
-                        <TextRevealIconButton text='New Data Entry' icon={<HiDocumentPlus />} onClick={() => setActiveTool('newData')} />
+                        <TextRevealIconButton text='Form Builder' icon={<FormBuilderIcon />} onClick={() => setActiveTool('formBuilder')} />
+                        <TextRevealIconButton text='Export to CSV' icon={<ExportIcon />} onClick={() => setActiveTool('export')} />
+                        <TextRevealIconButton text='New Session' icon={<NewSessionIcon />} onClick={() => setActiveTool('newSession')} />
+                        <TextRevealIconButton text='New Data Entry' icon={<NewDataIcon />} onClick={() => setActiveTool('newData')} />
                     </TableTools>
                     <Pagination
                         loadPrevBatch={loadPrevBatch}

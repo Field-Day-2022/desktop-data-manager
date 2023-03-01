@@ -1,5 +1,4 @@
-import { BiExport } from 'react-icons/bi';
-import { MdViewColumn } from 'react-icons/md';
+import { ColumnToggleIcon, ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
 import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
@@ -9,10 +8,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         <div className="bg-white">
             <div className="flex justify-between px-5 space-x-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
-                <div className="flex px-5 space-x-5 items-center">
-                    <input className="border-b border-neutral-800 p-2" type="text" name="search" />
-                    <MdViewColumn className="text-2xl" />
-                    <BiExport className="text-2xl" />
+                <div className="flex px-5 space-x-5 items-center text-2xl">
+                    <input className="border-b text-base border-neutral-800 p-2" type="text" name="search" />
+                    <ColumnToggleIcon />
+                    <ExportIcon />
                 </div>
             </div>
 
