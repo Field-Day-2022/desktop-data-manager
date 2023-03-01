@@ -59,6 +59,12 @@ export default function HomePage() {
             </div>
             <div>
                 {/*TODO add hyperlinks to repository and documentation of technology*/}
+                <div>
+                Tailwind with Vite - https://tailwindcss.com/docs/guides/vite
+                React - https://reactjs.org/docs/getting-started.html
+                Firebase - https://firebase.google.com/docs
+                Firestore - https://cloud.google.com/firestore/docs
+                </div>
                 {/*TODO add page for quick start guide*/}
                 <Card className='bg-white'>
                     <h1 className="heading">What's New About Field Day?</h1>
