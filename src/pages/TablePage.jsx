@@ -13,12 +13,19 @@ import { appMode, currentBatchSize, currentProjectName, currentTableName } from 
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 import TableTools from '../components/TableTools';
+import TextRevealIconButton from '../components/TextRevealIconButton';
+import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon } from '../assets/icons';
+import FormBuilderModal from '../modals/FormBuilderModal';
+import ExportModal from '../modals/ExportModal';
+import NewSessionModal from '../modals/NewSessionModal';
+import NewDataModal from '../modals/NewDataModal'
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [labels, setLabels] = useState();
+    const [activeTool, setActiveTool] = useState('none');
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
@@ -28,7 +35,7 @@ export default function TablePage() {
     useEffect(() => {
         setLabels(TABLE_LABELS[tableName]);
         loadEntries();
-    }, [tableName, batchSize, currentProject]);
+    }, [tableName, batchSize, currentProject, activeTool]);
 
     const getCollectionName = () => {
         return ((environment === 'test') ? 'Test' : '') + currentProject + ((tableName === 'Session') ? 'Session' : 'Data')
@@ -64,8 +71,8 @@ export default function TablePage() {
         initialQuery = query(
             ...generateQueryConstraints(
                 {
-                    whereClause: 
-                    (tableName !== 'Session')
+                    whereClause:
+                        (tableName !== 'Session')
                         && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
                 })
         )
@@ -125,6 +132,10 @@ export default function TablePage() {
 
     return (
         <PageWrapper>
+            <FormBuilderModal showModal={activeTool === 'formBuilder'} onCancel={() => setActiveTool('none')} />
+            <ExportModal showModal={activeTool === 'export'} onCancel={() => setActiveTool('none')} />
+            <NewSessionModal showModal={activeTool === 'newSession'} onCancel={() => setActiveTool('none')} />
+            <NewDataModal showModal={activeTool === 'newData'} onCancel={() => setActiveTool('none')} />
             <div className='flex justify-between items-center overflow-auto'>
                 <TabBar />
                 <div className='flex items-center px-5 space-x-5'>
@@ -142,7 +153,12 @@ export default function TablePage() {
             <div>
                 <DataTable name={tableName} labels={labels} entries={entries} setEntries={setEntries} />
                 <div className='flex justify-between overflow-auto'>
-                    <TableTools />
+                    <TableTools>
+                        <TextRevealIconButton text='Form Builder' icon={<FormBuilderIcon />} onClick={() => setActiveTool('formBuilder')} />
+                        <TextRevealIconButton text='Export to CSV' icon={<ExportIcon />} onClick={() => setActiveTool('export')} />
+                        <TextRevealIconButton text='New Session' icon={<NewSessionIcon />} onClick={() => setActiveTool('newSession')} />
+                        <TextRevealIconButton text='New Data Entry' icon={<NewDataIcon />} onClick={() => setActiveTool('newData')} />
+                    </TableTools>
                     <Pagination
                         loadPrevBatch={loadPrevBatch}
                         loadNextBatch={loadNextBatch}
