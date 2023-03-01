@@ -33,6 +33,9 @@ export default function HomePage() {
                         should be able to adapt this application to suit their needs.
                     </p>
                 </Card>
+
+                {/*TODO set width of cards for webui and overview, rather than changing by amount of text*/}
+
                 <Card className='bg-white'>
                     <h1 className="heading">Enter the WebUI</h1>
                     <p>
@@ -40,18 +43,36 @@ export default function HomePage() {
                         to simplify the process of collecting and querying data in a way that also reduces errors.
                         Created by software engineering students, it also serves as practice with interdisciplinary
                         work. Software students learn to understand and meet the needs of clients outside their own
-                        domain.
+                        domain.-------------------------------------------------------------
+                        -------------------------------------------------------------
+                        -------------------------------------------------------------
+                        -------------------------------------------------------------
+                        -------------------------------------------------------------
+                        -------------------------------------------------------------
+
                     </p>
-                    <Button style="position: absolute; left: 50% transform: translateX(-50%)" text='Enter WebUi' onClick={() => setCurrentPage('Table')} />
+                    <p>&nbsp;</p>
+                    <center>
+                        <Button text='Enter WebUi' onClick={() => setCurrentPage('Table')} />
+                    </center>
                 </Card>
             </div>
             <div>
+                {/*TODO add hyperlinks to repository and documentation of technology*/}
+                {/*TODO add page for quick start guide*/}
                 <Card className='bg-white'>
                     <h1 className="heading">What's New About Field Day?</h1>
                     <p>
                      Description of changes with links to quick start guide and documentation
                     </p>
-                    <Button style="position: absolute; left: 50% transform: translateX(-50%)" text='Enter WebUi' onClick={() => setCurrentPage('Table')} />
+                    <p>&nbsp;</p>
+                    <center>
+                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Software Team' onClick={() => setCurrentPage('Table')}/>
+                    </center>
+                    <p>&nbsp;</p>
+                    <center>
+                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Users' onClick={() => setCurrentPage('Table')}/>
+                    </center>
                 </Card>
             </div>
 
