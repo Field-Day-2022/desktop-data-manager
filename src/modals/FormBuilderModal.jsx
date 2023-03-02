@@ -1,14 +1,15 @@
 import Modal from "../components/Modal";
+import { FormBuilder } from "../pages";
 
-export default function FormBuilderModal({ showModal, onCancel }) {
+export default function FormBuilderModal({ showModal, onCancel, onOkay }) {
     return (
         <Modal
             showModal={showModal}
-            title='Form Builder'
-            text='Create a custom form below.'
-            onCancel={() => onCancel()}
+            onCancel={onCancel}
+            onOkay={onOkay}
+            displayOptions={['noHeader', 'fullScreen']}
         >
-            {/** Content */}
+            <FormBuilder />
         </Modal>
     );
 }

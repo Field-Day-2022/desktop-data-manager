@@ -2,7 +2,15 @@ import Button from '../components/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import { modalVariant } from '../utils/variants';
 
-export default function Modal({ title, text, onOkay, onCancel, children, showModal }) {
+export default function Modal({
+    title,
+    text,
+    onOkay,
+    onCancel,
+    children,
+    showModal,
+    displayOptions,
+}) {
     return (
         <motion.div
             className="relative z-50"
@@ -23,11 +31,12 @@ export default function Modal({ title, text, onOkay, onCancel, children, showMod
                             exit="hidden"
                         >
                             <ModalBuffer>
-                                <ModalWrapper>
-                                    <ModalHeader title={title} text={text} />
-                                    <ModalContent>
-                                        {children}
-                                    </ModalContent>
+                                <ModalWrapper displayOptions={displayOptions}>
+                                    {((displayOptions && !displayOptions.includes('noHeader')) ||
+                                        !displayOptions) && (
+                                        <ModalHeader title={title} text={text} />
+                                    )}
+                                    <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
                                         <Button
                                             onClick={() => onCancel()}
@@ -47,8 +56,6 @@ export default function Modal({ title, text, onOkay, onCancel, children, showMod
                 )}
             </AnimatePresence>
         </motion.div>
-
-
     );
 }
 
@@ -62,20 +69,23 @@ function ModalOverlay() {
             exit={{ opacity: 0 }}
         />
     );
-
 }
 
 function ModalBuffer({ children }) {
-    return (
-        <div className="flex min-h-full justify-center text-center items-center">
-            {children}
-        </div>
-    );
+    return <div className="flex h-full justify-center text-center items-center">{children}</div>;
 }
 
-function ModalWrapper({ children }) {
+function ModalWrapper({ children, displayOptions }) {
     return (
-        <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width">
+        <div
+            className={
+                !displayOptions
+                    ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
+                    : displayOptions.includes('fullScreen')
+                    ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl w-full-modal-width'
+                    : ''
+            }
+        >
             {children}
         </div>
     );
@@ -83,25 +93,17 @@ function ModalWrapper({ children }) {
 
 function ModalHeader({ title, text }) {
     return (
-        <div className='bg-neutral-100 p-3'>
+        <div className="bg-neutral-100 p-3">
             <h1 className="text-2xl p-2">{title}</h1>
-            <p className='p-2'>{text}</p>
+            <p className="p-2">{text}</p>
         </div>
     );
 }
 
 function ModalContent({ children }) {
-    return (
-        <div className="bg-white p-4 max-h-full-modal-content-height overflow-auto">
-            {children}
-        </div>
-    );
+    return <div className="bg-white p-4  overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {
-    return (
-        <div className="bg-neutral-100 p-4 flex justify-end space-x-5">
-            {children}
-        </div>
-    );
+    return <div className="bg-neutral-100 p-4 flex justify-end space-x-5">{children}</div>;
 }

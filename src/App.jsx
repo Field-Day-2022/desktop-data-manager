@@ -18,7 +18,6 @@ function App() {
     const pageMap = {
         'Home': <HomePage />,
         'Table': <TablePage />,
-        'FormBuilder': <FormBuilder />
     }
 
     return (
