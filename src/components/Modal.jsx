@@ -11,6 +11,7 @@ export default function Modal({
     showModal,
     displayOptions,
 }) {
+
     return (
         <motion.div
             className="relative z-50"
@@ -83,7 +84,7 @@ function ModalWrapper({ children, displayOptions }) {
                     ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
                     : displayOptions.includes('fullScreen')
                     ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl w-full-modal-width'
-                    : ''
+                    : 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
             }
         >
             {children}
