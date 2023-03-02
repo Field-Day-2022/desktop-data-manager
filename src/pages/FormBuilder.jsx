@@ -1,6 +1,6 @@
 import PageWrapper from './PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
 import { LayoutGroup, motion } from 'framer-motion';
@@ -14,7 +14,7 @@ export default function FormBuilder() {
     const [documentDataPrimaries, setDocumentDataPrimaries] = useState([]); // array of all primary keys for each document
     const [activeDocumentDataPrimary, setActiveDocumentDataPrimary] = useState(); // currently selected primary key
     const [formData, setFormData] = useState(); // form data
-    const [changeBoxTitle, setChangeBoxTitle] = useState('Change');
+    const [changeBoxTitle, setChangeBoxTitle] = useState('Edit Data');
 
     useEffect(() => {
         const getAllDocs = async () => {
@@ -63,11 +63,31 @@ export default function FormBuilder() {
         )
             .then(() => {
                 notify(Type.success, 'Changes successfully written to database!');
+                setChangeBoxTitle('Edit Data')
             })
             .catch((e) => {
                 notify(Type.error, `Error writing to database: ${e}`);
             });
     };
+
+    const addDocToFirestore = async () => {
+        if (activeCollection === 'AnswerSet') {
+            const d = new Date();
+            await addDoc(collection(db, activeCollection), {
+                ...formData,
+                date_modified: d.getTime(),
+            })
+            .then((doc) => {
+                notify(Type.success, 'New document successfully written to database!')
+                setChangeBoxTitle('Edit Data');
+                console.log(doc);
+                setDocumentSnapshots([...documentSnapshots, doc])
+            })
+            .catch((e) => {
+                notify(Type.error, `Error writing to database: ${e}`);
+            });
+        }
+    }
 
     const updateUI = () => {
         let tempDataPrimaries = documentDataPrimaries;
@@ -90,10 +110,13 @@ export default function FormBuilder() {
             documents[activeDocumentIndex] = activeDocument;
             setDocumentDataPrimaries([...documentDataPrimaries, formData.primary]);
             pushChangesToFirestore();
+        } else if (changeBoxTitle === 'Add New Document') {
+            setDocuments([...documents, formData])
+            addDocToFirestore();
         }
     };
 
-    const renderForm = () => {
+    const renderDataForm = () => {
         let output = [];
         if (activeCollection === 'AnswerSet') {
             output.push(
@@ -167,15 +190,24 @@ export default function FormBuilder() {
         let formTemplate = {};
         if (activeCollection === 'AnswerSet') {
             formTemplate.primary = '';
-            if (activeDocument.answers[0].secondary) {
-                formTemplate.secondary = {};
-                for (const secondaryKey in activeDocument.answers[0].secondary) {
-                    formTemplate.secondary[secondaryKey] = '';
+            let keyArray = [];
+            if (activeDocument.secondary_keys) {
+                formTemplate.secondary = {}
+                for (let i = 0; i < activeDocument.secondary_keys.length; i++) {
+                    formTemplate.secondary[activeDocument.secondary_keys[i]] = '';
+                    keyArray.push(activeDocument.secondary_keys[i])
                 }
             }
         }
         setFormData(formTemplate);
     };
+
+    const addNewDocument = () => {
+        setChangeBoxTitle('Add New Document')
+        if (activeCollection === 'AnswerSet') {
+            setFormData({ set_name: '', secondary_keys: [], answers: [] })
+        }
+    }
 
     return (
         <PageWrapper>
@@ -198,7 +230,7 @@ export default function FormBuilder() {
                             <h2 className="text-2xl">Document</h2>
                             {activeCollection && (
                                 <AddNewButton
-                                    clickHandler={() => console.log('clicked add new document')}
+                                    clickHandler={() => addNewDocument()}
                                 />
                             )}
                         </div>
@@ -240,7 +272,15 @@ export default function FormBuilder() {
                         <div>
                             <h2 className="text-2xl">{changeBoxTitle}</h2>
                             {(activeDocumentDataPrimary || changeBoxTitle === 'Add New Data') &&
-                                renderForm()}
+                                renderDataForm()}
+                            {changeBoxTitle === 'Add New Document' && 
+                                <NewDocumentForm 
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    activeCollection={activeCollection}
+                                    submitChanges={submitChanges}
+                                />
+                            }
                         </div>
                     </div>
                 </div>
@@ -294,3 +334,60 @@ const AddNewButton = ({ clickHandler }) => {
         </motion.button>
     );
 };
+
+const NewDocumentForm = ({ 
+    formData, 
+    setFormData,
+    activeCollection,
+    submitChanges,
+}) => {
+
+    if (activeCollection === 'AnswerSet') {
+        return (
+            <form className='flex flex-col items-center h-[calc(100%-2em)] overflow-y-auto'>
+                <div>
+                    <label htmlFor='setName' className='text-xl'>Answer Set Name:</label>
+                    <input 
+                        id='setName'
+                        type='text'
+                        className='border-gray-800 border-2 m-2 rounded text-xl p-1'
+                        value={formData.set_name}
+                        onChange={e => setFormData({ ...formData, set_name: e.target.value })}
+                    />
+                </div>
+                {formData.secondary_keys.map((secondaryKey, index) => (
+                    <div key={index} className='text-xl'>
+                        <label>{`Secondary Key ${index + 1}: `}</label>
+                        <input 
+                            type='text'
+                            className='border-gray-800 border-2 m-2 rounded p-1'
+                            value={secondaryKey}
+                            onChange={e => {
+                                const newKeys = formData.secondary_keys.map((key, i) => {
+                                    return i === index ? e.target.value : key;
+                                })
+                                setFormData({...formData, secondary_keys: newKeys})
+                            }}
+                        />
+                    </div>
+                ))}
+                <button
+                    className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-max cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                    onClick={e => {
+                        e.preventDefault();
+                        let tempKeysArray = [...formData.secondary_keys];
+                        tempKeysArray.push('')
+                        setFormData({...formData, secondary_keys: tempKeysArray})
+                    }}
+                >Add Secondary Key</button>
+                <button
+                    onClick={e => {
+                        e.preventDefault();
+                        submitChanges();
+                    }}
+                    className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                >Submit</button>
+            </form>
+        )
+    }
+}
