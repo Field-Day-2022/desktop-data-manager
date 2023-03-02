@@ -9,10 +9,6 @@ import { TablePage, FormBuilder, HomePage, LoginPage } from './pages'
 function App() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
 
-    useEffect(() => {
-        setCurrentPage('FormBuilder')
-    }, [])
-
     const auth = new Authenticator();
 
     const pageMap = {
