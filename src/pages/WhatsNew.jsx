@@ -10,7 +10,7 @@ export default function WhatsNew() {
         <PageWrapper>
             <Card className='bg-asu-maroon'>
                 <div className="text-white">
-                    <h1 className="title">Field Day</h1>
+                    <h1 className="title">What's New - Documentation</h1>
                     <h2 className="subtitle">Data Management Tool</h2>
                     <p>
                         Field Day builds rich, dynamic forms for mobile data collection and query.

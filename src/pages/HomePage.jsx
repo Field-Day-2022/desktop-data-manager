@@ -67,11 +67,11 @@ export default function HomePage() {
                     </p>
                     <p>&nbsp;</p>
                     <center>
-                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Software Team' onClick={() => setCurrentPage('Table')}/>
+                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Software Team' onClick={() => setCurrentPage('New')}/>
                     </center>
                     <p>&nbsp;</p>
                     <center>
-                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Users' onClick={() => setCurrentPage('Table')}/>
+                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Users' onClick={() => setCurrentPage('Guide')}/>
                     </center>
                 </Card>
             </div>

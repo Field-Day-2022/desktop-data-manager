@@ -8,6 +8,7 @@ import React from 'react';
 import { Authenticator } from './utils/authenticator';
 import { Notifier } from './components/Notifier';
 import WhatsNew from "./pages/WhatsNew.jsx";
+import QuickStart from "./pages/QuickStart";
 
 function App() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
@@ -17,7 +18,8 @@ function App() {
     const pageMap = {
         'Home': <HomePage />,
         'Table': <TablePage />,
-        'New' : <WhatsNew />
+        'New' : <WhatsNew />,
+        'Guide' : <QuickStart/>
     }
 
     return (
