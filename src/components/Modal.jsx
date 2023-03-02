@@ -11,7 +11,6 @@ export default function Modal({
     showModal,
     displayOptions,
 }) {
-
     return (
         <motion.div
             className="relative z-50"
@@ -33,8 +32,9 @@ export default function Modal({
                         >
                             <ModalBuffer>
                                 <ModalWrapper displayOptions={displayOptions}>
-                                    {((displayOptions && !displayOptions.includes('noHeader')) ||
-                                        !displayOptions) && (
+                                    {!displayOptions ? (
+                                        <ModalHeader title={title} text={text} />
+                                    ) : displayOptions.includes('noHeader') ? null : (
                                         <ModalHeader title={title} text={text} />
                                     )}
                                     <ModalContent>{children}</ModalContent>
@@ -102,7 +102,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white p-4  overflow-auto">{children}</div>;
+    return <div className="bg-white p-4 overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {
