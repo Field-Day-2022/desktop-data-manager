@@ -1,25 +1,27 @@
 import { BiExport } from 'react-icons/bi';
 import { MdViewColumn } from 'react-icons/md'
 import { TableEntry } from '../components/TableEntry';
+import { CSVLink } from "react-csv";
 import Button from "./Button";
 
 export default function DataTable({ name, labels, entries }) {
+    const csvData = [
+        ["val1", "val2", "val3"],
+    ];
     return (
         <div className='bg-white'>
             <div className='flex justify-between px-5 space-x-5 items-center'>
                 <h1 className='heading pt-4'>{name} - Entries</h1>
+                <CSVLink data={csvData}>
                 <div className='flex px-5 space-x-5 items-center'>
                     <input className='border-b border-neutral-800 p-2' type="text" name="search" />
                     <MdViewColumn className='text-2xl' />
                     <Button
                         enabled={true}
-                        onClick={() => {
-                            
-                        }}
                         icon={<BiExport className='export' />}
                     />
                 </div>
-
+                </CSVLink>
             </div>
 
             <div className='overflow-auto w-full h-full-table'>
