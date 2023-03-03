@@ -7,9 +7,13 @@ export default function FormBuilderModal({ showModal, onCancel, onOkay }) {
             showModal={showModal}
             onCancel={onCancel}
             onOkay={onOkay}
-            displayOptions={['noHeader', 'fullScreen']}
+            title='Form Builder'
+            text='Build custom forms with Field Day!'
         >
-            <FormBuilder />
+            <div className="w-full-modal-width">
+                <FormBuilder />
+            </div>
+            
         </Modal>
     );
 }

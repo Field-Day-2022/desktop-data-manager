@@ -32,11 +32,7 @@ export default function Modal({
                         >
                             <ModalBuffer>
                                 <ModalWrapper displayOptions={displayOptions}>
-                                    {!displayOptions ? (
-                                        <ModalHeader title={title} text={text} />
-                                    ) : displayOptions.includes('noHeader') ? null : (
-                                        <ModalHeader title={title} text={text} />
-                                    )}
+                                    <ModalHeader title={title} text={text} />
                                     <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
                                         <Button
@@ -78,15 +74,7 @@ function ModalBuffer({ children }) {
 
 function ModalWrapper({ children, displayOptions }) {
     return (
-        <div
-            className={
-                !displayOptions
-                    ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
-                    : displayOptions.includes('fullScreen')
-                    ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl w-full-modal-width'
-                    : 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
-            }
-        >
+        <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width">
             {children}
         </div>
     );
@@ -102,7 +90,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white p-4 overflow-auto">{children}</div>;
+    return <div className="bg-white p-4 max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {

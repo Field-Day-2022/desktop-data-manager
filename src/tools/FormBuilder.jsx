@@ -1,4 +1,4 @@
-import PageWrapper from './PageWrapper';
+import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
 import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
 import { db } from '../utils/firebase';
@@ -77,15 +77,15 @@ export default function FormBuilder() {
                 ...formData,
                 date_modified: d.getTime(),
             })
-            .then((doc) => {
-                notify(Type.success, 'New document successfully written to database!')
-                setChangeBoxTitle('Edit Data');
-                console.log(doc);
-                setDocumentSnapshots([...documentSnapshots, doc])
-            })
-            .catch((e) => {
-                notify(Type.error, `Error writing to database: ${e}`);
-            });
+                .then((doc) => {
+                    notify(Type.success, 'New document successfully written to database!')
+                    setChangeBoxTitle('Edit Data');
+                    console.log(doc);
+                    setDocumentSnapshots([...documentSnapshots, doc])
+                })
+                .catch((e) => {
+                    notify(Type.error, `Error writing to database: ${e}`);
+                });
         }
     }
 
@@ -210,82 +210,79 @@ export default function FormBuilder() {
     }
 
     return (
-        <PageWrapper>
-            <div className="flex flex-col items-start p-2">
-                <h1 className="text-3xl text-left w-full px-6 py-2">Form Builder</h1>
-                <div className="grid grid-cols-3 w-full gap-1">
-                    <div className="border-gray-800 border-2 rounded">
-                        <h2 className="text-2xl">Collection</h2>
-                        <ReusableUnorderedList
-                            listItemArray={['AnswerSet', 'DynamicForms']}
-                            clickHandler={(listItem) => {
-                                if (listItem === activeCollection) setActiveCollection('');
-                                else setActiveCollection(listItem);
-                            }}
-                            selectedItem={activeCollection}
-                        />
+        <div className="flex flex-col items-start p-2 text-center">
+            <div className="grid grid-cols-3 w-full gap-1">
+                <div className="border-gray-800 border-2 rounded">
+                    <h2 className="text-2xl">Collection</h2>
+                    <ReusableUnorderedList
+                        listItemArray={['AnswerSet', 'DynamicForms']}
+                        clickHandler={(listItem) => {
+                            if (listItem === activeCollection) setActiveCollection('');
+                            else setActiveCollection(listItem);
+                        }}
+                        selectedItem={activeCollection}
+                    />
+                </div>
+                <div className="border-gray-800 border-2 h-[calc(100vh-21em)] rounded">
+                    <div className="flex justify-around items-center">
+                        <h2 className="text-2xl">Document</h2>
+                        {activeCollection && (
+                            <AddNewButton
+                                clickHandler={() => addNewDocument()}
+                            />
+                        )}
                     </div>
-                    <div className="border-gray-800 border-2 h-[calc(100vh-12em)] rounded">
+                    <ReusableUnorderedList
+                        listItemArray={documents}
+                        clickHandler={(listItem, index) => {
+                            if (listItem === activeDocument) setActiveDocument('');
+                            else {
+                                setActiveDocument(listItem);
+                                setActiveDocumentIndex(index);
+                            }
+                        }}
+                        selectedItem={activeDocument}
+                    />
+                </div>
+                <div className="grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-21em)] rounded">
+                    <div className="border-gray-800 border-b-2 flex flex-col">
                         <div className="flex justify-around items-center">
-                            <h2 className="text-2xl">Document</h2>
-                            {activeCollection && (
-                                <AddNewButton
-                                    clickHandler={() => addNewDocument()}
-                                />
+                            <h2 className="text-2xl">Data</h2>
+                            {activeDocument && (
+                                <AddNewButton clickHandler={() => addNewData()} />
                             )}
                         </div>
                         <ReusableUnorderedList
-                            listItemArray={documents}
+                            listItemArray={documentDataPrimaries}
                             clickHandler={(listItem, index) => {
-                                if (listItem === activeDocument) setActiveDocument('');
-                                else {
-                                    setActiveDocument(listItem);
-                                    setActiveDocumentIndex(index);
+                                if (listItem === activeDocumentDataPrimary) {
+                                    setActiveDocumentDataPrimary('');
+                                    setFormData('');
+                                } else {
+                                    setActiveDocumentDataPrimary(listItem);
+                                    setFormData(activeDocument.answers[index]);
+                                    setChangeBoxTitle('Edit Data');
                                 }
                             }}
-                            selectedItem={activeDocument}
+                            selectedItem={activeDocumentDataPrimary}
                         />
                     </div>
-                    <div className="grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-12em)] rounded">
-                        <div className="border-gray-800 border-b-2 flex flex-col">
-                            <div className="flex justify-around items-center">
-                                <h2 className="text-2xl">Data</h2>
-                                {activeDocument && (
-                                    <AddNewButton clickHandler={() => addNewData()} />
-                                )}
-                            </div>
-                            <ReusableUnorderedList
-                                listItemArray={documentDataPrimaries}
-                                clickHandler={(listItem, index) => {
-                                    if (listItem === activeDocumentDataPrimary) {
-                                        setActiveDocumentDataPrimary('');
-                                        setFormData('');
-                                    } else {
-                                        setActiveDocumentDataPrimary(listItem);
-                                        setFormData(activeDocument.answers[index]);
-                                        setChangeBoxTitle('Edit Data');
-                                    }
-                                }}
-                                selectedItem={activeDocumentDataPrimary}
+                    <div>
+                        <h2 className="text-2xl">{changeBoxTitle}</h2>
+                        {(activeDocumentDataPrimary || changeBoxTitle === 'Add New Data') &&
+                            renderDataForm()}
+                        {changeBoxTitle === 'Add New Document' &&
+                            <NewDocumentForm
+                                formData={formData}
+                                setFormData={setFormData}
+                                activeCollection={activeCollection}
+                                submitChanges={submitChanges}
                             />
-                        </div>
-                        <div>
-                            <h2 className="text-2xl">{changeBoxTitle}</h2>
-                            {(activeDocumentDataPrimary || changeBoxTitle === 'Add New Data') &&
-                                renderDataForm()}
-                            {changeBoxTitle === 'Add New Document' && 
-                                <NewDocumentForm 
-                                    formData={formData}
-                                    setFormData={setFormData}
-                                    activeCollection={activeCollection}
-                                    submitChanges={submitChanges}
-                                />
-                            }
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
-        </PageWrapper>
+        </div>
     );
 }
 
@@ -335,8 +332,8 @@ const AddNewButton = ({ clickHandler }) => {
     );
 };
 
-const NewDocumentForm = ({ 
-    formData, 
+const NewDocumentForm = ({
+    formData,
     setFormData,
     activeCollection,
     submitChanges,
@@ -347,7 +344,7 @@ const NewDocumentForm = ({
             <form className='flex flex-col items-center h-[calc(100%-2em)] overflow-y-auto'>
                 <div>
                     <label htmlFor='setName' className='text-xl'>Answer Set Name:</label>
-                    <input 
+                    <input
                         id='setName'
                         type='text'
                         className='border-gray-800 border-2 m-2 rounded text-xl p-1'
@@ -358,7 +355,7 @@ const NewDocumentForm = ({
                 {formData.secondary_keys.map((secondaryKey, index) => (
                     <div key={index} className='text-xl'>
                         <label>{`Secondary Key ${index + 1}: `}</label>
-                        <input 
+                        <input
                             type='text'
                             className='border-gray-800 border-2 m-2 rounded p-1'
                             value={secondaryKey}
@@ -366,7 +363,7 @@ const NewDocumentForm = ({
                                 const newKeys = formData.secondary_keys.map((key, i) => {
                                     return i === index ? e.target.value : key;
                                 })
-                                setFormData({...formData, secondary_keys: newKeys})
+                                setFormData({ ...formData, secondary_keys: newKeys })
                             }}
                         />
                     </div>
@@ -377,7 +374,7 @@ const NewDocumentForm = ({
                         e.preventDefault();
                         let tempKeysArray = [...formData.secondary_keys];
                         tempKeysArray.push('')
-                        setFormData({...formData, secondary_keys: tempKeysArray})
+                        setFormData({ ...formData, secondary_keys: tempKeysArray })
                     }}
                 >Add Secondary Key</button>
                 <button
