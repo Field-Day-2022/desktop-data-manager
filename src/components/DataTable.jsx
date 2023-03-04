@@ -49,9 +49,20 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     };
 
     const ColumnSelector = () => {
+        useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (showColumnToggle && !event.target.closest('.absolute')) {
+                    setShowColumnToggle(false);
+                }
+            };
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }, [showColumnToggle]);
         return (
             (showColumnToggle) && (
-                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-sm shadow-md p-4'>
+                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-4'>
                     <div className='flex-col space-y-3'>
                         <h1 className='text-2xl'>Column Selector</h1>
                         {labels && labels.map((label) =>
