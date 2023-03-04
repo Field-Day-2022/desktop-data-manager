@@ -43,9 +43,6 @@ export const keyLabelMap = {
     thys: 'THYS',
     unki: 'UNKI',
     micro: 'MICRO',
-    hdBody: 'HD-Body',
-    comments: 'Comments',
-    sex: 'Sex'
 }
 
 
