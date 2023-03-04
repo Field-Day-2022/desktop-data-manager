@@ -3,6 +3,7 @@ export const keyLabelMap = {
     recorder: 'Recorder',
     handler: 'Handler',
     site: 'Site',
+    hdBody: 'HD-Body',
     array: 'Array',
     noCaptures: 'No Captures',
     trapStatus: 'Trap Status',

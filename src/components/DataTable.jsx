@@ -17,10 +17,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         console.log(columns);
     }, [labels]);
 
-    useEffect(() => {
-        console.log(columns);
-    }, [columns]);
-
     const ColumnSelectorButton = () => {
         return (
             <div className="flex px-5 space-x-5 items-center">
@@ -55,8 +51,9 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     const ColumnSelector = () => {
         return (
             (showColumnToggle) && (
-                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-sm shadow-md p-2 max-h-full-table overflow-auto'>
-                    <div className='flex-col items-center space-x-5'>
+                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-sm shadow-md p-4'>
+                    <div className='flex-col space-y-3'>
+                        <h1 className='text-2xl'>Column Selector</h1>
                         {labels && labels.map((label) =>
                             <div key={label} className='flex p-2 space-x-5'>
                                 <ColumnCheckbox label={label} />
