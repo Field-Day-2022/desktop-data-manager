@@ -2,11 +2,20 @@
 // https://firebase.google.com/docs/firestore/query-data/order-limit-data
 import { useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
-import { collection, query, orderBy, startAfter, limit, getDocs, startAt, where } from 'firebase/firestore';
+import {
+    collection,
+    query,
+    orderBy,
+    startAfter,
+    limit,
+    getDocs,
+    startAt,
+    where,
+} from 'firebase/firestore';
 import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
-import { TABLE_LABELS } from '../const/tableLabels'
+import { TABLE_LABELS } from '../const/tableLabels';
 import DataTable from '../components/DataTable';
 import { useAtom } from 'jotai';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
@@ -18,7 +27,7 @@ import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon } from '../ass
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
-import NewDataModal from '../modals/NewDataModal'
+import NewDataModal from '../modals/NewDataModal';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -38,44 +47,48 @@ export default function TablePage() {
     }, [tableName, batchSize, currentProject, activeTool]);
 
     const getCollectionName = () => {
-        return ((environment === 'test') ? 'Test' : '') + currentProject + ((tableName === 'Session') ? 'Session' : 'Data')
-    }
+        return (
+            (environment === 'test' ? 'Test' : '') +
+            currentProject +
+            (tableName === 'Session' ? 'Session' : 'Data')
+        );
+    };
 
-    console.log(getCollectionName())
+    console.log(getCollectionName());
 
     const generateQueryConstraints = ({ whereClause, at, after }) => {
         const collectionName = getCollectionName();
-        console.log(`loading ${tableName} from ${collectionName}`)
+        console.log(`loading ${tableName} from ${collectionName}`);
         const constraints = [
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
-            limit(batchSize)
-        ]
+            limit(batchSize),
+        ];
         if (whereClause) {
-            console.log('adding where clause')
-            constraints.push(where(...whereClause))
+            console.log('adding where clause');
+            constraints.push(where(...whereClause));
         }
         if (at) {
-            constraints.push(startAt(at))
+            constraints.push(startAt(at));
         } else if (after) {
-            constraints.push(startAfter(after))
+            constraints.push(startAfter(after));
         }
 
         return constraints;
-    }
+    };
 
     const loadEntries = async () => {
-
         let initialQuery;
 
         initialQuery = query(
-            ...generateQueryConstraints(
-                {
-                    whereClause:
-                        (tableName !== 'Session')
-                        && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName]
-                })
-        )
+            ...generateQueryConstraints({
+                whereClause: tableName !== 'Session' && [
+                    'taxa',
+                    '==',
+                    tableName === 'Arthropod' ? 'N/A' : tableName,
+                ],
+            })
+        );
 
         const initialQuerySnapshot = await getDocs(initialQuery);
         setEntries(initialQuerySnapshot.docs);
@@ -86,17 +99,19 @@ export default function TablePage() {
     const loadPrevBatch = async () => {
         let prevBatchQuery;
         if (queryCursorStack.length - 1 < 0) {
-            notify(Type.error, 'Unable to go back. This is the first page.')
-            return
+            notify(Type.error, 'Unable to go back. This is the first page.');
+            return;
         }
 
         prevBatchQuery = query(
-            ...generateQueryConstraints(
-                {
-                    whereClause: (tableName !== 'Session')
-                        && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName],
-                    at: queryCursorStack[queryCursorStack.length - 1]
-                })
+            ...generateQueryConstraints({
+                whereClause: tableName !== 'Session' && [
+                    'taxa',
+                    '==',
+                    tableName === 'Arthropod' ? 'N/A' : tableName,
+                ],
+                at: queryCursorStack[queryCursorStack.length - 1],
+            })
         );
 
         const prevBatchSnapshot = await getDocs(prevBatchQuery);
@@ -104,24 +119,23 @@ export default function TablePage() {
         setDocumentQueryCursor(prevBatchSnapshot.docs[prevBatchSnapshot.docs.length - 1]);
         let tempStack = queryCursorStack;
         tempStack.pop();
-        setQueryCursorStack(tempStack)
-    }
+        setQueryCursorStack(tempStack);
+    };
 
     const loadNextBatch = async () => {
-        setQueryCursorStack([
-            ...queryCursorStack,
-            entries[0]
-        ])
+        setQueryCursorStack([...queryCursorStack, entries[0]]);
 
         let nextBatchQuery;
 
         nextBatchQuery = query(
-            ...generateQueryConstraints(
-                {
-                    whereClause: (tableName !== 'Session')
-                        && ['taxa', '==', (tableName === 'Arthropod') ? 'N/A' : tableName],
-                    after: documentQueryCursor
-                })
+            ...generateQueryConstraints({
+                whereClause: tableName !== 'Session' && [
+                    'taxa',
+                    '==',
+                    tableName === 'Arthropod' ? 'N/A' : tableName,
+                ],
+                after: documentQueryCursor,
+            })
         );
 
         const nextBatchSnapshot = await getDocs(nextBatchQuery);
@@ -132,13 +146,26 @@ export default function TablePage() {
 
     return (
         <PageWrapper>
-            <FormBuilderModal showModal={activeTool === 'formBuilder'} onCancel={() => setActiveTool('none')} />
-            <ExportModal showModal={activeTool === 'export'} onCancel={() => setActiveTool('none')} />
-            <NewSessionModal showModal={activeTool === 'newSession'} onCancel={() => setActiveTool('none')} />
-            <NewDataModal showModal={activeTool === 'newData'} onCancel={() => setActiveTool('none')} />
-            <div className='flex justify-between items-center overflow-auto'>
+            <FormBuilderModal
+                showModal={activeTool === 'formBuilder'}
+                onCancel={() => setActiveTool('none')}
+                onOkay={() => console.log('okay then...')}
+            />
+            <ExportModal
+                showModal={activeTool === 'export'}
+                onCancel={() => setActiveTool('none')}
+            />
+            <NewSessionModal
+                showModal={activeTool === 'newSession'}
+                onCancel={() => setActiveTool('none')}
+            />
+            <NewDataModal
+                showModal={activeTool === 'newData'}
+                onCancel={() => setActiveTool('none')}
+            />
+            <div className="flex justify-between items-center overflow-auto">
                 <TabBar />
-                <div className='flex items-center px-5 space-x-5'>
+                <div className="flex items-center px-5 space-x-5">
                     <div>Project: </div>
                     <Dropdown
                         onClickHandler={(selectedOption) => {
@@ -151,20 +178,37 @@ export default function TablePage() {
             </div>
 
             <div>
-                <DataTable name={tableName} labels={labels} entries={entries} setEntries={setEntries} />
-                <div className='flex justify-between overflow-auto'>
+                <DataTable
+                    name={tableName}
+                    labels={labels}
+                    entries={entries}
+                    setEntries={setEntries}
+                />
+                <div className="flex justify-between overflow-auto">
                     <TableTools>
-                        <TextRevealIconButton text='Form Builder' icon={<FormBuilderIcon />} onClick={() => setActiveTool('formBuilder')} />
-                        <TextRevealIconButton text='Export to CSV' icon={<ExportIcon />} onClick={() => setActiveTool('export')} />
-                        <TextRevealIconButton text='New Session' icon={<NewSessionIcon />} onClick={() => setActiveTool('newSession')} />
-                        <TextRevealIconButton text='New Data Entry' icon={<NewDataIcon />} onClick={() => setActiveTool('newData')} />
+                        <TextRevealIconButton
+                            text="Form Builder"
+                            icon={<FormBuilderIcon />}
+                            onClick={() => setActiveTool('formBuilder')}
+                        />
+                        <TextRevealIconButton
+                            text="Export to CSV"
+                            icon={<ExportIcon />}
+                            onClick={() => setActiveTool('export')}
+                        />
+                        <TextRevealIconButton
+                            text="New Session"
+                            icon={<NewSessionIcon />}
+                            onClick={() => setActiveTool('newSession')}
+                        />
+                        <TextRevealIconButton
+                            text="New Data Entry"
+                            icon={<NewDataIcon />}
+                            onClick={() => setActiveTool('newData')}
+                        />
                     </TableTools>
-                    <Pagination
-                        loadPrevBatch={loadPrevBatch}
-                        loadNextBatch={loadNextBatch}
-                    />
+                    <Pagination loadPrevBatch={loadPrevBatch} loadNextBatch={loadNextBatch} />
                 </div>
-
             </div>
         </PageWrapper>
     );

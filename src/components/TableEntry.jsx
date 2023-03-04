@@ -83,7 +83,6 @@ export const TableEntry = forwardRef((props, ref) => {
             animate='visible'
             custom={index}
             exit='exit'
-            layout
             ref={ref}
         >
             <Actions
