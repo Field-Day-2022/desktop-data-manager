@@ -1,10 +1,7 @@
 import Button from "../components/Button";
 import Card from "../components/Card";
-import GoogleIcon from "../assets/GoogleIcon";
-import LizardIcon from "../assets/LizardIcon";
+import {GoogleIcon, LizardIcon} from "../assets/icons";
 import PageWrapper from "./PageWrapper";
-
-import { notify, Type } from "../components/Notifier";
 
 export default function LoginPage({ auth }) {
 

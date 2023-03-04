@@ -1,9 +1,9 @@
-import { BiExport } from 'react-icons/bi';
-import { MdViewColumn } from 'react-icons/md';
+import { ColumnToggleIcon, ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
 import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
+import { labelKeyMap } from '../const/tableLabels';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [showColumnToggle, setShowColumnToggle] = useState(false);
@@ -22,7 +22,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         return (
             <div className="flex px-5 space-x-5 items-center">
                 <div onClick={() => setShowColumnToggle(!showColumnToggle)}>
-                    <MdViewColumn className="text-2xl" />
+                    <ColumnToggleIcon className="text-2xl" />
                 </div>
             </div>
         );
@@ -76,8 +76,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 space-x-5 items-center">
                     <input className="border-b border-neutral-800 p-2" type="text" name="search" />
-                    <ColumnSelectorButton />
-                    <BiExport className="text-2xl" />
+                    <div className="text-2xl flex">
+                        <ColumnSelectorButton />
+                        <ExportIcon />
+                    </div>
                 </div>
             </div>
 
@@ -97,20 +99,17 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                     >
                         {/* <AnimatePresence> */}
                         {entries.map((entry, index) => (
-                            console.log(entry),
-                            (columns[entry.label] && columns[entry.label].show &&
-
-                                <TableEntry
-                                    index={index}
-                                    key={entry.id}
-                                    entrySnapshot={entry}
-                                    tableName={name}
-                                    removeEntry={() => {
-                                        setEntries(entries.filter(e => e !== entry));
-                                    }}
-                                />
-                            )
-
+                            console.log(entry.data()),
+                            <TableEntry
+                                index={index}
+                                key={entry.id}
+                                entrySnapshot={entry}
+                                shownColumns={[...labels].filter(label => columns[label] && columns[label].show)}
+                                tableName={name}
+                                removeEntry={() => {
+                                    setEntries(entries.filter(e => e !== entry));
+                                }}
+                            />
                         ))}
                         {/* </AnimatePresence> */}
                     </motion.tbody>
