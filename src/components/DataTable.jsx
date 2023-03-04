@@ -55,7 +55,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     const ColumnSelector = () => {
         return (
             (showColumnToggle) && (
-                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-sm shadow-md p-2'>
+                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-sm shadow-md p-2 max-h-full-table overflow-auto'>
                     <div className='flex-col items-center space-x-5'>
                         {labels && labels.map((label) =>
                             <div key={label} className='flex p-2 space-x-5'>
