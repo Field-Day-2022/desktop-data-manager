@@ -31,7 +31,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     const ColumnSelectorButton = () => {
         return (
             <div className="flex-col px-5 space-x-5 items-center">
-                <div className='hover:scale-125 transition h-8' onClick={() => setShowColumnSelector(!showColumnSelector)}>
+                <div className='hover:scale-125 transition h-8 cursor-pointer' onClick={() => setShowColumnSelector(!showColumnSelector)}>
                     <ColumnToggleIcon className="text-2xl" />
                 </div>
                 <div>
