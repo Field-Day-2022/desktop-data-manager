@@ -5,7 +5,7 @@ import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
-    const [showColumnToggle, setShowColumnToggle] = useState(false);
+    const [showColumnSelector, setShowColumnSelector] = useState(false);
     const [columns, setColumns] = useState();
 
     useEffect(() => {
@@ -14,21 +14,18 @@ export default function DataTable({ name, labels, entries, setEntries }) {
             initialColumns[label] = { show: true };
         });
         setColumns(initialColumns);
-        console.log(columns);
     }, [labels]);
-
-    // Make the table update when the columns change
-    useEffect(() => {
-        console.log(columns);
-    }, [columns]);
-
 
     const ColumnSelectorButton = () => {
         return (
-            <div className="flex px-5 space-x-5 items-center">
-                <div onClick={() => setShowColumnToggle(!showColumnToggle)}>
+            <div className="flex-col px-5 space-x-5 items-center">
+                <div className='hover:scale-125 transition h-8' onClick={() => setShowColumnSelector(!showColumnSelector)}>
                     <ColumnToggleIcon className="text-2xl" />
                 </div>
+                <div>
+                    <ColumnSelector />
+                </div>
+
             </div>
         );
     };
@@ -56,30 +53,30 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     const ColumnSelector = () => {
         useEffect(() => {
             const handleClickOutside = (event) => {
-                if (showColumnToggle && !event.target.closest('.absolute')) {
-                    setShowColumnToggle(false);
+                if (showColumnSelector && !event.target.closest('.absolute')) {
+                    setShowColumnSelector(false);
                 }
             };
             document.addEventListener('mousedown', handleClickOutside);
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside);
             };
-        }, [showColumnToggle]);
+        }, [showColumnSelector]);
 
         return (
             <AnimatePresence>
-                {showColumnToggle &&
+                {showColumnSelector &&
                     <motion.div
                         key='column-selector'
-                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-4'
-                        initial={{ opacity: 0, y: '-100%' }}
-                        animate={{opacity: 1, y: '0%' }}
-                        exit={{opacity: 0, y: '-100%' }}
+                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-6'
+                        initial={{ opacity: 0, y: '-100%', x: '-100%' }}
+                        animate={{ opacity: 1, y: '0%', x: '-100%' }}
+                        exit={{ opacity: 0, y: '-100%', x: '-100%' }}
                     >
-                        <div className='flex-col space-y-3'>
-                            <h1 className='text-2xl'>Column Selector</h1>
+                        <div className='flex-col space-y-3 whitespace-nowrap'>
+                            <h1 className='text-xl'>Column Selector</h1>
                             {labels && labels.map((label) =>
-                                <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100'>
+                                <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
                                     <ColumnCheckbox label={label} />
                                     <div>{label}</div>
                                 </div>)}
@@ -93,7 +90,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
 
     return (
         <motion.div className="bg-white">
-            <ColumnSelector />
             <div className="flex justify-between px-5 space-x-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 space-x-5 items-center">
