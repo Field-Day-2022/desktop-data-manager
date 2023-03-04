@@ -93,12 +93,7 @@ export const TableEntry = forwardRef((props, ref) => {
                 onSaveClickedHandler={onSaveClickedHandler}
                 currentState={currentState}
             />
-            {console.log('Keys: ' + keys)}
-            {console.log('Shown Columns: ' + shownColumns)}
             {keys && keys.map((key) => (
-                console.log('Key:' + key),
-                console.log('Label: ' + keyLabelMap[key]),
-                console.log('Show: ' + shownColumns.includes(keyLabelMap[key])),
                 shownColumns.includes(keyLabelMap[key]) && (
                 <EntryItem
                     entrySnapshot={entrySnapshot}

@@ -3,7 +3,6 @@ import { TableEntry } from '../components/TableEntry';
 import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
-import { labelKeyMap } from '../const/tableLabels';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [showColumnToggle, setShowColumnToggle] = useState(false);
@@ -17,6 +16,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
         console.log(columns);
     }, [labels]);
+
+    useEffect(() => {
+        console.log(columns);
+    }, [columns]);
 
     const ColumnSelectorButton = () => {
         return (
@@ -65,8 +68,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         );
     };
 
-
-
     return (
         <motion.div className="bg-white">
 
@@ -99,7 +100,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                     >
                         {/* <AnimatePresence> */}
                         {entries.map((entry, index) => (
-                            console.log(entry.data()),
                             <TableEntry
                                 index={index}
                                 key={entry.id}
