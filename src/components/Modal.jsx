@@ -9,7 +9,6 @@ export default function Modal({
     onCancel,
     children,
     showModal,
-    displayOptions,
 }) {
     return (
         <motion.div
@@ -31,7 +30,7 @@ export default function Modal({
                             exit="hidden"
                         >
                             <ModalBuffer>
-                                <ModalWrapper displayOptions={displayOptions}>
+                                <ModalWrapper>
                                     <ModalHeader title={title} text={text} />
                                     <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
@@ -72,7 +71,7 @@ function ModalBuffer({ children }) {
     return <div className="flex h-full justify-center text-center items-center">{children}</div>;
 }
 
-function ModalWrapper({ children, displayOptions }) {
+function ModalWrapper({ children }) {
     return (
         <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width">
             {children}
