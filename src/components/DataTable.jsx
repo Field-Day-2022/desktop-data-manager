@@ -3,6 +3,7 @@ import { TableEntry } from '../components/TableEntry';
 import { AnimatePresence, motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
+import { notify, Type } from './Notifier';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [showColumnSelector, setShowColumnSelector] = useState(false);
@@ -16,6 +17,17 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
     }, [labels]);
 
+    // Get the count of shown columns
+    const getShownColumnCount = () => {
+        let count = 0;
+        for (let key in columns) {
+            if (columns[key].show) {
+                count++;
+            }
+        }
+        return count;
+    };
+
     const ColumnSelectorButton = () => {
         return (
             <div className="flex-col px-5 space-x-5 items-center">
@@ -23,7 +35,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                     <ColumnToggleIcon className="text-2xl" />
                 </div>
                 <div>
-                    <ColumnSelector />
+                    <ColumnSelector show={showColumnSelector} />
                 </div>
 
             </div>
@@ -32,7 +44,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
 
     const ColumnCheckbox = ({ label }) => {
 
-        const onClickHandler = () => {
+        const onChangeHandler = () => {
             let newColumns = columns;
             newColumns[label].show = !newColumns[label].show;
             setColumns(newColumns);
@@ -43,17 +55,18 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                 className="accent-asu-maroon w-4"
                 type="checkbox"
                 defaultChecked={columns[label] && columns[label].show}
+                disabled={getShownColumnCount() === 1 && columns[label].show}
                 onChange={() => {
-                    onClickHandler();
+                        onChangeHandler();                
                 }}
             />
         );
     };
 
-    const ColumnSelector = () => {
+    const ColumnSelector = ({ show }) => {
         useEffect(() => {
             const handleClickOutside = (event) => {
-                if (showColumnSelector && !event.target.closest('.absolute')) {
+                if (show && !event.target.closest('.absolute')) {
                     setShowColumnSelector(false);
                 }
             };
@@ -61,19 +74,19 @@ export default function DataTable({ name, labels, entries, setEntries }) {
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside);
             };
-        }, [showColumnSelector]);
+        }, [show]);
 
         return (
             <AnimatePresence>
-                {showColumnSelector &&
+                {show &&
                     <motion.div
                         key='column-selector'
-                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-6'
+                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-6 overflow-auto'
                         initial={{ opacity: 0, y: '-100%', x: '-100%' }}
                         animate={{ opacity: 1, y: '0%', x: '-100%' }}
                         exit={{ opacity: 0, y: '-100%', x: '-100%' }}
                     >
-                        <div className='flex-col space-y-3 whitespace-nowrap'>
+                        <div className='flex-col space-y-3 whitespace-nowrap max-h-full-table'>
                             <h1 className='text-xl'>Column Selector</h1>
                             {labels && labels.map((label) =>
                                 <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
@@ -115,7 +128,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                         animate='visible'
                         variants={tableBody}
                     >
-                        {/* <AnimatePresence> */}
                         {entries.map((entry, index) => (
                             <TableEntry
                                 index={index}
@@ -128,7 +140,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                                 }}
                             />
                         ))}
-                        {/* </AnimatePresence> */}
                     </motion.tbody>
 
                 </table>
