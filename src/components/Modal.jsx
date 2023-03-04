@@ -9,7 +9,6 @@ export default function Modal({
     onCancel,
     children,
     showModal,
-    displayOptions,
 }) {
     return (
         <motion.div
@@ -31,12 +30,8 @@ export default function Modal({
                             exit="hidden"
                         >
                             <ModalBuffer>
-                                <ModalWrapper displayOptions={displayOptions}>
-                                    {!displayOptions ? (
-                                        <ModalHeader title={title} text={text} />
-                                    ) : displayOptions.includes('noHeader') ? null : (
-                                        <ModalHeader title={title} text={text} />
-                                    )}
+                                <ModalWrapper>
+                                    <ModalHeader title={title} text={text} />
                                     <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
                                         <Button
@@ -76,17 +71,9 @@ function ModalBuffer({ children }) {
     return <div className="flex h-full justify-center text-center items-center">{children}</div>;
 }
 
-function ModalWrapper({ children, displayOptions }) {
+function ModalWrapper({ children }) {
     return (
-        <div
-            className={
-                !displayOptions
-                    ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
-                    : displayOptions.includes('fullScreen')
-                    ? 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl w-full-modal-width'
-                    : 'relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width'
-            }
-        >
+        <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width">
             {children}
         </div>
     );
@@ -102,7 +89,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white p-4 overflow-auto">{children}</div>;
+    return <div className="bg-white p-4 max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {
