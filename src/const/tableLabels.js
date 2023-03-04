@@ -43,8 +43,7 @@ export const keyLabelMap = {
     thys: 'THYS',
     unki: 'UNKI',
     micro: 'MICRO',
-}
-
+};
 
 const sessionLabels = [
     'Date & Time',
