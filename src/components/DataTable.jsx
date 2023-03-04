@@ -1,6 +1,6 @@
 import { ColumnToggleIcon, ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
 
@@ -16,6 +16,12 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
         console.log(columns);
     }, [labels]);
+
+    // Make the table update when the columns change
+    useEffect(() => {
+        console.log(columns);
+    }, [columns]);
+
 
     const ColumnSelectorButton = () => {
         return (
@@ -33,7 +39,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
             let newColumns = columns;
             newColumns[label].show = !newColumns[label].show;
             setColumns(newColumns);
-            console.log(columns)
         };
 
         return (
@@ -60,27 +65,35 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                 document.removeEventListener('mousedown', handleClickOutside);
             };
         }, [showColumnToggle]);
+
         return (
-            (showColumnToggle) && (
-                <div className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-4'>
-                    <div className='flex-col space-y-3'>
-                        <h1 className='text-2xl'>Column Selector</h1>
-                        {labels && labels.map((label) =>
-                            <div key={label} className='flex p-2 space-x-5'>
-                                <ColumnCheckbox label={label} />
-                                <div>{label}</div>
-                            </div>)}
-                    </div>
-                </div>
-            )
+            <AnimatePresence>
+                {showColumnToggle &&
+                    <motion.div
+                        key='column-selector'
+                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-4'
+                        initial={{ opacity: 0, y: '-100%' }}
+                        animate={{opacity: 1, y: '0%' }}
+                        exit={{opacity: 0, y: '-100%' }}
+                    >
+                        <div className='flex-col space-y-3'>
+                            <h1 className='text-2xl'>Column Selector</h1>
+                            {labels && labels.map((label) =>
+                                <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100'>
+                                    <ColumnCheckbox label={label} />
+                                    <div>{label}</div>
+                                </div>)}
+                        </div>
+                    </motion.div>
+                }
+            </AnimatePresence>
+
         );
     };
 
     return (
         <motion.div className="bg-white">
-
             <ColumnSelector />
-
             <div className="flex justify-between px-5 space-x-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 space-x-5 items-center">
