@@ -9,15 +9,15 @@ import { notify, Type } from './Notifier';
 import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
+import { keyLabelMap } from '../const/tableLabels';
 
 export const TableEntry = forwardRef((props, ref) => {
-    const { entrySnapshot, removeEntry, index } = props;
+    const { entrySnapshot, shownColumns, removeEntry, index } = props;
 
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
-    const [currentPage, setCurrentPage] = useAtom(currentPageName);
     const [environment, setEnvironment] = useAtom(appMode);
     const [tableName, setTableName] = useAtom(currentTableName);
 
@@ -93,6 +93,7 @@ export const TableEntry = forwardRef((props, ref) => {
                 currentState={currentState}
             />
             {keys && keys.map((key) => (
+                shownColumns.includes(keyLabelMap[key]) && (
                 <EntryItem
                     entrySnapshot={entrySnapshot}
                     currentState={currentState}
@@ -100,7 +101,7 @@ export const TableEntry = forwardRef((props, ref) => {
                     entryData={entryData}
                     setEntryData={setEntryData}
                     key={key}
-                />
+                />)
             ))}
         </motion.tr>
     );
