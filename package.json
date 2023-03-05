@@ -1,0 +1,35 @@
+{
+  "name": "my-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@blaumaus/react-alert": "^7.0.5",
+    "@material-tailwind/react": "^1.2.5",
+    "@syncfusion/ej2-react-spreadsheet": "^20.4.44",
+    "daisyui": "^2.50.0",
+    "esbuild": "^0.17.7",
+    "firebase": "^9.15.0",
+    "framer-motion": "^8.5.0",
+    "jotai": "^1.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1",
+    "react-hot-toast": "^2.4.0",
+    "react-icons": "^4.7.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4",
+    "vite": "^4.0.0"
+  }
+}
