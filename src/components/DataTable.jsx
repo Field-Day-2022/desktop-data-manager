@@ -1,13 +1,11 @@
-import { ColumnToggleIcon, ExportIcon } from '../assets/icons';
+import { ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
-import { notify, Type } from './Notifier';
-import ColumnSelector from './ColumnSelector';
+import ColumnSelectorButton from './ColumnSelectorButton';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
-    const [showColumnSelector, setShowColumnSelector] = useState(false);
     const [columns, setColumns] = useState();
 
     useEffect(() => {
@@ -18,25 +16,14 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
     }, [labels]);
 
-    const ColumnSelectorButton = () => {
-        return (
-            <div className="flex-col px-5 space-x-5 items-center">
-                <div className='hover:scale-125 transition h-8 cursor-pointer' onClick={() => setShowColumnSelector(!showColumnSelector)}>
-                    <ColumnToggleIcon className="text-2xl" />
-                </div>
-                <ColumnSelector
-                    show={showColumnSelector}
-                    labels={labels}
-                    columns={columns}
-                    setShow={setShowColumnSelector}
-                    toggleColumn={toggleColumn} />
-            </div>
-        );
-    };
     const toggleColumn = (label) => {
-        let newColumns = columns;
-        newColumns[label].show = !newColumns[label].show;
-        setColumns(newColumns);
+        setColumns(prevColumns => ({
+            ...prevColumns,
+            [label]: {
+                ...prevColumns[label],
+                show: !prevColumns[label].show
+            }
+        }));
     };
 
     return (
@@ -46,7 +33,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                 <div className="flex px-5 space-x-5 items-center">
                     <input className="border-b border-neutral-800 p-2" type="text" name="search" />
                     <div className="text-2xl flex">
-                        <ColumnSelectorButton />
+                        <ColumnSelectorButton
+                            labels={labels}
+                            columns={columns}
+                            toggleColumn={toggleColumn} />
                         <ExportIcon />
                     </div>
                 </div>

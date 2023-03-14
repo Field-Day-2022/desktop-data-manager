@@ -8,7 +8,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (show && !ref.current.contains(event.target)) {
-                setShow(null);
+                setShow(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -18,13 +18,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     }, [show, toggleColumn]);
 
     const getShownColumnCount = () => {
-        let count = 0;
-        for (let key in columns) {
-            if (columns[key].show) {
-                count++;
-            }
-        }
-        return count;
+        return Object.values(columns).reduce((count, column) => count + (column.show ? 1 : 0), 0);
     };
 
     return (
