@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ColumnCheckbox from './ColumnCheckbox';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
+    const ref = useRef();
+
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (show && !event.target.closest('.absolute')) {
+            if (show && !ref.current.contains(event.target)) {
                 setShow(null);
             }
         };
@@ -34,6 +36,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                     initial={{ opacity: 0, y: '-100%', x: '-100%' }}
                     animate={{ opacity: 1, y: '0%', x: '-100%' }}
                     exit={{ opacity: 0, y: '-100%', x: '-100%' }}
+                    ref={ref}
                 >
                     <div className='flex-col space-y-3 whitespace-nowrap max-h-full-column-selector-height'>
                         <h1 className='text-xl'>Column Selector</h1>
