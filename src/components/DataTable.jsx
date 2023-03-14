@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
 import { notify, Type } from './Notifier';
-import ColumnCheckbox from './ColumnCheckbox';
+import ColumnSelector from './ColumnSelector';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [showColumnSelector, setShowColumnSelector] = useState(false);
@@ -18,24 +18,18 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
     }, [labels]);
 
-    // Get the count of shown columns
-    const getShownColumnCount = () => {
-        let count = 0;
-        for (let key in columns) {
-            if (columns[key].show) {
-                count++;
-            }
-        }
-        return count;
-    };
-
     const ColumnSelectorButton = () => {
         return (
             <div className="flex-col px-5 space-x-5 items-center">
                 <div className='hover:scale-125 transition h-8 cursor-pointer' onClick={() => setShowColumnSelector(!showColumnSelector)}>
                     <ColumnToggleIcon className="text-2xl" />
                 </div>
-                <ColumnSelector show={showColumnSelector} />
+                <ColumnSelector
+                    show={showColumnSelector}
+                    labels={labels}
+                    columns={columns}
+                    setShow={setShowColumnSelector}
+                    toggleColumn={toggleColumn} />
             </div>
         );
     };
@@ -43,47 +37,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         let newColumns = columns;
         newColumns[label].show = !newColumns[label].show;
         setColumns(newColumns);
-    };
-
-    const ColumnSelector = ({ show }) => {
-        useEffect(() => {
-            const handleClickOutside = (event) => {
-                if (show && !event.target.closest('.absolute')) {
-                    setShowColumnSelector(false);
-                }
-            };
-            document.addEventListener('mousedown', handleClickOutside);
-            return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-            };
-        }, [show]);
-
-        return (
-            <AnimatePresence>
-                {show &&
-                    <motion.div
-                        key='column-selector'
-                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-6 overflow-auto'
-                        initial={{ opacity: 0, y: '-100%', x: '-100%' }}
-                        animate={{ opacity: 1, y: '0%', x: '-100%' }}
-                        exit={{ opacity: 0, y: '-100%', x: '-100%' }}
-                    >
-                        <div className='flex-col space-y-3 whitespace-nowrap max-h-full-column-selector-height'>
-                            <h1 className='text-xl'>Column Selector</h1>
-                            {labels && labels.map((label) =>
-                                <ColumnCheckbox
-                                    label={label}
-                                    defaultChecked={columns[label] && columns[label].show}
-                                    disabled={getShownColumnCount() === 1 && columns[label].show}
-                                    onChange={() => {
-                                        toggleColumn(label);
-                                    }} />)}
-                        </div>
-                    </motion.div>
-                }
-            </AnimatePresence>
-
-        );
     };
 
     return (
