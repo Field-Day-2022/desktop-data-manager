@@ -4,9 +4,10 @@ import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
 import ColumnSelectorButton from './ColumnSelectorButton';
+import { useCallback } from 'react';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
-    const [columns, setColumns] = useState();
+    const [columns, setColumns] = useState({});
 
     useEffect(() => {
         let initialColumns = {};
@@ -16,15 +17,15 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
     }, [labels]);
 
-    const toggleColumn = (label) => {
+    const toggleColumn = useCallback((label) => {
         setColumns(prevColumns => ({
-            ...prevColumns,
-            [label]: {
-                ...prevColumns[label],
-                show: !prevColumns[label].show
-            }
+          ...prevColumns,
+          [label]: {
+            ...prevColumns[label],
+            show: !prevColumns[label].show
+          }
         }));
-    };
+      }, []);
 
     return (
         <motion.div className="bg-white">
@@ -48,7 +49,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                         <tr>
                             <TableHeading label="Actions" />
                             {labels &&
-                                labels.map((label) => (columns[label] && columns[label].show) && <TableHeading key={label} label={label} />)}
+                                labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} />)}
                         </tr>
                     </thead>
                     <motion.tbody
@@ -61,7 +62,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                                 index={index}
                                 key={entry.id}
                                 entrySnapshot={entry}
-                                shownColumns={[...labels].filter(label => columns[label] && columns[label].show)}
+                                shownColumns={[...labels].filter(label => columns[label]?.show)}
                                 tableName={name}
                                 removeEntry={() => {
                                     setEntries(entries.filter(e => e !== entry));
