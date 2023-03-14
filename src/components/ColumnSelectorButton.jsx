@@ -7,7 +7,7 @@ const ColumnSelectorButton = ({ labels, columns, toggleColumn }) => {
 
     return (
         <div className="flex-col px-5 space-x-5 items-center">
-            <div className='hover:scale-125 transition h-8 cursor-pointer' onClick={() => setShowColumnSelector(!showColumnSelector)}>
+            <div className='hover:scale-125 transition h-8 cursor-pointer' onClick={() => !showColumnSelector && setShowColumnSelector(true)}>
                 <ColumnToggleIcon className="text-2xl" />
             </div>
             <ColumnSelector
