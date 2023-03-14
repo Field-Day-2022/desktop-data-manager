@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
 import { notify, Type } from './Notifier';
+import ColumnCheckbox from './ColumnCheckbox';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [showColumnSelector, setShowColumnSelector] = useState(false);
@@ -38,26 +39,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
             </div>
         );
     };
-
-    const ColumnCheckbox = ({ label }) => {
-
-        const onChangeHandler = () => {
-            let newColumns = columns;
-            newColumns[label].show = !newColumns[label].show;
-            setColumns(newColumns);
-        };
-
-        return (
-            <input
-                className="accent-asu-maroon w-4"
-                type="checkbox"
-                defaultChecked={columns[label] && columns[label].show}
-                disabled={getShownColumnCount() === 1 && columns[label].show}
-                onChange={() => {
-                    onChangeHandler();
-                }}
-            />
-        );
+    const toggleColumn = (label) => {
+        let newColumns = columns;
+        newColumns[label].show = !newColumns[label].show;
+        setColumns(newColumns);
     };
 
     const ColumnSelector = ({ show }) => {
@@ -86,10 +71,13 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                         <div className='flex-col space-y-3 whitespace-nowrap max-h-full-column-selector-height'>
                             <h1 className='text-xl'>Column Selector</h1>
                             {labels && labels.map((label) =>
-                                <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
-                                    <ColumnCheckbox label={label} />
-                                    <div>{label}</div>
-                                </div>)}
+                                <ColumnCheckbox
+                                    label={label}
+                                    defaultChecked={columns[label] && columns[label].show}
+                                    disabled={getShownColumnCount() === 1 && columns[label].show}
+                                    onChange={() => {
+                                        toggleColumn(label);
+                                    }} />)}
                         </div>
                     </motion.div>
                 }
