@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const ColumnCheckbox = ({ label, defaultChecked, disabled, onChange }) => {
+const ColumnCheckbox = ({ label, defaultChecked, disabled, onChange, onClick }) => {
     const [isChecked, setIsChecked] = useState(defaultChecked);
 
     const handleOnChange = () => {
@@ -11,9 +11,9 @@ const ColumnCheckbox = ({ label, defaultChecked, disabled, onChange }) => {
     };
 
     return (
-        <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
+        <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base' onClick={onClick}>
             <input
-                className="accent-asu-maroon w-4"
+                className="accent-asu-maroon w-4 cursor-pointer"
                 type="checkbox"
                 checked={isChecked}
                 disabled={disabled}

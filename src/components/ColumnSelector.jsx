@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ColumnCheckbox from './ColumnCheckbox';
+import { notify, Type } from './Notifier';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     const ref = useRef();
@@ -42,7 +43,14 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                                 disabled={getShownColumnCount() === 1 && columns[label].show}
                                 onChange={() => {
                                     toggleColumn(label);
-                                }} />)}
+                                }}
+                                onClick={() => {
+                                    console.log('You clicked me!')
+                                    if (getShownColumnCount() === 1 && columns[label].show) {
+                                        notify(Type.error, 'You must have at least one column selected.');
+                                    }
+                                }} />
+                        )}
                     </div>
                 </motion.div>
             }
