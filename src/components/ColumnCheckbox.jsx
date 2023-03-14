@@ -4,20 +4,24 @@ const ColumnCheckbox = ({ label, defaultChecked, disabled, onChange, onClick }) 
     const [isChecked, setIsChecked] = useState(defaultChecked);
 
     const handleOnChange = () => {
+
         if (!disabled) {
             setIsChecked(!isChecked);
             onChange(!isChecked);
         }
     };
 
+    let color = (!disabled && isChecked) ? 'accent-asu-maroon ' : 'accent-neutral-400 ';
+
     return (
-        <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base' onClick={onClick}>
+        <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
+            
             <input
-                className="accent-asu-maroon w-4 cursor-pointer"
+                className={color + "w-4 cursor-pointer"}
                 type="checkbox"
                 checked={isChecked}
-                disabled={disabled}
                 onChange={handleOnChange}
+                onClick={onClick}
             />
             <div>{label}</div>
         </div>
