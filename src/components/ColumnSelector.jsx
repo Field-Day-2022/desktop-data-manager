@@ -39,13 +39,12 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                             <ColumnCheckbox
                                 key={label}
                                 label={label}
-                                defaultChecked={columns[label] && columns[label].show}
+                                defaultChecked={columns[label]?.show}
                                 disabled={getShownColumnCount() === 1 && columns[label].show}
                                 onChange={() => {
                                     toggleColumn(label);
                                 }}
                                 onClick={() => {
-                                    console.log('You clicked me!')
                                     if (getShownColumnCount() === 1 && columns[label].show) {
                                         notify(Type.error, 'You must have at least one column selected.');
                                     }
