@@ -18,7 +18,7 @@ export const TableHeading = ({ label, active, sortDirection, onClick }) => {
     };
 
     return (
-        <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold"
+        <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold cursor-pointer"
             onClick={onClick}>
             {getLabel()}
         </th>
