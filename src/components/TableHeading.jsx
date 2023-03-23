@@ -4,10 +4,6 @@ import { SortAscIcon, SortDescIcon } from "../assets/icons";
 
 export const TableHeading = ({ label, active, sortDirection, onClick }) => {
 
-    useEffect(() => {
-        console.log(label, sortDirection);
-    }, [active, sortDirection]);
-
     const getSortIcon = () => {
         if (active && sortDirection) {
           return sortDirection === "asc" ? <SortAscIcon /> : <SortDescIcon />;
