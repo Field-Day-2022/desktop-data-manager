@@ -1,13 +1,13 @@
-import { ColumnToggleIcon, ExportIcon } from '../assets/icons';
+import { ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
-import { notify, Type } from './Notifier';
+import ColumnSelectorButton from './ColumnSelectorButton';
+import { useCallback } from 'react';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
-    const [showColumnSelector, setShowColumnSelector] = useState(false);
-    const [columns, setColumns] = useState();
+    const [columns, setColumns] = useState({});
 
     useEffect(() => {
         let initialColumns = {};
@@ -17,86 +17,15 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         setColumns(initialColumns);
     }, [labels]);
 
-    // Get the count of shown columns
-    const getShownColumnCount = () => {
-        let count = 0;
-        for (let key in columns) {
-            if (columns[key].show) {
-                count++;
-            }
-        }
-        return count;
-    };
-
-    const ColumnSelectorButton = () => {
-        return (
-            <div className="flex-col px-5 space-x-5 items-center">
-                <div className='hover:scale-125 transition h-8 cursor-pointer' onClick={() => setShowColumnSelector(!showColumnSelector)}>
-                    <ColumnToggleIcon className="text-2xl" />
-                </div>
-                <ColumnSelector show={showColumnSelector} />
-            </div>
-        );
-    };
-
-    const ColumnCheckbox = ({ label }) => {
-
-        const onChangeHandler = () => {
-            let newColumns = columns;
-            newColumns[label].show = !newColumns[label].show;
-            setColumns(newColumns);
-        };
-
-        return (
-            <input
-                className="accent-asu-maroon w-4"
-                type="checkbox"
-                defaultChecked={columns[label] && columns[label].show}
-                disabled={getShownColumnCount() === 1 && columns[label].show}
-                onChange={() => {
-                    onChangeHandler();
-                }}
-            />
-        );
-    };
-
-    const ColumnSelector = ({ show }) => {
-        useEffect(() => {
-            const handleClickOutside = (event) => {
-                if (show && !event.target.closest('.absolute')) {
-                    setShowColumnSelector(false);
-                }
-            };
-            document.addEventListener('mousedown', handleClickOutside);
-            return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-            };
-        }, [show]);
-
-        return (
-            <AnimatePresence>
-                {show &&
-                    <motion.div
-                        key='column-selector'
-                        className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-6 overflow-auto'
-                        initial={{ opacity: 0, y: '-100%', x: '-100%' }}
-                        animate={{ opacity: 1, y: '0%', x: '-100%' }}
-                        exit={{ opacity: 0, y: '-100%', x: '-100%' }}
-                    >
-                        <div className='flex-col space-y-3 whitespace-nowrap max-h-[calc(100vh-14em)]'>
-                            <h1 className='text-xl'>Column Selector</h1>
-                            {labels && labels.map((label) =>
-                                <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
-                                    <ColumnCheckbox label={label} />
-                                    <div>{label}</div>
-                                </div>)}
-                        </div>
-                    </motion.div>
-                }
-            </AnimatePresence>
-
-        );
-    };
+    const toggleColumn = useCallback((label) => {
+        setColumns(prevColumns => ({
+          ...prevColumns,
+          [label]: {
+            ...prevColumns[label],
+            show: !prevColumns[label].show
+          }
+        }));
+      }, []);
 
     return (
         <motion.div className="bg-white">
@@ -105,7 +34,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                 <div className="flex px-5 space-x-5 items-center">
                     <input className="border-b border-neutral-800 p-2" type="text" name="search" />
                     <div className="text-2xl flex">
-                        <ColumnSelectorButton />
+                        <ColumnSelectorButton
+                            labels={labels}
+                            columns={columns}
+                            toggleColumn={toggleColumn} />
                         <ExportIcon />
                     </div>
                 </div>
@@ -117,7 +49,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                         <tr>
                             <TableHeading label="Actions" />
                             {labels &&
-                                labels.map((label) => (columns[label] && columns[label].show) && <TableHeading key={label} label={label} />)}
+                                labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} />)}
                         </tr>
                     </thead>
                     <motion.tbody
@@ -130,7 +62,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                                 index={index}
                                 key={entry.id}
                                 entrySnapshot={entry}
-                                shownColumns={[...labels].filter(label => columns[label] && columns[label].show)}
+                                shownColumns={[...labels].filter(label => columns[label]?.show)}
                                 tableName={name}
                                 removeEntry={() => {
                                     setEntries(entries.filter(e => e !== entry));
