@@ -180,13 +180,13 @@ export const getKey = (label, tableName) => {
     if (label === 'Comments' && tableName === 'Session') {
         return 'commentsAboutTheArray';
     }
-    return Object.keys(keyLabelMap).find(key => keyLabelMap[key] === label);
-}
+    return Object.keys(keyLabelMap).find((key) => keyLabelMap[key] === label);
+};
 
 export const getKeys = (tableName) => {
     const labels = TABLE_LABELS[tableName];
-    return labels.map(label => getKey(label, tableName));
-}
+    return labels.map((label) => getKey(label, tableName));
+};
 
 export const TABLE_LABELS = {
     Session: sessionLabels,
