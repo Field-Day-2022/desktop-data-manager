@@ -1,10 +1,18 @@
-import { ArrowIcon } from "../assets/icons";
+import { useEffect } from "react";
+import { SortAscIcon, SortDescIcon } from "../assets/icons";
 
 export const TableHeading = ({ label, active, sortDirection, onClick }) => {
 
-    const getArrow = () => {
+    useEffect(() => {
+    }, [active, sortDirection]);
+
+    const getSortIcon = () => {
         if (active) {
-            return <ArrowIcon className='w-4 h-4' direction={(sortDirection === 'asc')?'up':'down'}/>;
+            return (
+                <div className="text-xl">
+                    {(sortDirection === 'asc') ? <SortAscIcon /> : <SortDescIcon />}
+                </div>
+            );
         }
     };
 
@@ -12,7 +20,7 @@ export const TableHeading = ({ label, active, sortDirection, onClick }) => {
         return (
             <div className="flex items-center justify-center">
                 <span className="flex-1 mr-1">{label}</span>
-                <span className="flex-4">{getArrow()}</span>
+                <span className="flex-4">{getSortIcon()}</span>
             </div>
         );
     };

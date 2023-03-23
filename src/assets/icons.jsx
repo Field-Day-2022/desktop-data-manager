@@ -4,6 +4,7 @@ import { FaClipboard } from 'react-icons/fa'
 import { TbTable } from 'react-icons/tb';
 import { HiDocumentPlus, HiFolderPlus } from 'react-icons/hi2';
 import { MdViewColumn } from 'react-icons/md';
+import { CgSortAz, CgSortZa } from 'react-icons/cg';
 
 export function TurtleIcon() { return (<GiTurtle />) }
 export function AmphibianIcon() { return (<GiFrog />) }
@@ -16,6 +17,8 @@ export function SessionIcon() { return (<FaClipboard />) }
 export function NewSessionIcon() { return (<HiFolderPlus />) }
 export function NewDataIcon() { return (<HiDocumentPlus />) }
 export function ColumnToggleIcon() { return (<MdViewColumn />) }
+export function SortAscIcon() { return (<CgSortAz />) }
+export function SortDescIcon() { return (<CgSortZa />) }
 
 export function LizardIcon({ className }) {
     return (

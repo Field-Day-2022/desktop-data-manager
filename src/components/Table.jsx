@@ -33,7 +33,7 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
 
     const sortByColumn = (column) => {
         if (sortedColumn === column) {
-            setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
+            setSortDirection(prevDirection => (prevDirection === 'asc') ? 'desc' : 'asc');
         } else {
             setSortedColumn(column);
             setSortDirection('asc');
