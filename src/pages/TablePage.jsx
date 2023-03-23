@@ -168,6 +168,7 @@ export default function TablePage() {
                             if (selectedOption !== currentProject)
                                 setCurrentProject(selectedOption.replace(/\s/g, ''));
                         }}
+                        value={currentProject.replace(/([a-z])([A-Z])/g, "$1 $2")}
                         options={['Gateway', 'Virgin River', 'San Pedro']}
                     />
                 </div>
