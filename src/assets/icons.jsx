@@ -17,8 +17,8 @@ export function SessionIcon() { return (<FaClipboard />) }
 export function NewSessionIcon() { return (<HiFolderPlus />) }
 export function NewDataIcon() { return (<HiDocumentPlus />) }
 export function ColumnToggleIcon() { return (<MdViewColumn />) }
-export function SortAscIcon() { return (<CgSortAz />) }
-export function SortDescIcon() { return (<CgSortZa />) }
+export function SortDescIcon() { return (<CgSortAz />) }
+export function SortAscIcon() { return (<CgSortZa />) }
 
 export function LizardIcon({ className }) {
     return (

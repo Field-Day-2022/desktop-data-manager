@@ -14,6 +14,8 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     useEffect(() => {
         if (sortState !== null) {
             setEntries(sortEntries(entries, sortState.column, sortState.direction));
+        } else {
+            setEntries(entries);
         }
     }, [sortState]);
 
@@ -21,10 +23,10 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
             if (getValue(a, column) < getValue(b, column)) {
-                return (direction === 'asc') ? -1 : 1;
+                return (direction === 'asc') ? 1 : -1;
             }
             if (getValue(a, column) > getValue(b, column)) {
-                return (direction === 'asc') ? 1 : -1;
+                return (direction === 'asc') ? -1 : 1;
             }
             return 0;
         });
@@ -33,7 +35,7 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
 
     const sortByColumn = (column) => {
         if (sortedColumn === column) {
-            setSortDirection(prevDirection => (prevDirection === 'asc') ? 'desc' : 'asc');
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
         } else {
             setSortedColumn(column);
             setSortDirection('asc');
