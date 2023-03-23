@@ -1,4 +1,4 @@
-import { ExportIcon } from '../assets/icons';
+import { ArrowIcon, ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
 import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
@@ -8,6 +8,9 @@ import { useCallback } from 'react';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [columns, setColumns] = useState({});
+    const [sortedColumn, setSortedColumn] = useState(null);
+    const [sortDirection, setSortDirection] = useState('asc');
+
 
     useEffect(() => {
         let initialColumns = {};
@@ -19,13 +22,37 @@ export default function DataTable({ name, labels, entries, setEntries }) {
 
     const toggleColumn = useCallback((label) => {
         setColumns(prevColumns => ({
-          ...prevColumns,
-          [label]: {
-            ...prevColumns[label],
-            show: !prevColumns[label].show
-          }
+            ...prevColumns,
+            [label]: {
+                ...prevColumns[label],
+                show: !prevColumns[label].show
+            }
         }));
-      }, []);
+    }, []);
+
+    const sortColumn = (label) => {
+        if (sortedColumn === label) {
+            setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortedColumn(label);
+            setSortDirection('asc');
+        }
+    };
+
+    // Function to sort entries by column
+    const sortEntries = (entries, column, direction) => {
+        const sortedEntries = [...entries];
+        sortedEntries.sort((a, b) => {
+            if (a[column] < b[column]) {
+                return (direction === 'asc') ? -1 : 1;
+            }
+            if (a[column] > b[column]) {
+                return (direction === 'asc') ? 1 : -1;
+            }
+            return 0;
+        });
+        return sortedEntries;
+    };
 
     return (
         <motion.div className="bg-white">
@@ -49,7 +76,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                         <tr>
                             <TableHeading label="Actions" />
                             {labels &&
-                                labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} />)}
+                                labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} active={sortedColumn === label} sortDirection={sortDirection} onClick={() => {
+                                    sortColumn(label)
+                                    sortEntries(entries, label, sortDirection);
+                                    }} />)}
                         </tr>
                     </thead>
                     <motion.tbody
@@ -77,10 +107,27 @@ export default function DataTable({ name, labels, entries, setEntries }) {
     );
 }
 
-const TableHeading = ({ label }) => {
+const TableHeading = ({ label, active, sortDirection, onClick }) => {
+
+    const getArrow = () => {
+        if (active) {
+            return <ArrowIcon direction={(sortDirection === 'asc')?'up':'down'}/>;
+        }
+    };
+
+    const getLabel = () => {
+        return (
+            <div className="flex items-center">
+                <span>{label}</span>
+                {getArrow()}
+            </div>
+        );
+    };
+
     return (
-        <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold">
-            {label}
+        <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold"
+            onClick={onClick}>
+            {getLabel()}
         </th>
     );
 };
