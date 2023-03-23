@@ -1,7 +1,7 @@
 import { ExportIcon } from '../assets/icons';
 import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
-import { SpreadSheet } from '../components/SpreadSheet';
+import { Table } from '../components/Table';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
@@ -43,7 +43,7 @@ export default function DataManager({ name, labels, entries, setEntries }) {
                 </div>
             </div>
 
-            <SpreadSheet
+            <Table
                 labels={labels}
                 columns={columns}
                 entries={entries}

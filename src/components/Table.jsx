@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { TableEntry } from '../components/TableEntry';
-import { TableHeading } from '../components/TableHeading';
+import { TableEntry } from './TableEntry';
+import { TableHeading } from './TableHeading';
 import { tableBody } from '../utils/variants';
-import { keyLabelMap } from '../const/tableLabels';
+import { getKey } from '../const/tableLabels';
 
-export const SpreadSheet = ({ labels, columns, entries, name, setEntries }) => {
+export const Table = ({ labels, columns, entries, name, setEntries }) => {
 
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
@@ -31,28 +31,21 @@ export const SpreadSheet = ({ labels, columns, entries, name, setEntries }) => {
         return sortedEntries;
     };
 
-    const sortByColumn = (label) => {
-        if (sortedColumn === label) {
+    const sortByColumn = (column) => {
+        if (sortedColumn === column) {
             setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
         } else {
-            setSortedColumn(label);
+            setSortedColumn(column);
             setSortDirection('asc');
         }
-        setSortState({ column: label, direction: sortDirection });
+        setSortState({ column: column, direction: sortDirection });
     };
 
-    const getKey = (column) => {
-        if (column === 'Comments' && name === 'Session') {
-            return 'commentsAboutTheArray';
-        }
-        return Object.keys(keyLabelMap).find(key => keyLabelMap[key] === column);
-    }
-
     const getValue = (entry, column) => {
-        if (!entry._document.data.value.mapValue.fields[getKey(column)]) {
+        if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
             return 'N/A';
         }
-        return entry._document.data.value.mapValue.fields[getKey(column)].stringValue;
+        return entry._document.data.value.mapValue.fields[getKey(column, name)].stringValue;
     }
 
     return (

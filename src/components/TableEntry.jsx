@@ -1,15 +1,14 @@
 import { useEffect, useState, forwardRef } from 'react';
-import { TABLE_KEYS } from '../const/tableKeys';
 import { useAtom } from 'jotai';
 import { currentTableName } from '../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { currentProjectName, currentPageName, appMode } from '../utils/jotai';
+import { currentProjectName, appMode } from '../utils/jotai';
 import { notify, Type } from './Notifier';
 import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
-import { keyLabelMap } from '../const/tableLabels';
+import { getKeys, getLabel } from '../const/tableLabels';
 
 export const TableEntry = forwardRef((props, ref) => {
     const { entrySnapshot, shownColumns, removeEntry, index } = props;
@@ -73,7 +72,7 @@ export const TableEntry = forwardRef((props, ref) => {
     };
 
     useEffect(() => {
-        setKeys(TABLE_KEYS[tableName]);
+        setKeys(getKeys(tableName));
     }, [])
 
     return (
@@ -93,7 +92,7 @@ export const TableEntry = forwardRef((props, ref) => {
                 currentState={currentState}
             />
             {keys && keys.map((key) => (
-                shownColumns.includes(keyLabelMap[key]) && (
+                shownColumns.includes(getLabel(key)) && (
                 <EntryItem
                     entrySnapshot={entrySnapshot}
                     currentState={currentState}
