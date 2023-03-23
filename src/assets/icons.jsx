@@ -126,10 +126,7 @@ export function ArrowIcon({ direction }) {
     }
 
     let rotation = directionMap[direction] || directionMap['down'];
-    
-    console.log(directionMap)
 
-    console.log(direction, rotation)
 
     return (
         <svg

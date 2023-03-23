@@ -54,18 +54,14 @@ export default function TablePage() {
         );
     };
 
-    console.log(getCollectionName());
-
     const generateQueryConstraints = ({ whereClause, at, after }) => {
         const collectionName = getCollectionName();
-        console.log(`loading ${tableName} from ${collectionName}`);
         const constraints = [
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
             limit(batchSize),
         ];
         if (whereClause) {
-            console.log('adding where clause');
             constraints.push(where(...whereClause));
         }
         if (at) {

@@ -4,15 +4,15 @@ export const TableHeading = ({ label, active, sortDirection, onClick }) => {
 
     const getArrow = () => {
         if (active) {
-            return <ArrowIcon direction={(sortDirection === 'asc')?'up':'down'}/>;
+            return <ArrowIcon className='w-4 h-4' direction={(sortDirection === 'asc')?'up':'down'}/>;
         }
     };
 
     const getLabel = () => {
         return (
-            <div className="flex items-center">
-                <span>{label}</span>
-                {getArrow()}
+            <div className="flex items-center justify-center">
+                <span className="flex-1 mr-1">{label}</span>
+                <span className="flex-4">{getArrow()}</span>
             </div>
         );
     };

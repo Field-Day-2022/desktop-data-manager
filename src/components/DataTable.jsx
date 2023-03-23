@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react';
 import ColumnSelectorButton from './ColumnSelectorButton';
 import { useCallback } from 'react';
 import { TableHeading } from './TableHeading';
+import { keyLabelMap } from '../const/tableLabels';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [columns, setColumns] = useState({});
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
-
 
     useEffect(() => {
         let initialColumns = {};
@@ -20,6 +20,10 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         });
         setColumns(initialColumns);
     }, [labels]);
+
+    useEffect(() => {
+    }, [entries]);
+
 
     const toggleColumn = useCallback((label) => {
         setColumns(prevColumns => ({
@@ -31,7 +35,7 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         }));
     }, []);
 
-    const sortColumn = (label) => {
+    const sortByColumn = (label) => {
         if (sortedColumn === label) {
             setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
         } else {
@@ -40,13 +44,28 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         }
     };
 
+    const getKey = (column) => {
+        if(column === 'Comments' && name === 'Session') {
+            return 'commentsAboutTheArray';
+        }
+        return Object.keys(keyLabelMap).find(key => keyLabelMap[key] === column);
+    }
+
+    const getValue = (entry, column) => {
+        console.log(entries)
+        if (!entry._document.data.value.mapValue.fields[getKey(column)]) {
+            return 'N/A';
+        }
+        return entry._document.data.value.mapValue.fields[getKey(column)].stringValue;
+    }
+
     const sortEntries = (entries, column, direction) => {
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
-            if (a[column] < b[column]) {
+            if (getValue(a, column) < getValue(b, column)) {
                 return (direction === 'asc') ? -1 : 1;
             }
-            if (a[column] > b[column]) {
+            if (getValue(a, column) > getValue(b, column)) {
                 return (direction === 'asc') ? 1 : -1;
             }
             return 0;
@@ -77,8 +96,8 @@ export default function DataTable({ name, labels, entries, setEntries }) {
                             <TableHeading label="Actions" />
                             {labels &&
                                 labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} active={sortedColumn === label} sortDirection={sortDirection} onClick={() => {
-                                    sortColumn(label)
-                                    sortEntries(entries, label, sortDirection);
+                                    sortByColumn(label)
+                                    setEntries(sortEntries(entries, label, sortDirection))
                                     }} />)}
                         </tr>
                     </thead>
