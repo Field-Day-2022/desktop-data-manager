@@ -1,10 +1,11 @@
-import { ArrowIcon, ExportIcon } from '../assets/icons';
+import { ExportIcon } from '../assets/icons';
 import { TableEntry } from '../components/TableEntry';
 import { motion } from 'framer-motion';
 import { tableBody } from '../utils/variants';
 import { useEffect, useState } from 'react';
 import ColumnSelectorButton from './ColumnSelectorButton';
 import { useCallback } from 'react';
+import { TableHeading } from './TableHeading';
 
 export default function DataTable({ name, labels, entries, setEntries }) {
     const [columns, setColumns] = useState({});
@@ -39,7 +40,6 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         }
     };
 
-    // Function to sort entries by column
     const sortEntries = (entries, column, direction) => {
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
@@ -106,28 +106,3 @@ export default function DataTable({ name, labels, entries, setEntries }) {
         </motion.div>
     );
 }
-
-const TableHeading = ({ label, active, sortDirection, onClick }) => {
-
-    const getArrow = () => {
-        if (active) {
-            return <ArrowIcon direction={(sortDirection === 'asc')?'up':'down'}/>;
-        }
-    };
-
-    const getLabel = () => {
-        return (
-            <div className="flex items-center">
-                <span>{label}</span>
-                {getArrow()}
-            </div>
-        );
-    };
-
-    return (
-        <th className="sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-sm text-gray-600 font-semibold"
-            onClick={onClick}>
-            {getLabel()}
-        </th>
-    );
-};
