@@ -1,4 +1,4 @@
-export const keyLabelMap = {
+const keyLabelMap = {
     dateTime: 'Date & Time',
     recorder: 'Recorder',
     handler: 'Handler',
@@ -173,6 +173,20 @@ const amphibianLabels = [
     'Dead?',
     'Comments',
 ];
+
+export const getLabel = (key) => keyLabelMap[key];
+
+export const getKey = (label, tableName) => {
+    if (label === 'Comments' && tableName === 'Session') {
+        return 'commentsAboutTheArray';
+    }
+    return Object.keys(keyLabelMap).find((key) => keyLabelMap[key] === label);
+};
+
+export const getKeys = (tableName) => {
+    const labels = TABLE_LABELS[tableName];
+    return labels.map((label) => getKey(label, tableName));
+};
 
 export const TABLE_LABELS = {
     Session: sessionLabels,

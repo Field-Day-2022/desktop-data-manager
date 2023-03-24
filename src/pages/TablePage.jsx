@@ -16,7 +16,7 @@ import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels';
-import DataTable from '../components/DataTable';
+import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
@@ -54,18 +54,14 @@ export default function TablePage() {
         );
     };
 
-    console.log(getCollectionName());
-
     const generateQueryConstraints = ({ whereClause, at, after }) => {
         const collectionName = getCollectionName();
-        console.log(`loading ${tableName} from ${collectionName}`);
         const constraints = [
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
             limit(batchSize),
         ];
         if (whereClause) {
-            console.log('adding where clause');
             constraints.push(where(...whereClause));
         }
         if (at) {
@@ -178,7 +174,7 @@ export default function TablePage() {
             </div>
 
             <div>
-                <DataTable
+                <DataManager
                     name={tableName}
                     labels={labels}
                     entries={entries}

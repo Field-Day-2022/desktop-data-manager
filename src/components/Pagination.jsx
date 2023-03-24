@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { LeftArrowIcon, RightArrowIcon } from "../assets/icons";
+import { ArrowIcon } from "../assets/icons";
 import { currentBatchSize } from "../utils/jotai";
 import Dropdown from "./Dropdown";
 
@@ -17,7 +17,7 @@ export const Pagination = ({
             <div
                 className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
                 onClick={() => loadPrevBatch()}>
-                <LeftArrowIcon />
+                <ArrowIcon direction='left' />
             </div>
 
             <div className='relative p-2'>
@@ -30,7 +30,7 @@ export const Pagination = ({
             <div
                 className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
                 onClick={() => loadNextBatch()}>
-                <RightArrowIcon />
+                <ArrowIcon direction='right' />
             </div>
         </div>
     )
