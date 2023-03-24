@@ -2,27 +2,24 @@ import { ExportIcon } from '../assets/icons';
 import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-export default function DataManager({ name, labels, entries, setEntries }) {
+export default function DataManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
 
     useEffect(() => {
-        let initialColumns = {};
-        labels && labels.forEach((label) => {
-            initialColumns[label] = { show: true };
-        });
-        setColumns(initialColumns);
+        setColumns(labels.reduce((acc, label) => {
+            acc[label] = { show: true };
+            return acc;
+        }, {}));
     }, [labels]);
 
     const toggleColumn = useCallback((label) => {
         setColumns(prevColumns => ({
             ...prevColumns,
             [label]: {
-                ...prevColumns[label],
-                show: !prevColumns[label].show
+                ...prevColumns?.[label],
+                show: !prevColumns?.[label]?.show
             }
         }));
     }, []);
@@ -37,7 +34,8 @@ export default function DataManager({ name, labels, entries, setEntries }) {
                         <ColumnSelectorButton
                             labels={labels}
                             columns={columns}
-                            toggleColumn={toggleColumn} />
+                            toggleColumn={toggleColumn}
+                        />
                         <ExportIcon />
                     </div>
                 </div>
