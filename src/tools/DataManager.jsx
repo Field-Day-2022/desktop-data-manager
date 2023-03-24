@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
+import Dropdown from '../components/Dropdown';
 
 function SearchBar({ onChange }) {
 
@@ -15,7 +16,6 @@ function SearchBar({ onChange }) {
             <div className='text-2xl'><SearchIcon /></div>
             <input className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 w-full appearance-none leading-normal" type="text" placeholder="Search" onChange={onChange} />
         </div>
-
     )
 }
 
@@ -48,29 +48,33 @@ export default function DataManager({ name, labels, entries, setEntries }) {
     }, []);
 
     const filteredEntries = useCallback((entries, search) => {
+
         if (search === '') {
             return entries;
         }
+
         return entries.filter((entry) => {
             return labels.some((label) => {
-                return getValue(entry, label).toString().toLowerCase().includes(search.toLowerCase());
+                const entryValue = getValue(entry, label);
+                return entryValue.toString().toLowerCase().includes(search.toLowerCase());
             });
         });
     }, [labels]);
 
     return (
         <motion.div className="bg-white">
-            <div className="flex justify-between px-5 space-x-5 items-center">
+            <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
-                <div className="flex px-5 space-x-5 items-center">
+                <div className="flex px-5 items-center">
                     <MemoizedSearchBar onChange={handleSearchChange} />
-                    <div className="text-2xl flex">
+                    <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}
                             columns={columns}
                             toggleColumn={toggleColumn} />
                         <ExportIcon />
                     </div>
+
                 </div>
             </div>
 
