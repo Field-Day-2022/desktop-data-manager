@@ -3,24 +3,29 @@ import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { useCallback } from 'react';
 
-export default function DataManager({ name, labels = [], entries, setEntries }) {
-    const [columns, setColumns] = useState(
-        labels.reduce((obj, label) => {
-            obj[label] = { show: true };
-            return obj;
-        }, {})
-    );
+export default function DataManager({ name, labels, entries, setEntries }) {
+    const [columns, setColumns] = useState({});
 
-    const toggleColumn = (label) => {
-        setColumns((prevColumns) => ({
+    useEffect(() => {
+        let initialColumns = {};
+        labels && labels.forEach((label) => {
+            initialColumns[label] = { show: true };
+        });
+        setColumns(initialColumns);
+    }, [labels]);
+
+    const toggleColumn = useCallback((label) => {
+        setColumns(prevColumns => ({
             ...prevColumns,
             [label]: {
                 ...prevColumns[label],
-                show: !prevColumns[label].show,
-            },
+                show: !prevColumns[label].show
+            }
         }));
-    };
+    }, []);
 
     return (
         <motion.div className="bg-white">
@@ -29,13 +34,22 @@ export default function DataManager({ name, labels = [], entries, setEntries }) 
                 <div className="flex px-5 space-x-5 items-center">
                     <input className="border-b border-neutral-800 p-2" type="text" name="search" />
                     <div className="text-2xl flex">
-                        <ColumnSelectorButton labels={labels} columns={columns} toggleColumn={toggleColumn} />
+                        <ColumnSelectorButton
+                            labels={labels}
+                            columns={columns}
+                            toggleColumn={toggleColumn} />
                         <ExportIcon />
                     </div>
                 </div>
             </div>
             <div className="overflow-auto w-full h-full-table">
-                <Table labels={labels} columns={columns} entries={entries} name={name} setEntries={setEntries} />
+                <Table
+                    labels={labels}
+                    columns={columns}
+                    entries={entries}
+                    name={name}
+                    setEntries={setEntries}
+                />
             </div>
         </motion.div>
     );
