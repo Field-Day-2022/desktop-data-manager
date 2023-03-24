@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TableEntry } from './TableEntry';
 import { TableHeading } from './TableHeading';
@@ -11,7 +11,6 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     const [sortDirection, setSortDirection] = useState('asc');
 
     const sortEntries = (entries, column, direction) => {
-        console.log(`sorting by ${column} ${direction}`)
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
             if (getValue(a, column) > getValue(b, column)) {
@@ -26,8 +25,6 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     };
 
     const sortByColumn = (column) => {
-        console.log(`clicked ${column}`)
-        console.log(`sorted column is ${sortedColumn}`)
         const newSortDirection = sortDirection === 'asc' ? 'desc' : 'asc' 
         setEntries(sortEntries(entries, column, newSortDirection))
         setSortedColumn(column)
@@ -35,10 +32,9 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     };
 
     const getValue = (entry, column) => {
-        if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
-            return 'N/A';
-        }
-        return entry._document.data.value.mapValue.fields[getKey(column, name)].stringValue;
+        const key = getKey(column, name);
+        const value = entry.data?.()[key] || 'N/A';
+        return value;
     }
 
     return (
