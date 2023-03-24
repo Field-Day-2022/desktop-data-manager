@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 import { useEffect } from 'react';
-import { SortAscIcon, SortDescIcon } from "../assets/icons";
+import { SortAscIcon, SortDescIcon } from '../assets/icons';
 
 export const TableHeading = ({ label, active, sortDirection, onClick }) => {
 
     const getSortIcon = () => {
         if (active && sortDirection) {
-          return sortDirection === "asc" ? <SortAscIcon /> : <SortDescIcon />;
+            return sortDirection === 'asc' ? <SortAscIcon /> : <SortDescIcon />;
         }
-      };
+    };
 
     const thClasses = classNames(
         'sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-gray-600 font-semibold cursor-pointer',

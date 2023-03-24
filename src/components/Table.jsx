@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getValue, TableEntry } from './TableEntry';
 import { TableHeading } from './TableHeading';
@@ -8,23 +8,14 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
 
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
-    const [sortState, setSortState] = useState(null);
-
-    useEffect(() => {
-        if (sortState !== null) {
-            setEntries(sortEntries(entries, sortState.column, sortState.direction));
-        } else {
-            setEntries(entries);
-        }
-    }, [sortState]);
 
     const sortEntries = (entries, column, direction) => {
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
-            if (getValue(a, column) < getValue(b, column)) {
+            if (getValue(a, column) > getValue(b, column)) {
                 return (direction === 'asc') ? 1 : -1;
             }
-            if (getValue(a, column) > getValue(b, column)) {
+            if (getValue(a, column) < getValue(b, column)) {
                 return (direction === 'asc') ? -1 : 1;
             }
             return 0;
@@ -33,25 +24,34 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     };
 
     const sortByColumn = (column) => {
-        if (sortedColumn === column) {
-            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortedColumn(column);
-            setSortDirection('asc');
-        }
-        setSortState({ column: column, direction: sortDirection });
+        const newSortDirection = sortDirection === 'asc' ? 'desc' : 'asc' 
+        setEntries(sortEntries(entries, column, newSortDirection))
+        setSortedColumn(column)
+        setSortDirection(newSortDirection);
     };
 
+    const getValue = (entry, column) => {
+        const key = getKey(column, name);
+        const value = entry.data?.()[key] || 'N/A';
+        return value;
+    }
+
     return (
-        <div className="overflow-auto w-full h-full-table">
             <table className="w-full table-auto border-separate border-spacing-0">
                 <thead>
                     <tr>
                         <TableHeading label="Actions" />
                         {labels &&
-                            labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} active={sortedColumn === label} sortDirection={sortDirection} onClick={() => {
-                                sortByColumn(label)
-                            }} />)}
+                            labels.map((label) => (columns[label]?.show) && 
+                            <TableHeading 
+                                key={label} 
+                                label={label} 
+                                active={sortedColumn === label} 
+                                sortDirection={sortDirection} 
+                                onClick={() => {
+                                    sortByColumn(label)
+                                }}
+                            />)}
                     </tr>
                 </thead>
                 <motion.tbody
@@ -73,6 +73,5 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
                     ))}
                 </motion.tbody>
             </table>
-        </div>
     );
 };
