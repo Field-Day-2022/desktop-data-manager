@@ -9,23 +9,15 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
 
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
-    const [sortState, setSortState] = useState(null);
-
-    useEffect(() => {
-        if (sortState !== null) {
-            setEntries(sortEntries(entries, sortState.column, sortState.direction));
-        } else {
-            setEntries(entries);
-        }
-    }, [sortState]);
 
     const sortEntries = (entries, column, direction) => {
+        console.log(`sorting by ${column} ${direction}`)
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
-            if (getValue(a, column) < getValue(b, column)) {
+            if (getValue(a, column) > getValue(b, column)) {
                 return (direction === 'asc') ? 1 : -1;
             }
-            if (getValue(a, column) > getValue(b, column)) {
+            if (getValue(a, column) < getValue(b, column)) {
                 return (direction === 'asc') ? -1 : 1;
             }
             return 0;
@@ -34,13 +26,12 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     };
 
     const sortByColumn = (column) => {
-        if (sortedColumn === column) {
-            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortedColumn(column);
-            setSortDirection('asc');
-        }
-        setSortState({ column: column, direction: sortDirection });
+        console.log(`clicked ${column}`)
+        console.log(`sorted column is ${sortedColumn}`)
+        const newSortDirection = sortDirection === 'asc' ? 'desc' : 'asc' 
+        setEntries(sortEntries(entries, column, newSortDirection))
+        setSortedColumn(column)
+        setSortDirection(newSortDirection);
     };
 
     const getValue = (entry, column) => {
@@ -57,9 +48,16 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
                     <tr>
                         <TableHeading label="Actions" />
                         {labels &&
-                            labels.map((label) => (columns[label]?.show) && <TableHeading key={label} label={label} active={sortedColumn === label} sortDirection={sortDirection} onClick={() => {
-                                sortByColumn(label)
-                            }} />)}
+                            labels.map((label) => (columns[label]?.show) && 
+                            <TableHeading 
+                                key={label} 
+                                label={label} 
+                                active={sortedColumn === label} 
+                                sortDirection={sortDirection} 
+                                onClick={() => {
+                                    sortByColumn(label)
+                                }}
+                            />)}
                     </tr>
                 </thead>
                 <motion.tbody
