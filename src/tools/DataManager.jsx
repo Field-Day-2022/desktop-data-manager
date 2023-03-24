@@ -42,14 +42,15 @@ export default function DataManager({ name, labels, entries, setEntries }) {
                     </div>
                 </div>
             </div>
-
-            <Table
-                labels={labels}
-                columns={columns}
-                entries={entries}
-                name={name}
-                setEntries={setEntries}
-            />
+            <div className="overflow-auto w-full h-full-table">
+                <Table
+                    labels={labels}
+                    columns={columns}
+                    entries={entries}
+                    name={name}
+                    setEntries={setEntries}
+                />
+            </div>
         </motion.div>
     );
 }

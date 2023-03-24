@@ -38,7 +38,6 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     }
 
     return (
-        <div className="overflow-auto w-full h-full-table">
             <table className="w-full table-auto border-separate border-spacing-0">
                 <thead>
                     <tr>
@@ -75,6 +74,5 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
                     ))}
                 </motion.tbody>
             </table>
-        </div>
     );
 };
