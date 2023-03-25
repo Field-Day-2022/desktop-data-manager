@@ -10,7 +10,7 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
 
-    const sortEntries = (entries, column, direction) => {
+    const sortedEntries = (entries , column, direction) => {
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
             if (getValue(a, column) > getValue(b, column)) {
@@ -25,8 +25,7 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     };
 
     const sortByColumn = (column) => {
-        const newSortDirection = sortDirection === 'asc' ? 'desc' : 'asc' 
-        setEntries(sortEntries(entries, column, newSortDirection))
+        const newSortDirection = sortDirection === 'asc' ? 'desc' : 'asc'
         setSortedColumn(column)
         setSortDirection(newSortDirection);
     };
@@ -38,41 +37,41 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
     }
 
     return (
-            <table className="w-full table-auto border-separate border-spacing-0">
-                <thead>
-                    <tr>
-                        <TableHeading label="Actions" />
-                        {labels &&
-                            labels.map((label) => (columns[label]?.show) && 
-                            <TableHeading 
-                                key={label} 
-                                label={label} 
-                                active={sortedColumn === label} 
-                                sortDirection={sortDirection} 
+        <table className="w-full table-auto border-separate border-spacing-0">
+            <thead>
+                <tr>
+                    <TableHeading label="Actions" />
+                    {labels &&
+                        labels.map((label) => (columns[label]?.show) &&
+                            <TableHeading
+                                key={label}
+                                label={label}
+                                active={sortedColumn === label}
+                                sortDirection={sortDirection}
                                 onClick={() => {
                                     sortByColumn(label)
                                 }}
                             />)}
-                    </tr>
-                </thead>
-                <motion.tbody
-                    initial='hidden'
-                    animate='visible'
-                    variants={tableBody}
-                >
-                    {entries.map((entry, index) => (
-                        <TableEntry
-                            index={index}
-                            key={entry.id}
-                            entrySnapshot={entry}
-                            shownColumns={[...labels].filter(label => columns[label]?.show)}
-                            tableName={name}
-                            removeEntry={() => {
-                                setEntries(entries.filter(e => e !== entry));
-                            }}
-                        />
-                    ))}
-                </motion.tbody>
-            </table>
+                </tr>
+            </thead>
+            <motion.tbody
+                initial='hidden'
+                animate='visible'
+                variants={tableBody}
+            >
+                {sortedEntries(entries, sortedColumn, sortDirection).map((entry, index) => (
+                    <TableEntry
+                        index={index}
+                        key={entry.id}
+                        entrySnapshot={entry}
+                        shownColumns={[...labels].filter(label => columns[label]?.show)}
+                        tableName={name}
+                        removeEntry={() => {
+                            setEntries(entries.filter(e => e !== entry));
+                        }}
+                    />
+                ))}
+            </motion.tbody>
+        </table>
     );
 };

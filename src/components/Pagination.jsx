@@ -24,6 +24,7 @@ export const Pagination = ({
                 <Dropdown
                     onClickHandler={(selectedOption) => onClickHandler(selectedOption.replace(' Rows', ''))}
                     options={['15 Rows', '50 Rows', '100 Rows']}
+                    value={`${batchSize} Rows`}
                 />
             </div>
 
