@@ -97,5 +97,4 @@ import {
     };
 
     return { entries, loadEntries, loadPrevBatch, loadNextBatch };
-
-}
+};
