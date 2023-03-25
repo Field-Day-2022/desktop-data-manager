@@ -42,13 +42,6 @@ export default function TablePage() {
         { text: 'Session', icon: <SessionIcon /> },
     ];
 
-    const tools = [
-        { name: 'Form Builder', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
-        { name: 'Export to CSV', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
-        { name: 'New Session', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
-        { name: 'New Data', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
-    ]
-
     return (
         <PageWrapper>
             <FormBuilderModal
