@@ -5,7 +5,7 @@ import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
 import TableTools from '../components/TableTools';
@@ -23,7 +23,7 @@ export default function TablePage() {
     const [activeTool, setActiveTool] = useState('none');
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
-    const [batchSize, setBatchSize] = useAtom(currentBatchSize);
+    const batchSize = useAtomValue(currentBatchSize);
 
     const { entries, setEntries, loadEntries, loadNextBatch, loadPrevBatch } = useFirestore();
 
