@@ -1,6 +1,17 @@
 // A collection of functions for interacting with firestore
 
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, orderBy, limit, where, query } from 'firebase/firestore';
+import {
+    collection,
+    getDocs,
+    addDoc,
+    doc,
+    updateDoc,
+    deleteDoc,
+    orderBy,
+    limit,
+    where,
+    query,
+} from 'firebase/firestore';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { db } from './firebase';
@@ -17,28 +28,34 @@ export const useFirestore = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = (environment === 'test' ? 'Test' : '') +
+    const collectionName =
+        (environment === 'test' ? 'Test' : '') +
         currentProject +
-        (currentTable === 'Session' ? 'Session' : 'Data')
-    const defaultConstraints = [collection(db, collectionName), orderBy('dateTime', 'desc'), limit(batchSize)];
+        (currentTable === 'Session' ? 'Session' : 'Data');
+    const defaultConstraints = [
+        collection(db, collectionName),
+        orderBy('dateTime', 'desc'),
+        limit(batchSize),
+    ];
 
     const generateQueryConstraints = ({ constraints } = {}) => {
         const { whereClause, at, after } = constraints;
         const queryConstraints = defaultConstraints;
 
         whereClause?.length && queryConstraints.push(where(...whereClause));
-        at ? queryConstraints.push(startAt(at)) :
-            after && queryConstraints.push(startAfter(after));
+        at ? queryConstraints.push(startAt(at)) : after && queryConstraints.push(startAfter(after));
 
         return queryConstraints;
-    }
+    };
 
     const loadDocs = async (queryConstraints) => {
-        const currentQuery = query(...generateQueryConstraints({
-            batchSize: batchSize,
-            collectionName: collectionName,
-            constraints: queryConstraints
-        }));
+        const currentQuery = query(
+            ...generateQueryConstraints({
+                batchSize: batchSize,
+                collectionName: collectionName,
+                constraints: queryConstraints,
+            })
+        );
 
         try {
             const { docs } = await getDocs(currentQuery);
@@ -52,7 +69,11 @@ export const useFirestore = () => {
 
     const loadEntries = async () => {
         const queryConstraints = {
-            whereClause: currentTable !== 'Session' && ['taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable],
+            whereClause: currentTable !== 'Session' && [
+                'taxa',
+                '==',
+                currentTable === 'Arthropod' ? 'N/A' : currentTable,
+            ],
         };
         await loadDocs(queryConstraints);
     };
@@ -95,5 +116,4 @@ export const useFirestore = () => {
     };
 
     return { entries, loadEntries, loadPrevBatch, loadNextBatch };
-
-}
+};
