@@ -75,14 +75,15 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
 
                 </div>
             </div>
-
-            <Table
-                labels={labels}
-                columns={columns}
-                entries={filteredEntries(entries, search)}
-                name={name}
-                setEntries={setEntries}
-            />
+            <div className="overflow-auto w-full h-full-table">
+                <Table
+                    labels={labels}
+                    columns={columns}
+                    entries={filteredEntries(entries, search)}
+                    name={name}
+                    setEntries={setEntries}
+                />
+            </div>
         </motion.div>
     );
 }
