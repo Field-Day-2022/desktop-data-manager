@@ -89,7 +89,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white p-4 max-h-full-modal-content-height overflow-auto">{children}</div>;
+    return <div className="bg-white max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {

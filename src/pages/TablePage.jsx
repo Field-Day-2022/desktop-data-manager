@@ -26,8 +26,9 @@ import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, L
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
-import NewDataModal from '../modals/NewDataModal';
+import DataInputModal from '../modals/DataInputModal';
 import TableManager from '../tools/TableManager';
+import { getCollectionName } from '../utils/firestore';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -46,98 +47,73 @@ export default function TablePage() {
         loadEntries();
     }, [tableName, batchSize, currentProject, activeTool]);
 
-    const getCollectionName = () => {
-        return (
-            (environment === 'test' ? 'Test' : '') +
-            currentProject +
-            (tableName === 'Session' ? 'Session' : 'Data')
-        );
-    };
-
-    const generateQueryConstraints = ({ whereClause, at, after }) => {
-        const collectionName = getCollectionName();
+    const generateQueryConstraints = ({ whereClause, at, after } = {}) => {
+        const collectionName = getCollectionName(environment, currentProject, tableName);
         const constraints = [
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
-            limit(batchSize),
-        ];
-        if (whereClause) {
-            constraints.push(where(...whereClause));
-        }
-        if (at) {
-            constraints.push(startAt(at));
-        } else if (after) {
-            constraints.push(startAfter(after));
-        }
-
+            limit(batchSize),];
+        whereClause?.length && constraints.push(where(...whereClause));
+        at ? constraints.push(startAt(at)) : after && constraints.push(startAfter(after));
         return constraints;
     };
 
     const loadEntries = async () => {
-        let initialQuery;
-
-        initialQuery = query(
+        const initialQuery = query(
             ...generateQueryConstraints({
-                whereClause: tableName !== 'Session' && [
-                    'taxa',
-                    '==',
-                    tableName === 'Arthropod' ? 'N/A' : tableName,
-                ],
+                whereClause: tableName !== 'Session' && ['taxa', '==', tableName === 'Arthropod' ? 'N/A' : tableName],
             })
         );
 
-        const initialQuerySnapshot = await getDocs(initialQuery);
-        setEntries(initialQuerySnapshot.docs);
-        const lastVisibleDoc = initialQuerySnapshot.docs[initialQuerySnapshot.docs.length - 1];
+        try {
+            const { docs } = await getDocs(initialQuery);
+            setEntries(docs);
+            const lastVisibleDoc = docs[docs.length - 1];
+            setDocumentQueryCursor(lastVisibleDoc);
+        } catch (error) {
+            console.error('Error loading entries:', error);
+        }
+    };
+
+    const loadBatch = async (constraints) => {
+        const batchQuery = query(...generateQueryConstraints(constraints));
+        const batchSnapshot = await getDocs(batchQuery);
+        setEntries(batchSnapshot.docs);
+        const lastVisibleDoc = batchSnapshot.docs[batchSnapshot.docs.length - 1];
         setDocumentQueryCursor(lastVisibleDoc);
     };
 
     const loadPrevBatch = async () => {
-        let prevBatchQuery;
         if (queryCursorStack.length - 1 < 0) {
             notify(Type.error, 'Unable to go back. This is the first page.');
             return;
         }
 
-        prevBatchQuery = query(
-            ...generateQueryConstraints({
-                whereClause: tableName !== 'Session' && [
-                    'taxa',
-                    '==',
-                    tableName === 'Arthropod' ? 'N/A' : tableName,
-                ],
-                at: queryCursorStack[queryCursorStack.length - 1],
-            })
-        );
+        const prevQueryCursor = queryCursorStack[queryCursorStack.length - 1];
+        setQueryCursorStack(queryCursorStack.slice(0, -1));
 
-        const prevBatchSnapshot = await getDocs(prevBatchQuery);
-        setEntries(prevBatchSnapshot.docs);
-        setDocumentQueryCursor(prevBatchSnapshot.docs[prevBatchSnapshot.docs.length - 1]);
-        let tempStack = queryCursorStack;
-        tempStack.pop();
-        setQueryCursorStack(tempStack);
+        const constraints = {
+            whereClause: tableName !== 'Session' && [
+                'taxa',
+                '==',
+                tableName === 'Arthropod' ? 'N/A' : tableName,
+            ],
+            at: prevQueryCursor,
+        };
+        await loadBatch(constraints);
     };
 
     const loadNextBatch = async () => {
+        const constraints = {
+            whereClause: tableName !== 'Session' && [
+                'taxa',
+                '==',
+                tableName === 'Arthropod' ? 'N/A' : tableName,
+            ],
+            after: documentQueryCursor,
+        };
         setQueryCursorStack([...queryCursorStack, entries[0]]);
-
-        let nextBatchQuery;
-
-        nextBatchQuery = query(
-            ...generateQueryConstraints({
-                whereClause: tableName !== 'Session' && [
-                    'taxa',
-                    '==',
-                    tableName === 'Arthropod' ? 'N/A' : tableName,
-                ],
-                after: documentQueryCursor,
-            })
-        );
-
-        const nextBatchSnapshot = await getDocs(nextBatchQuery);
-        setEntries(nextBatchSnapshot.docs);
-        const lastVisibleDoc = nextBatchSnapshot.docs[nextBatchSnapshot.docs.length - 1];
-        setDocumentQueryCursor(lastVisibleDoc);
+        await loadBatch(constraints);
     };
 
     return (
@@ -155,20 +131,20 @@ export default function TablePage() {
                 showModal={activeTool === 'newSession'}
                 onCancel={() => setActiveTool('none')}
             />
-            <NewDataModal
+            <DataInputModal
                 showModal={activeTool === 'newData'}
                 onCancel={() => setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
-                <TabBar 
+                <TabBar
                     tabs={[
-                        {text: 'Turtle', icon: <TurtleIcon />, onClick: () => setTableName('Turtle'), active: tableName === 'Turtle'},
-                        {text: 'Lizard', icon: <LizardIcon className="h-6" />, onClick: () => setTableName('Lizard'), active: tableName === 'Lizard'},
-                        {text: 'Mammal', icon: <MammalIcon />, onClick: () => setTableName('Mammal'), active: tableName === 'Mammal'},
-                        {text: 'Snake', icon: <SnakeIcon />, onClick: () => setTableName('Snake'), active: tableName === 'Snake'},
-                        {text: 'Arthropod', icon: <ArthropodIcon />, onClick: () => setTableName('Arthropod'), active: tableName === 'Arthropod'},
-                        {text: 'Amphibian', icon: <AmphibianIcon />, onClick: () => setTableName('Amphibian'), active: tableName === 'Amphibian'},
-                        {text: 'Session', icon: <SessionIcon />, onClick: () => setTableName('Session'), active: tableName === 'Session'},
+                        { text: 'Turtle', icon: <TurtleIcon />, onClick: () => setTableName('Turtle'), active: tableName === 'Turtle' },
+                        { text: 'Lizard', icon: <LizardIcon className="h-6" />, onClick: () => setTableName('Lizard'), active: tableName === 'Lizard' },
+                        { text: 'Mammal', icon: <MammalIcon />, onClick: () => setTableName('Mammal'), active: tableName === 'Mammal' },
+                        { text: 'Snake', icon: <SnakeIcon />, onClick: () => setTableName('Snake'), active: tableName === 'Snake' },
+                        { text: 'Arthropod', icon: <ArthropodIcon />, onClick: () => setTableName('Arthropod'), active: tableName === 'Arthropod' },
+                        { text: 'Amphibian', icon: <AmphibianIcon />, onClick: () => setTableName('Amphibian'), active: tableName === 'Amphibian' },
+                        { text: 'Session', icon: <SessionIcon />, onClick: () => setTableName('Session'), active: tableName === 'Session' },
                     ]}
                 />
                 <div className="flex items-center px-5 space-x-5">
