@@ -8,7 +8,6 @@ import { TABLE_LABELS } from '../const/tableLabels';
 import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
-import { notify, Type } from '../components/Notifier';
 import TableTools from '../components/TableTools';
 import TextRevealIconButton from '../components/TextRevealIconButton';
 import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
@@ -33,6 +32,23 @@ export default function TablePage() {
         loadEntries();
     }, [tableName, batchSize, currentProject, activeTool]);
 
+    const tabsData = [
+        { text: 'Turtle', icon: <TurtleIcon /> },
+        { text: 'Lizard', icon: <LizardIcon className="h-6" /> },
+        { text: 'Mammal', icon: <MammalIcon /> },
+        { text: 'Snake', icon: <SnakeIcon /> },
+        { text: 'Arthropod', icon: <ArthropodIcon /> },
+        { text: 'Amphibian', icon: <AmphibianIcon /> },
+        { text: 'Session', icon: <SessionIcon /> },
+    ];
+
+    const tools = [
+        { name: 'Form Builder', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
+        { name: 'Export to CSV', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
+        { name: 'New Session', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
+        { name: 'New Data', onCancel: () => setActiveTool('none'), onOkay: () => console.log('okay then...')},
+    ]
+
     return (
         <PageWrapper>
             <FormBuilderModal
@@ -54,15 +70,12 @@ export default function TablePage() {
             />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar
-                    tabs={[
-                        { text: 'Turtle', icon: <TurtleIcon />, onClick: () => setTableName('Turtle'), active: tableName === 'Turtle' },
-                        { text: 'Lizard', icon: <LizardIcon className="h-6" />, onClick: () => setTableName('Lizard'), active: tableName === 'Lizard' },
-                        { text: 'Mammal', icon: <MammalIcon />, onClick: () => setTableName('Mammal'), active: tableName === 'Mammal' },
-                        { text: 'Snake', icon: <SnakeIcon />, onClick: () => setTableName('Snake'), active: tableName === 'Snake' },
-                        { text: 'Arthropod', icon: <ArthropodIcon />, onClick: () => setTableName('Arthropod'), active: tableName === 'Arthropod' },
-                        { text: 'Amphibian', icon: <AmphibianIcon />, onClick: () => setTableName('Amphibian'), active: tableName === 'Amphibian' },
-                        { text: 'Session', icon: <SessionIcon />, onClick: () => setTableName('Session'), active: tableName === 'Session' },
-                    ]}
+                    tabs={tabsData.map(({ text, icon }) => ({
+                        text,
+                        icon,
+                        onClick: () => setTableName(text),
+                        active: text === tableName,
+                    }))}
                 />
                 <div className="flex items-center px-5 space-x-5">
                     <div>Project: </div>

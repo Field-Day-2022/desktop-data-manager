@@ -52,7 +52,7 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
         return entries.filter((entry) => {
             return labels.some((label) => {
                 const entryValue = getValue(entry, label);
-                return entryValue.toString().toLowerCase().includes(search.toLowerCase());
+                return entryValue?.toString().toLowerCase().includes(search.toLowerCase());
             });
         });
     }, [labels]);
