@@ -24,8 +24,9 @@ export const useFirestore = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'
-        }`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
+        currentTable === 'Session' ? 'Session' : 'Data'
+    }`;
 
     const defaultConstraints = [
         collection(db, collectionName),
@@ -46,7 +47,9 @@ export const useFirestore = () => {
     // function that returns all session documents
     const getSessions = async () => {
         try {
-            const currentQuery = query(collection(db, `${environment === 'test' ? 'Test' : ''}${currentProject}Session`));
+            const currentQuery = query(
+                collection(db, `${environment === 'test' ? 'Test' : ''}${currentProject}Session`)
+            );
             const { docs } = await getDocs(currentQuery);
             return docs;
         } catch (error) {
