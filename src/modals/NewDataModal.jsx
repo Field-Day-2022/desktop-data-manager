@@ -1,4 +1,5 @@
 import Modal from "../components/Modal";
+import NewDataTool from "../tools/NewDataTool";
 
 export default function NewDataModal({ showModal, onCancel }) {
     return (
@@ -8,7 +9,7 @@ export default function NewDataModal({ showModal, onCancel }) {
             text='Create a new data entry.'
             onCancel={() => onCancel()}
         >
-            {/** Content */}
+            <NewDataTool />
         </Modal>
     );
 }

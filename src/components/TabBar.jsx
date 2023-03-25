@@ -1,29 +1,17 @@
-import { AmphibianIcon, ArthropodIcon, LizardIcon, MammalIcon, SessionIcon, SnakeIcon, TurtleIcon } from '../assets/icons';
-import { useAtom } from 'jotai';
-import { currentTableName } from '../utils/jotai';
+import Tab from "./Tab";
 
-function Tab({ text, icon, active, onClick }) {
-    const background = (active) ? 'bg-white ' : 'bg-neutral-200 '
+export default function TabBar({ tabs }) {
     return (
-        <div className={background + 'max-w-fit flex py-2 px-4 rounded-t-2xl text-lg items-center item cursor-pointer  hover:border-asu-gold border-transparent border-b-2 active:bg-neutral-300'}
-            onClick={() => onClick()}>
-            {[<div key='icon' className='text-2xl mr-2'>{icon}</div>, <div key='text'>{text}</div>]}
-        </div>
-    );
-}
-
-export default function TabBar() {
-    const [currentTable, setCurrentTable] = useAtom(currentTableName);
-
-    return (
-        <div className='flex pt-4 px-2'>
-            <Tab key='Turtle' active={currentTable === 'Turtle'} text='Turtle' icon={<TurtleIcon />} onClick={() => setCurrentTable('Turtle')} />
-            <Tab key='Lizard' active={currentTable === 'Lizard'} text='Lizard' icon={<LizardIcon className="h-6" />} onClick={() => setCurrentTable('Lizard')} />
-            <Tab key='Mammal' active={currentTable === 'Mammal'} text='Mammal' icon={<MammalIcon />} onClick={() => setCurrentTable('Mammal')} />
-            <Tab key='Snake' active={currentTable === 'Snake'} text='Snake' icon={<SnakeIcon />} onClick={() => setCurrentTable('Snake')} />
-            <Tab key='Arthropod' active={currentTable === 'Arthropod'} text='Arthropod' icon={<ArthropodIcon />} onClick={() => setCurrentTable('Arthropod')} />
-            <Tab key='Amphibian' active={currentTable === 'Amphibian'} text='Amphibian' icon={<AmphibianIcon />} onClick={() => setCurrentTable('Amphibian')} />
-            <Tab key='Session' active={currentTable === 'Session'} text='Session' icon={<SessionIcon />} onClick={() => setCurrentTable('Session')} />
+        <div className='flex pt-2 px-2'>
+            {tabs.map(({ text, icon, active, onClick }) => (
+                <Tab
+                    key={text}
+                    text={text}
+                    icon={icon}
+                    active={active}
+                    onClick={onClick}
+                />
+            ))}
         </div>
     );
 }

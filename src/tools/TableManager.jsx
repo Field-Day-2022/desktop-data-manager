@@ -5,7 +5,6 @@ import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import Dropdown from '../components/Dropdown';
 
 function SearchBar({ onChange }) {
 
@@ -19,7 +18,7 @@ function SearchBar({ onChange }) {
 
 const MemoizedSearchBar = React.memo(SearchBar);
 
-export default function DataManager({ name, labels = [], entries = [], setEntries }) {
+export default function TableManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
     const [search, setSearch] = useState('');
 

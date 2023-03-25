@@ -16,18 +16,18 @@ import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels';
-import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
 import { notify, Type } from '../components/Notifier';
 import TableTools from '../components/TableTools';
 import TextRevealIconButton from '../components/TextRevealIconButton';
-import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
 import NewDataModal from '../modals/NewDataModal';
+import TableManager from '../tools/TableManager';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -160,7 +160,17 @@ export default function TablePage() {
                 onCancel={() => setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
-                <TabBar />
+                <TabBar 
+                    tabs={[
+                        {text: 'Turtle', icon: <TurtleIcon />, onClick: () => setTableName('Turtle'), active: tableName === 'Turtle'},
+                        {text: 'Lizard', icon: <LizardIcon className="h-6" />, onClick: () => setTableName('Lizard'), active: tableName === 'Lizard'},
+                        {text: 'Mammal', icon: <MammalIcon />, onClick: () => setTableName('Mammal'), active: tableName === 'Mammal'},
+                        {text: 'Snake', icon: <SnakeIcon />, onClick: () => setTableName('Snake'), active: tableName === 'Snake'},
+                        {text: 'Arthropod', icon: <ArthropodIcon />, onClick: () => setTableName('Arthropod'), active: tableName === 'Arthropod'},
+                        {text: 'Amphibian', icon: <AmphibianIcon />, onClick: () => setTableName('Amphibian'), active: tableName === 'Amphibian'},
+                        {text: 'Session', icon: <SessionIcon />, onClick: () => setTableName('Session'), active: tableName === 'Session'},
+                    ]}
+                />
                 <div className="flex items-center px-5 space-x-5">
                     <div>Project: </div>
                     <Dropdown
@@ -175,7 +185,7 @@ export default function TablePage() {
             </div>
 
             <div>
-                <DataManager
+                <TableManager
                     name={tableName}
                     labels={labels}
                     entries={entries}
