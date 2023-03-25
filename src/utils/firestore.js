@@ -24,7 +24,9 @@ export const useFirestore = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'}`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
+        currentTable === 'Session' ? 'Session' : 'Data'
+    }`;
 
     const defaultConstraints = [
         collection(db, collectionName),
@@ -55,14 +57,14 @@ export const useFirestore = () => {
     };
 
     const loadBatch = async (queryConstraints) => {
-        console.log('Loading batch from collection:', collectionName)
+        console.log('Loading batch from collection:', collectionName);
         try {
             const currentQuery = query(
                 ...generateQueryConstraints({ constraints: queryConstraints })
             );
             const { docs } = await getDocs(currentQuery);
             setEntries(docs);
-            console.log('Number of entries loaded:', docs.length)
+            console.log('Number of entries loaded:', docs.length);
             const lastVisibleDoc = docs[docs.length - 1];
             setDocumentQueryCursor(lastVisibleDoc);
         } catch (error) {
