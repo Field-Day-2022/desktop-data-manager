@@ -24,9 +24,8 @@ export const useFirestore = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
-        currentTable === 'Session' ? 'Session' : 'Data'
-    }`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'
+        }`;
 
     const defaultConstraints = [
         collection(db, collectionName),
@@ -42,6 +41,17 @@ export const useFirestore = () => {
         at ? queryConstraints.push(startAt(at)) : after && queryConstraints.push(startAfter(after));
 
         return queryConstraints;
+    };
+
+    // function that returns all session documents
+    const getSessions = async () => {
+        try {
+            const currentQuery = query(collection(db, `${environment === 'test' ? 'Test' : ''}${currentProject}Session`));
+            const { docs } = await getDocs(currentQuery);
+            return docs;
+        } catch (error) {
+            console.error('Error loading entries:', error);
+        }
     };
 
     const loadDocs = async (queryConstraints) => {
@@ -106,5 +116,5 @@ export const useFirestore = () => {
         await loadBatch(constraints);
     };
 
-    return { entries, loadEntries, loadPrevBatch, loadNextBatch };
+    return { entries, loadEntries, loadPrevBatch, loadNextBatch, getSessions };
 };
