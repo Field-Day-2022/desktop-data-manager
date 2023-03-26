@@ -43,12 +43,11 @@ export const useFirestore = () => {
                 where('set_name', '==', set_name)
             );
             const { docs } = await getDocs(currentQuery);
-            return docs.map(doc => doc.data().answers)
+            return docs.map((doc) => doc.data().answers);
         } catch (error) {
             console.error('Error loading answer sets:', error);
         }
-    }
-
+    };
 
     const generateQueryConstraints = ({ constraints = {} }) => {
         const { whereClause, at, after } = constraints;
@@ -73,9 +72,7 @@ export const useFirestore = () => {
     };
 
     const createSession = async (session) => {
-        const sessionCollection = `${environment === 'test' ? 'Test' : ''}${
-            currentProject
-        }Session`;
+        const sessionCollection = `${environment === 'test' ? 'Test' : ''}${currentProject}Session`;
 
         const getSessionDataModel = () => {
             const { date, time, ...data } = session;

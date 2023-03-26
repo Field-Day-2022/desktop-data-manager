@@ -100,8 +100,7 @@ export default class Session {
     }
 
     toString() {
-        return (
-            `dateTime: ${this.dateTime}
+        return `dateTime: ${this.dateTime}
             recorder: ${this.recorder}
             handler: ${this.handler}
             site: ${this.site}
@@ -109,8 +108,7 @@ export default class Session {
             noCaptures: ${this.noCaptures}
             trapStatus: ${this.trapStatus}
             commentsAboutTheArray: ${this.commentsAboutTheArray}
-            year: ${this.year}`
-        );
+            year: ${this.year}`;
     }
 
     toJSON() {
@@ -126,5 +124,4 @@ export default class Session {
             year: this.year,
         };
     }
-
 }
