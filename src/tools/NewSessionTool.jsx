@@ -49,6 +49,14 @@ export default function NewSessionTool({ setData }) {
         setData(sessionData);
     }, [sessionData]);
 
+    useEffect(() => {
+        setSessionData({
+            ...sessionData,
+            project: sessionData.project,
+            site: sites[sessionData.project][0],
+        });
+    }, [sessionData.project]);
+
     const dateField = () => {
         return (
             <div className='flex-col p-2'>
