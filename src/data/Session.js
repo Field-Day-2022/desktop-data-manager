@@ -23,7 +23,6 @@ export default class Session {
         this.year = year;
     }
 
-    // Getters and setters
     getDateTime() {
         return this.dateTime;
     }
@@ -96,9 +95,10 @@ export default class Session {
         this.year = year;
     }
 
-    // Methods
+    setField(field, value) {
+        this[field] = value;
+    }
 
-    // Returns a string representation of the object
     toString() {
         return (
             `dateTime: ${this.dateTime}
@@ -113,7 +113,6 @@ export default class Session {
         );
     }
 
-    // Returns a JSON representation of the object
     toJSON() {
         return {
             dateTime: this.dateTime,
