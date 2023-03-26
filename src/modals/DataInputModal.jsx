@@ -18,9 +18,13 @@ export default function DataInputModal({ showModal, closeModal }) {
     };
 
     const processModalData = (data) => {
-        createSession(data);
+        if(activeTab === 'New Data') {
+            console.log(data);
+            return;
+        } else if(activeTab === 'New Session'){
+            createSession(data);
+        }
     };
-
 
     return (
         <Modal

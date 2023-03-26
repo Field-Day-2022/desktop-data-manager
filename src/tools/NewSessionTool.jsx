@@ -22,6 +22,13 @@ export default function NewSessionTool({ setData }) {
     });
 
     const setField = (field, value) => {
+        if(field === 'time') {
+            setTime(value);
+            return;
+        } else if(field === 'date') {
+            setDate(value);
+            return;
+        }
         setSessionData({
             ...sessionData,
             [field]: value
@@ -62,7 +69,7 @@ export default function NewSessionTool({ setData }) {
             <div className='flex-col p-2'>
                 <div className='text-sm'>Date:</div>
                 <input type='date' className='input' onChange={(e) => {
-                    setDate(e.target.value)
+                    setField('date', e.target.value)
                 }} />
             </div>
         )
@@ -73,7 +80,7 @@ export default function NewSessionTool({ setData }) {
             <div className='flex-col p-2'>
                 <div className='text-sm'>Time:</div>
                 <input type='time' className='input' onChange={(e) => {
-                    setTime(e.target.value)
+                    setField('time', e.target.value)
                 }} />
             </div>
         )

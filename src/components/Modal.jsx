@@ -10,7 +10,6 @@ export default function Modal({
     onCancel,
     children,
     showModal,
-    setData,
 }) {
 
     return (
@@ -35,7 +34,7 @@ export default function Modal({
                             <ModalBuffer>
                                 <ModalWrapper>
                                     <ModalHeader title={title} text={text} />
-                                    <ModalContent>{React.cloneElement(children, { setData })}</ModalContent>
+                                    <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
                                         <Button
                                             onClick={() => onCancel()}
