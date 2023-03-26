@@ -5,12 +5,17 @@ import TabBar from "../components/TabBar";
 import NewDataTool from "../tools/NewDataTool";
 import NewSessionTool from "../tools/NewSessionTool";
 
-export default function DataInputModal({ showModal, onCancel }) {
+export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');
+    const [modalData, setModalData] = useState({});
 
     const tools = {
-        'New Data': <NewDataTool />,
-        'New Session': <NewSessionTool />,
+        'New Data': <div />,
+        'New Session': <NewSessionTool setData={setModalData} />,
+    };
+
+    const processModalData = (data) => {
+        console.log(data);
     };
 
 
@@ -19,7 +24,11 @@ export default function DataInputModal({ showModal, onCancel }) {
             showModal={showModal}
             title='Data Input Tool'
             text='Select a tab to create a new data entry or session.'
-            onCancel={() => onCancel()}
+            onCancel={() => closeModal()}
+            onOkay={() => {
+                processModalData(modalData)
+                closeModal();
+            }}
         >
             <div className='flex-col'>
                 <div className='bg-neutral-100'>

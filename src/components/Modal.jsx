@@ -1,6 +1,7 @@
 import Button from '../components/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import { modalVariant } from '../utils/variants';
+import React from 'react';
 
 export default function Modal({
     title,
@@ -9,7 +10,9 @@ export default function Modal({
     onCancel,
     children,
     showModal,
+    setData,
 }) {
+
     return (
         <motion.div
             className="relative z-50"
@@ -32,7 +35,7 @@ export default function Modal({
                             <ModalBuffer>
                                 <ModalWrapper>
                                     <ModalHeader title={title} text={text} />
-                                    <ModalContent>{children}</ModalContent>
+                                    <ModalContent>{React.cloneElement(children, { setData })}</ModalContent>
                                     <ModalFooter>
                                         <Button
                                             onClick={() => onCancel()}

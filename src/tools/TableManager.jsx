@@ -5,13 +5,14 @@ import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
+import TextInput from '../components/TextInput';
 
 function SearchBar({ onChange }) {
 
     return (
         <div className='flex items-center space-x-2'>
             <div className='text-2xl'><SearchIcon /></div>
-            <input className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 w-full appearance-none leading-normal" type="text" placeholder="Search" onChange={onChange} />
+            <TextInput onChange={onChange} placeholder='Search'/>
         </div>
     )
 }

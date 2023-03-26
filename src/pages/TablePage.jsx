@@ -13,7 +13,6 @@ import TextRevealIconButton from '../components/TextRevealIconButton';
 import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
-import NewSessionModal from '../modals/NewSessionModal';
 import DataInputModal from '../modals/DataInputModal';
 import TableManager from '../tools/TableManager';
 import { useFirestore } from '../utils/firestore';
@@ -30,7 +29,7 @@ export default function TablePage() {
     useEffect(() => {
         setLabels(TABLE_LABELS[tableName]);
         loadEntries();
-    }, [tableName, batchSize, currentProject, activeTool]);
+    }, [tableName, batchSize, currentProject]);
 
     const tabsData = [
         { text: 'Turtle', icon: <TurtleIcon /> },
@@ -53,13 +52,9 @@ export default function TablePage() {
                 showModal={activeTool === 'export'}
                 onCancel={() => setActiveTool('none')}
             />
-            <NewSessionModal
-                showModal={activeTool === 'newSession'}
-                onCancel={() => setActiveTool('none')}
-            />
             <DataInputModal
-                showModal={activeTool === 'newData'}
-                onCancel={() => setActiveTool('none')}
+                showModal={activeTool === 'dataInput'}
+                closeModal={() => setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar
@@ -103,14 +98,9 @@ export default function TablePage() {
                             onClick={() => setActiveTool('export')}
                         />
                         <TextRevealIconButton
-                            text="New Session"
-                            icon={<NewSessionIcon />}
-                            onClick={() => setActiveTool('newSession')}
-                        />
-                        <TextRevealIconButton
-                            text="New Data Entry"
+                            text="Input Data"
                             icon={<NewDataIcon />}
-                            onClick={() => setActiveTool('newData')}
+                            onClick={() => setActiveTool('dataInput')}
                         />
                     </TableTools>
                     <Pagination loadPrevBatch={loadPrevBatch} loadNextBatch={loadNextBatch} />
