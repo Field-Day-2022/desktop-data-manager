@@ -2,53 +2,75 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Dropdown from "../components/Dropdown"
 import TextInput from "../components/TextInput"
+import { sites } from "../const/projects"
 
-export default function NewSessionTool({setData}) {
+export default function NewSessionTool({ setData }) {
 
     const [sessionData, setSessionData] = useState({
+        project: 'Gateway',
         date: '',
         time: '',
+        dateTime: '',
         recorder: '',
         handler: '',
-        site: '',
+        site: 'GWA1',
         array: '',
-        captures: '',
-        trapStatus: '',
-        comments: '',
+        noCaptures: '',
+        trapStatus: 'OPEN',
+        commentsAboutTheArray: '',
+        year: '',
     });
 
     const setField = (field, value) => {
         setSessionData({
             ...sessionData,
-            [field]: value,
+            [field]: value
         });
-    };
+    }
+
+    const setTime = (time) => {
+        setSessionData({
+            ...sessionData,
+            time: time,
+            dateTime: sessionData.date + ' ' + time
+        })
+    }
+
+    const setDate = (date) => {
+        setSessionData({
+            ...sessionData,
+            date: date,
+            dateTime: date + ' ' + sessionData.time,
+            year: date.split('-')[0]
+        })
+    }
 
     useEffect(() => {
         setData(sessionData);
     }, [sessionData]);
 
-    //function that returns a field for entering a date
     const dateField = () => {
         return (
             <div className='flex-col p-2'>
                 <div className='text-sm'>Date:</div>
-                <input type='date' className='input' onChange={(e) => setField('date', e.target.value)} />
+                <input type='date' className='input' onChange={(e) => {
+                    setDate(e.target.value)
+                }} />
             </div>
         )
     }
 
-    //Function that returns a field for entering a time
     const timeField = () => {
         return (
             <div className='flex-col p-2'>
                 <div className='text-sm'>Time:</div>
-                <input type='time' className='input' onChange={(e) => setField('time', e.target.value)} />
+                <input type='time' className='input' onChange={(e) => {
+                    setTime(e.target.value)
+                }} />
             </div>
         )
     }
 
-    // Function that returns a field for entering a recorder
     const recorderField = () => {
         return (
             <div className='flex-col p-2'>
@@ -58,7 +80,6 @@ export default function NewSessionTool({setData}) {
         )
     }
 
-    // Function that returns a field for entering a handler
     const handlerField = () => {
         return (
             <div className='flex-col p-2'>
@@ -68,17 +89,32 @@ export default function NewSessionTool({setData}) {
         )
     }
 
-    // Function that returns a field for entering a site
-    const siteField = () => {
+    const projectField = () => {
         return (
             <div className='flex-col p-2'>
-                <div className='text-sm'>Site:</div>
-                <TextInput placeholder='Site' onChange={(e) => setField('site', e.target.value)} />
+                <div className='text-sm'>Project:</div>
+                <Dropdown
+                    options={['Gateway', 'SanPedro', 'VirginRiver']}
+                    value={sessionData.project}
+                    onClickHandler={(option) => setField('project', option)}
+                />
             </div>
         )
     }
 
-    // Function that returns a field for entering an array
+    const siteField = () => {
+        return (
+            <div className='flex-col p-2'>
+                <div className='text-sm'>Site:</div>
+                <Dropdown
+                    options={sites[sessionData.project]}
+                    value={sessionData.site}
+                    onClickHandler={(e) => setField('site', e)}
+                />
+            </div>
+        )
+    }
+
     const arrayField = () => {
         return (
             <div className='flex-col p-2'>
@@ -88,51 +124,48 @@ export default function NewSessionTool({setData}) {
         )
     }
 
-    // Function that returns two radio buttons to indicated whether there were captures
-    const capturesField = () => {
+    const noCapturesField = () => {
         return (
             <div className='flex-col p-2'>
                 <div className='text-sm'>Captures:</div>
                 <div className='flex space-x-2 accent-asu-maroon'>
-
-                    <input type='radio' name='captures' value='yes' onChange={(e) => setField('captures', e.target.value)} />
+                    <input type='radio' name='captures' value='yes' onChange={() => setField('noCaptures', false)} />
                     <label>Yes</label>
-
-                    <input type='radio' name='captures' value='no' onChange={(e) => setField('captures', e.target.value)} />
+                    <input type='radio' name='captures' value='no' onChange={() => setField('noCaptures', true)} />
                     <label>No</label>
                 </div>
             </div>
         )
     }
 
-    // Function that returns a dropdown with the options, 'OPEN', 'CLOSED', and 'CHECKED & CLOSED' to indicate trap status
     const trapStatusField = () => {
         return (
             <div className='flex-col p-2'>
                 <div className='text-sm'>Trap Status:</div>
                 <Dropdown
                     options={['OPEN', 'CLOSED', 'CHECKED & CLOSED']}
-                    value={'OPEN'}
-                    onClickHandler={(e) => setField('trapStatus', e.target.value)}
+                    value={sessionData.trapStatus}
+                    onClickHandler={(e) => setField('trapStatus', e)}
                 />
             </div>
         )
     }
 
-    // Function that returns a field to enter comments
     const commentsField = () => {
         return (
             <div className="flex-col p-2">
                 <div className="text-sm font-medium">Comments:</div>
-                <textarea className="p-2 mt-1 block w-full rounded-lg border border-neutral-200 resize-none h-24" onChange={(e) => setField('comments', e.target.value) } />
+                <textarea className="p-2 mt-1 block w-full rounded-lg border border-neutral-200 resize-none h-24" onChange={(e) => setField('commentsAboutTheArray', e.target.value)} />
             </div>
         );
     };
 
-
     return (
         <div className='flex-co p-4'>
-            <h1 className='heading'>Add New Session</h1>
+            <div className='flex justify-between'>
+                <h1 className='heading'>Add New Session</h1>
+                {projectField()}
+            </div>
             <div className='flex'>
                 {dateField()}
                 {timeField()}
@@ -142,7 +175,7 @@ export default function NewSessionTool({setData}) {
                 {handlerField()}
                 {siteField()}
                 {arrayField()}
-                {capturesField()}
+                {noCapturesField()}
                 {trapStatusField()}
                 {commentsField()}
             </div>

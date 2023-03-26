@@ -1,4 +1,5 @@
 import {
+    addDoc,
     collection,
     getDocs,
     limit,
@@ -53,6 +54,22 @@ export const useFirestore = () => {
             return docs;
         } catch (error) {
             console.error('Error loading entries:', error);
+        }
+    };
+
+    const createSession = async (session) => {
+        const sessionCollection = `${environment === 'test' ? 'Test' : ''}${session.project}Session`;
+        
+        const getSessionDataModel = () => {
+            const { date, time, project, ...data } = session;
+            return data;
+        }
+
+        try {
+            const sessionRef = await addDoc(collection(db, sessionCollection), getSessionDataModel());
+            console.log('Document written with ID: ', sessionRef.id);
+        } catch (error) {
+            console.error('Error adding document: ', error);
         }
     };
 
@@ -116,5 +133,5 @@ export const useFirestore = () => {
         await loadBatch(constraints);
     };
 
-    return { entries, loadEntries, loadPrevBatch, loadNextBatch, getSessions };
+    return { entries, loadEntries, loadPrevBatch, loadNextBatch, getSessions, createSession };
 };

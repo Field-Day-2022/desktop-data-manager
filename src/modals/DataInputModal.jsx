@@ -4,10 +4,13 @@ import Modal from "../components/Modal";
 import TabBar from "../components/TabBar";
 import NewDataTool from "../tools/NewDataTool";
 import NewSessionTool from "../tools/NewSessionTool";
+import { useFirestore } from "../utils/firestore";
 
 export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');
     const [modalData, setModalData] = useState({});
+
+    const { createSession } = useFirestore();
 
     const tools = {
         'New Data': <div />,
@@ -15,7 +18,7 @@ export default function DataInputModal({ showModal, closeModal }) {
     };
 
     const processModalData = (data) => {
-        console.log(data);
+        createSession(data);
     };
 
 
