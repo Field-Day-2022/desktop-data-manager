@@ -25,7 +25,7 @@ export default function DataTable({ name, labels, entries }) {
             </div>
 
             <div className='overflow-auto w-full h-full-table'>
-                <table className='w-full table-auto border-separate border-spacing-0'>
+                <table className='w-full table-auto border-separate border-spacing-0' data={csvData}>
                     <thead>
                         <tr>
                             <TableHeading label="Actions" />
