@@ -58,15 +58,20 @@ export const useFirestore = () => {
     };
 
     const createSession = async (session) => {
-        const sessionCollection = `${environment === 'test' ? 'Test' : ''}${session.project}Session`;
-        
+        const sessionCollection = `${environment === 'test' ? 'Test' : ''}${
+            session.project
+        }Session`;
+
         const getSessionDataModel = () => {
             const { date, time, project, ...data } = session;
             return data;
-        }
+        };
 
         try {
-            const sessionRef = await addDoc(collection(db, sessionCollection), getSessionDataModel());
+            const sessionRef = await addDoc(
+                collection(db, sessionCollection),
+                getSessionDataModel()
+            );
             console.log('Document written with ID: ', sessionRef.id);
         } catch (error) {
             console.error('Error adding document: ', error);
