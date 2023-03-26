@@ -1,23 +1,11 @@
 import React from 'react';
-import { ExportIcon, SearchIcon } from '../assets/icons';
+import { ExportIcon } from '../assets/icons';
 import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import TextInput from '../components/TextInput';
-
-function SearchBar({ onChange }) {
-
-    return (
-        <div className='flex items-center space-x-2'>
-            <div className='text-2xl'><SearchIcon /></div>
-            <TextInput onChange={onChange} placeholder='Search'/>
-        </div>
-    )
-}
-
-const MemoizedSearchBar = React.memo(SearchBar);
+import Input from '../components/Input';
 
 export default function TableManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
@@ -40,10 +28,6 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
         }));
     }, []);
 
-    const handleSearchChange = useCallback((e) => {
-        setSearch(e.target.value);
-    }, []);
-
     const filteredEntries = useCallback((entries, search) => {
 
         if (search === '') {
@@ -63,7 +47,12 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">
-                    <MemoizedSearchBar onChange={handleSearchChange} />
+                    <Input
+                        type="search"
+                        placeholder="Search"
+                        className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}

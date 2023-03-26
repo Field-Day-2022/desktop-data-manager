@@ -16,6 +16,7 @@ import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
 import TableManager from '../tools/TableManager';
 import { useFirestore } from '../utils/firestore';
+import { ProjectField } from '../forms/Fields';
 
 export default function TablePage() {
     const [labels, setLabels] = useState();
@@ -65,17 +66,13 @@ export default function TablePage() {
                         active: text === tableName,
                     }))}
                 />
-                <div className="flex items-center px-5 space-x-5">
-                    <div>Project: </div>
-                    <Dropdown
-                        onClickHandler={(selectedOption) => {
-                            if (selectedOption !== currentProject)
-                                setCurrentProject(selectedOption.replace(/\s/g, ''));
-                        }}
-                        value={currentProject.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                        options={['Gateway', 'Virgin River', 'San Pedro']}
+                <div className='pr-2'>
+                    <ProjectField
+                        setField={(value) => setCurrentProject(value)}
                     />
                 </div>
+
+
             </div>
 
             <div>
