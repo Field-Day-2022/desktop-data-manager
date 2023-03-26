@@ -36,7 +36,7 @@ export const useFirestore = () => {
     ];
 
     const getAnswerSet = async (set_name) => {
-        console.log('Getting answer set:', set_name)
+        console.log('Getting answer set:', set_name);
         try {
             const currentQuery = query(
                 collection(db, 'AnswerSet'),
@@ -44,12 +44,11 @@ export const useFirestore = () => {
             );
             const { docs } = await getDocs(currentQuery);
             // Return an array of all doc.data()[answers] for each doc
-            return docs.map(doc => doc.data().answers)
+            return docs.map((doc) => doc.data().answers);
         } catch (error) {
             console.error('Error loading answer sets:', error);
         }
-    }
-
+    };
 
     const generateQueryConstraints = ({ constraints = {} }) => {
         const { whereClause, at, after } = constraints;
@@ -154,5 +153,13 @@ export const useFirestore = () => {
         await loadBatch(constraints);
     };
 
-    return { entries, loadEntries, loadPrevBatch, loadNextBatch, getSessions, createSession, getAnswerSet };
+    return {
+        entries,
+        loadEntries,
+        loadPrevBatch,
+        loadNextBatch,
+        getSessions,
+        createSession,
+        getAnswerSet,
+    };
 };
