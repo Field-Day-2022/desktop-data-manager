@@ -100,8 +100,7 @@ export default class Session {
 
     // Returns a string representation of the object
     toString() {
-        return (
-            `dateTime: ${this.dateTime}
+        return `dateTime: ${this.dateTime}
             recorder: ${this.recorder}
             handler: ${this.handler}
             site: ${this.site}
@@ -109,8 +108,7 @@ export default class Session {
             noCaptures: ${this.noCaptures}
             trapStatus: ${this.trapStatus}
             commentsAboutTheArray: ${this.commentsAboutTheArray}
-            year: ${this.year}`
-        );
+            year: ${this.year}`;
     }
 
     // Returns a JSON representation of the object
@@ -127,5 +125,4 @@ export default class Session {
             year: this.year,
         };
     }
-
 }
