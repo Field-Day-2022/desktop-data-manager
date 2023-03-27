@@ -62,7 +62,6 @@ export const usePagination = () => {
             notify(Type.error, 'Unable to go back. This is the first page.');
             return;
         }
-
         const prevQueryCursor = queryCursorStack[queryCursorStack.length - 1];
         setQueryCursorStack(queryCursorStack.slice(0, -1));
         await loadBatch(startAt(prevQueryCursor));
