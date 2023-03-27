@@ -9,17 +9,14 @@ import {
     startAt,
     where,
 } from 'firebase/firestore';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useAtoms } from 'jotai';
 import { useState } from 'react';
 import { db } from './firebase';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from './jotai';
 import { notify, Type } from '../components/Notifier';
 
 export const usePagination = () => {
-    const batchSize = useAtomValue(currentBatchSize);
-    const currentProject = useAtomValue(currentProjectName);
-    const currentTable = useAtomValue(currentTableName);
-    const environment = useAtomValue(appMode);
+    const { batchSize, currentProject, currentTable, environment } = useAtoms([ currentBatchSize, currentProjectName, currentTableName, appMode ]);
 
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
