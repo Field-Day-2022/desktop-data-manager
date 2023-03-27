@@ -11,7 +11,7 @@ export const tableRows = {
             delay: i * 0.02,
         },
     }),
-}; 
+};
 
 export const tableBody = {
     hidden: {
@@ -51,8 +51,8 @@ export const slideInVariant = {
         visibility: 'visible',
         opacity: 1,
         x: 0,
-    }
-}
+    },
+};
 
 export const modalOverlayVariant = {
     hidden: {
