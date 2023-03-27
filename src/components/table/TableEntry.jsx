@@ -6,7 +6,7 @@ import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { currentProjectName, appMode } from '../../utils/jotai';
 import { notify, Type } from '../Notifier';
 import { db } from '../../utils/firebase';
-import { tableRows } from '../../const/animationVariants';
+import { deleteMessageVariant, tableRows } from '../../const/animationVariants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../../assets/icons';
 import { getKey, getKeys, getLabel } from '../../const/tableLabels';
 
@@ -194,18 +194,10 @@ const Actions = ({
                         <motion.div
                             key='deleteMsg'
                             className="absolute left-8 -top-3 z-10 px-2 rounded-md drop-shadow-xl border-[1px] bg-red-800/10 backdrop-blur border-red-800 shadow-lg  shadow-red-800/25 leading-tight"
-                            initial={{
-                                left: '-2rem',
-                                opacity: 0,
-                            }}
-                            animate={{
-                                left: '2rem',
-                                opacity: 1,
-                            }}
-                            exit={{
-                                left: '-20rem',
-                                opacity: 0,
-                            }}
+                            variants={deleteMessageVariant}
+                            initial={'hidden'}
+                            animate={'visible'}
+                            exit={'hidden'}
                         >
                             Are you sure you want to delete this row?
                         </motion.div>

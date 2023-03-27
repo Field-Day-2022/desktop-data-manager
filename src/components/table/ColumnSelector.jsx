@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ColumnCheckbox from './ColumnCheckbox';
 import { notify, Type } from '../Notifier';
+import { columnSelectorVariant } from '../../const/animationVariants';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     const ref = useRef();
@@ -27,10 +28,11 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
             {show &&
                 <motion.div
                     key='column-selector'
+                    variants={columnSelectorVariant}
                     className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md p-6 overflow-auto'
-                    initial={{ opacity: 0, y: '-100%', x: '-100%' }}
-                    animate={{ opacity: 1, y: '0%', x: '-100%' }}
-                    exit={{ opacity: 0, y: '-100%', x: '-100%' }}
+                    initial={'hidden'}
+                    animate={'visible'}
+                    exit={'hidden'}
                     ref={ref}
                 >
                     <div className='flex-col space-y-3 whitespace-nowrap max-h-full-column-selector-height'>
