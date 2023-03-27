@@ -64,13 +64,13 @@ const ProjectField = ({ project, setProject }) => {
     )
 }
 
-const SiteField = ({ project, setField }) => {
+const SiteField = ({ project, site, setField }) => {
     return (
         <div className='flex-col p-2'>
             <div className='text-sm'>Site:</div>
             <Dropdown
                 options={sites[project]}
-                value={sites[project][0]}
+                value={site}
                 onClickHandler={(e) => setField('site', e)}
             />
         </div>

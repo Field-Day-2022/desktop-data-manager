@@ -12,6 +12,7 @@ import {
 } from "./Fields"
 
 export default function SessionForm({ session, setField, project, setProject }) {
+    
     return (
         <div className='flex-co p-4'>
             <div className='flex justify-between'>
@@ -25,7 +26,7 @@ export default function SessionForm({ session, setField, project, setProject }) 
             <div className='grid grid-cols-2'>
                 <RecorderField setField={setField} />
                 <HandlerField setField={setField} />
-                <SiteField project={project} setField={setField} />
+                <SiteField project={project} site={session.site} setField={setField} />
                 <ArrayField setField={setField} />
                 <NoCapturesField setField={setField} />
                 <TrapStatusField setField={setField} />

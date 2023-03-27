@@ -15,6 +15,35 @@ import { db } from './firebase';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from './jotai';
 import { notify, Type } from '../components/Notifier';
 
+const getDocsFromCollection = async (collectionName, constraints = []) => {
+    if (!Array.isArray(constraints)) {
+        constraints = [constraints];
+    }
+
+    console.log('Loading entries from collection:', collectionName, constraints)
+
+    try {
+        const currentQuery = query(
+            collection(db, collectionName),
+            orderBy('dateTime', 'desc'),
+            ...constraints
+        );
+        const docs = await getDocs(currentQuery);
+        return docs;
+    } catch (error) {
+        console.error('Error loading entries:', error);
+    }
+};
+
+const addDocToCollection = async (collectionName, data) => {
+    try {
+        const docRef = await addDoc(collection(db, collectionName), data);
+        console.log('Document written with ID: ', docRef.id);
+    } catch (error) {
+        console.error('Error adding document: ', error);
+    }
+};
+
 export const usePagination = () => {
     const batchSize = useAtomValue(currentBatchSize);
     const currentProject = useAtomValue(currentProjectName);
@@ -25,37 +54,21 @@ export const usePagination = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
-        currentTable === 'Session' ? 'Session' : 'Data'
-    }`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'
+        }`;
 
     const loadBatch = async (constraints = []) => {
-        // TODO: This is a hack to get around the fact that the Arthropod table doesn't have a taxa field.
-        // This should be fixed in the future.
-
-        if (!Array.isArray(constraints)) {
-            constraints = [constraints];
-        }
-
         const whereClause =
             currentTable !== 'Session' &&
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
         whereClause && constraints.push(whereClause);
 
-        try {
-            const currentQuery = query(
-                collection(db, collectionName),
-                orderBy('dateTime', 'desc'),
-                limit(batchSize),
-                ...constraints
-            );
-            const { docs } = await getDocs(currentQuery);
-            const lastVisibleDoc = docs[docs.length - 1];
-            setEntries(docs);
-            setDocumentQueryCursor(lastVisibleDoc);
-        } catch (error) {
-            console.error('Error loading entries:', error);
-        }
+        constraints.push(limit(batchSize));
+
+        const { docs } = await getDocsFromCollection(collectionName, constraints);
+        const lastVisibleDoc = docs[docs.length - 1];
+        setEntries(docs);
+        setDocumentQueryCursor(lastVisibleDoc);
     };
 
     const loadPrevBatch = async () => {
@@ -81,52 +94,35 @@ export const useFirestore = () => {
     const environment = useAtomValue(appMode);
 
     const getAnswerSet = async (set_name) => {
-        console.log('Getting answer set:', set_name);
-        try {
-            const currentQuery = query(
-                collection(db, 'AnswerSet'),
-                where('set_name', '==', set_name)
-            );
-            const { docs } = await getDocs(currentQuery);
-            return docs.map((doc) => doc.data().answers);
-        } catch (error) {
-            console.error('Error loading answer sets:', error);
-        }
+        const docs = await getDocsFromCollection('AnswerSet', where('set_name', '==', set_name));
+        return docs.map((doc) => doc.data().answers);
     };
 
     const getSessions = async () => {
-        try {
-            const currentQuery = query(
-                collection(db, `${environment === 'test' ? 'Test' : ''}${currentProject}Session`)
-            );
-            const { docs } = await getDocs(currentQuery);
-            return docs;
-        } catch (error) {
-            console.error('Error loading entries:', error);
-        }
+        const docs = await getDocsFromCollection(`${environment === 'test' ? 'Test' : ''}${currentProject}Session`);
+        return docs.map((doc) => doc.data());
+    };
+
+    const getSessionsByYear = async (year) => {
+        const docs = await getDocsFromCollection(
+            `${environment === 'test' ? 'Test' : ''}${currentProject}Session`,
+            where('year', '==', year)
+        );
+        return docs.map((doc) => doc.data());
     };
 
     const createSession = async (session) => {
         const sessionCollection = `${environment === 'test' ? 'Test' : ''}${currentProject}Session`;
-
         const getSessionDataModel = () => {
             const { date, time, ...data } = session;
             return data;
         };
-
-        try {
-            const sessionRef = await addDoc(
-                collection(db, sessionCollection),
-                getSessionDataModel()
-            );
-            console.log('Document written with ID: ', sessionRef.id);
-        } catch (error) {
-            console.error('Error adding document: ', error);
-        }
+        addDocToCollection(sessionCollection, getSessionDataModel());
     };
 
     return {
         getSessions,
+        getSessionsByYear,
         createSession,
         getAnswerSet,
     };

@@ -22,7 +22,7 @@ export default function DataInputModal({ showModal, closeModal }) {
             console.log(data);
             return;
         } else if (activeTab === 'New Session') {
-            createSession(data);
+            console.log(data);
         }
     };
 
