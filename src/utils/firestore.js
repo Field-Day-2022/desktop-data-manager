@@ -20,8 +20,6 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
         constraints = [constraints];
     }
 
-    console.log('Loading entries from collection:', collectionName, constraints);
-
     try {
         const currentQuery = query(
             collection(db, collectionName),
@@ -29,6 +27,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
             ...constraints
         );
         const docs = await getDocs(currentQuery);
+        console.log(`Read ${docs.size} docs from ${collectionName}.`)
         return docs;
     } catch (error) {
         console.error('Error loading entries:', error);
@@ -38,7 +37,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 const addDocToCollection = async (collectionName, data) => {
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
-        console.log('Document written with ID: ', docRef.id);
+        console.log(`Document written to collection: ${collectionName} with ID: ${docRef.id}`);
     } catch (error) {
         console.error('Error adding document: ', error);
     }
@@ -59,6 +58,9 @@ export const usePagination = () => {
     }`;
 
     const loadBatch = async (constraints = []) => {
+        if (!Array.isArray(constraints)) {
+            constraints = [constraints];
+        }
         const whereClause =
             currentTable !== 'Session' &&
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);

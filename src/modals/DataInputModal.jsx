@@ -10,8 +10,6 @@ export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');
     const [modalData, setModalData] = useState({});
 
-    const { createSession } = useFirestore();
-
     const tools = {
         'New Data': <NewDataTool />,
         'New Session': <NewSessionTool setData={setModalData} />,
@@ -26,19 +24,21 @@ export default function DataInputModal({ showModal, closeModal }) {
         }
     };
 
+    const onOkay = () => {
+        processModalData(modalData);
+        closeModal();
+    };
+
     return (
         <Modal
             showModal={showModal}
             title='Data Input Tool'
             text='Select a tab to create a new data entry or session.'
             onCancel={() => closeModal()}
-            onOkay={() => {
-                processModalData(modalData)
-                closeModal();
-            }}
+            onOkay={() => onOkay()}
         >
             <div className='flex-col'>
-                <div className='bg-neutral-100'>
+                <div className='bg-neutral-100 flex-shrink-0'>
                     <TabBar
                         tabs={[
                             {
@@ -56,9 +56,10 @@ export default function DataInputModal({ showModal, closeModal }) {
                         ]}
                     />
                 </div>
-                <div className='min-w-data-input min-h-data-input overflow-auto'>
+                <div className='flex-grow h-data-input overflow-auto'>
                     {tools[activeTab]}
                 </div>
+
 
             </div>
         </Modal>

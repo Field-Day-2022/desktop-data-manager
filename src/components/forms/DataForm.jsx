@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { ProjectField, YearField } from './Fields.jsx'
+import { ProjectField, YearField, SiteField, ArrayField } from './Fields.jsx'
 import { TurtleIcon, LizardIcon, MammalIcon, ArthropodIcon, AmphibianIcon } from '../../assets/icons.jsx'
 import TabBar from '../TabBar.jsx'
+import Dropdown from '../Dropdown.jsx'
 
-export default function DataForm({ project, setProject}) {
+export default function DataForm({ project, setProject }) {
 
     const [selectedCritter, setSelectedCritter] = useState('Turtle')
 
@@ -21,10 +22,21 @@ export default function DataForm({ project, setProject}) {
                 <h1 className='heading'>Add New Criter Data</h1>
                 <ProjectField setProject={setProject} />
             </div>
-            <h2>Choose a session:</h2>
+            <h2>Select a session: </h2>
             <div className='flex'>
                 <YearField />
+                <SiteField
+                    project={project}
+                />
+                <ArrayField />
             </div>
+            <Dropdown
+                options={['Session1', 'Session2', 'Session3']}
+                value={'Session1'}
+                onClickHandler={(option) => {
+                    console.log(option)
+                }}
+            />
             <h2>Choose a critter:</h2>
             <div className='flex justify-between bg-neutral-100'>
                 <TabBar
