@@ -16,7 +16,6 @@ import { appMode, currentBatchSize, currentProjectName, currentTableName } from 
 import { notify, Type } from '../components/Notifier';
 
 export const usePagination = () => {
-
     const batchSize = useAtomValue(currentBatchSize);
     const currentProject = useAtomValue(currentProjectName);
     const currentTable = useAtomValue(currentTableName);
@@ -26,11 +25,11 @@ export const usePagination = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'
-        }`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
+        currentTable === 'Session' ? 'Session' : 'Data'
+    }`;
 
     const loadBatch = async (constraints = []) => {
-
         // TODO: This is a hack to get around the fact that the Arthropod table doesn't have a taxa field.
         // This should be fixed in the future.
 
@@ -38,7 +37,9 @@ export const usePagination = () => {
             constraints = [constraints];
         }
 
-        const whereClause = currentTable !== 'Session' && where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
+        const whereClause =
+            currentTable !== 'Session' &&
+            where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
         whereClause && constraints.push(whereClause);
 
         try {
