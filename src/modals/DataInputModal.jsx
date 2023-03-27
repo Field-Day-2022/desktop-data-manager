@@ -13,15 +13,15 @@ export default function DataInputModal({ showModal, closeModal }) {
     const { createSession } = useFirestore();
 
     const tools = {
-        'New Data': <div />,
+        'New Data': <NewDataTool />,
         'New Session': <NewSessionTool setData={setModalData} />,
     };
 
     const processModalData = (data) => {
-        if(activeTab === 'New Data') {
+        if (activeTab === 'New Data') {
             console.log(data);
             return;
-        } else if(activeTab === 'New Session'){
+        } else if (activeTab === 'New Session') {
             createSession(data);
         }
     };
@@ -56,8 +56,10 @@ export default function DataInputModal({ showModal, closeModal }) {
                         ]}
                     />
                 </div>
+                <div className='min-w-data-input min-h-data-input overflow-auto'>
+                    {tools[activeTab]}
+                </div>
 
-                {tools[activeTab]}
             </div>
         </Modal>
     );

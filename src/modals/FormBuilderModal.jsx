@@ -10,10 +10,8 @@ export default function FormBuilderModal({ showModal, onCancel, onOkay }) {
             title='Form Builder'
             text='Build custom forms with Field Day!'
         >
-            <div className="w-full-modal-width">
-                <FormBuilder />
-            </div>
-            
+            <FormBuilder />
+
         </Modal>
     );
 }

@@ -10,14 +10,23 @@ module.exports = {
         'asu-maroon': '#8c1d40',
         'asu-gold': '#ffc627'
       },
-      spacing: {
-        'full-modal-content-height': 'calc(100vh - 280px)',
-        'full-modal-width': 'calc(90vw)',
-        'full-column-selector-height': 'calc(100vh - 16em)',
-        'full-minus-nav': 'calc(100vh - 64px)',
-        'full-minus-sideBar': 'calc(100vw - 18rem)',
-        'full-table': 'calc(100vh - 257px)'
-      }
+      height: {
+        'table': 'calc(100vh - 257px)',
+      },
+      minWidth: {
+        'data-input': '500px',
+      },
+      maxWidth: {
+        'modal-content': 'calc(90vw)',
+      },
+      minHeight: {
+        'data-input': '560px',
+      },
+      maxHeight: {
+        'modal-content': 'calc(100vh - 280px)',
+        'column-selector': 'calc(100vh - 16em)',
+        'page-content': 'calc(100vh - 64px)',
+      },
     },
   },
   plugins: [],

@@ -65,7 +65,7 @@ function ModalBuffer({ children }) {
 
 function ModalWrapper({ children }) {
     return (
-        <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-full-modal-width">
+        <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl max-w-modal-content">
             {children}
         </div>
     );
@@ -81,7 +81,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white max-h-full-modal-content-height overflow-auto">{children}</div>;
+    return <div className="bg-white max-h-modal-content overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ onCancel, onOkay }) {

@@ -35,7 +35,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                     exit={'hidden'}
                     ref={ref}
                 >
-                    <div className='flex-col space-y-3 whitespace-nowrap max-h-full-column-selector-height'>
+                    <div className='flex-col space-y-3 whitespace-nowrap max-h-column-selector'>
                         <h1 className='text-xl'>Column Selector</h1>
                         {labels && labels.map((label) =>
                             <ColumnCheckbox

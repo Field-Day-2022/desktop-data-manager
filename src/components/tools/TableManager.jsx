@@ -5,7 +5,6 @@ import ColumnSelectorButton from '../table/ColumnSelectorButton';
 import { Table } from '../table/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../table/TableEntry';
-import Input from '../Input';
 import { SearchField } from '../forms/Fields';
 
 export default function TableManager({ name, labels = [], entries = [], setEntries }) {
@@ -60,7 +59,7 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
 
                 </div>
             </div>
-            <div className="overflow-auto w-full h-full-table">
+            <div className="overflow-auto w-full h-table">
                 <Table
                     labels={labels}
                     columns={columns}

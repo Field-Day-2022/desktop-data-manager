@@ -1,6 +1,7 @@
 import Dropdown from "../Dropdown"
 import Input from "../Input"
 import { sites } from "../../const/projects"
+import { useState } from "react"
 
 const SearchField = ({ setField }) => {
     return (
@@ -48,7 +49,7 @@ const HandlerField = ({ setField }) => {
     )
 }
 
-const ProjectField = ({project, setProject}) => {
+const ProjectField = ({ project, setProject }) => {
     return (
         <div className='flex items-center space-x-2'>
             <div className='text-sm'>Project:</div>
@@ -121,4 +122,29 @@ const CommentsField = ({ setField }) => {
     );
 };
 
-export { DateField, TimeField, RecorderField, HandlerField, ProjectField, SiteField, ArrayField, NoCapturesField, TrapStatusField, CommentsField, SearchField }
+const YearField = ({ setField }) => {
+
+    const currentYear = new Date().getFullYear()
+    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const years = [];
+    const oldestYear = 1969
+
+    for (let i = currentYear; i >= oldestYear; i--) {
+        years.push(i)
+    }
+
+    return (
+        <div className='flex-col p-2'>
+            <div className='text-sm'>Year:</div>
+            <Dropdown
+                options={years}
+                value={selectedYear}
+                onClickHandler={(e) => {
+                    setSelectedYear(e)
+                }}
+            />
+        </div>
+    )
+}
+
+export { DateField, TimeField, RecorderField, HandlerField, ProjectField, SiteField, ArrayField, NoCapturesField, TrapStatusField, CommentsField, SearchField, YearField }
