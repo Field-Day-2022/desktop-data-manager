@@ -20,7 +20,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
         constraints = [constraints];
     }
 
-    console.log('Loading entries from collection:', collectionName, constraints)
+    console.log('Loading entries from collection:', collectionName, constraints);
 
     try {
         const currentQuery = query(
@@ -54,8 +54,9 @@ export const usePagination = () => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'
-        }`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
+        currentTable === 'Session' ? 'Session' : 'Data'
+    }`;
 
     const loadBatch = async (constraints = []) => {
         const whereClause =
@@ -99,7 +100,9 @@ export const useFirestore = () => {
     };
 
     const getSessions = async () => {
-        const docs = await getDocsFromCollection(`${environment === 'test' ? 'Test' : ''}${currentProject}Session`);
+        const docs = await getDocsFromCollection(
+            `${environment === 'test' ? 'Test' : ''}${currentProject}Session`
+        );
         return docs.map((doc) => doc.data());
     };
 
