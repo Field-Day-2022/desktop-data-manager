@@ -1,11 +1,12 @@
 import React from 'react';
-import { ExportIcon } from '../assets/icons';
+import { ExportIcon } from '../../assets/icons';
 import { motion } from 'framer-motion';
-import ColumnSelectorButton from '../components/ColumnSelectorButton';
-import { Table } from '../components/Table';
+import ColumnSelectorButton from '../table/ColumnSelectorButton';
+import { Table } from '../table/Table';
 import { useState, useEffect, useCallback } from 'react';
-import { getValue } from '../components/TableEntry';
-import Input from '../components/Input';
+import { getValue } from '../table/TableEntry';
+import Input from '../Input';
+import { SearchField } from '../forms/Fields';
 
 export default function TableManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
@@ -47,12 +48,7 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">
-                    <Input
-                        type="search"
-                        placeholder="Search"
-                        className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <SearchField setField={(e) => setSearch(e)} />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}

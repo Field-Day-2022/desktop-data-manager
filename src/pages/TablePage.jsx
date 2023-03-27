@@ -1,7 +1,7 @@
 // https://firebase.google.com/docs/firestore/query-data/query-cursors
 // https://firebase.google.com/docs/firestore/query-data/order-limit-data
 import { useState, useEffect } from 'react';
-import PageWrapper from './PageWrapper';
+import PageWrapper from '../components/containers/PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels';
@@ -14,9 +14,9 @@ import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, L
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
-import TableManager from '../tools/TableManager';
+import TableManager from '../components/tools/TableManager';
 import { useFirestore } from '../utils/firestore';
-import { ProjectField } from '../forms/Fields';
+import { ProjectField } from '../components/forms/Fields';
 
 export default function TablePage() {
     const [labels, setLabels] = useState();

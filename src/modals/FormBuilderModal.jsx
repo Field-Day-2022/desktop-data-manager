@@ -1,5 +1,5 @@
 import Modal from "../components/Modal";
-import { FormBuilder } from "../pages";
+import FormBuilder from "../components/tools/FormBuilder";
 
 export default function FormBuilderModal({ showModal, onCancel, onOkay }) {
     return (

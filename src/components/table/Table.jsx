@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TableEntry } from './TableEntry';
 import { TableHeading } from './TableHeading';
-import { tableBody } from '../utils/variants';
-import { getKey } from '../const/tableLabels';
+import { tableBody } from '../../const/animationVariants';
+import { getKey } from '../../const/tableLabels';
 
 export const Table = ({ labels, columns, entries, name, setEntries }) => {
 

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { NewDataIcon, NewSessionIcon } from "../assets/icons";
 import Modal from "../components/Modal";
 import TabBar from "../components/TabBar";
-import NewDataTool from "../tools/NewDataTool";
-import NewSessionTool from "../tools/NewSessionTool";
+import NewDataTool from "../components/tools/NewDataTool";
+import NewSessionTool from "../components/tools/NewSessionTool";
 import { useFirestore } from "../utils/firestore";
 
 export default function DataInputModal({ showModal, closeModal }) {

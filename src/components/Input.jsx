@@ -1,4 +1,5 @@
 import { SearchIcon } from "../assets/icons";
+import classNames from "classnames";
 
 export default function Input({
     value,
@@ -7,8 +8,16 @@ export default function Input({
     maxLength,
     type = "text",
 }) {
-    const searchIconWidth = type === "search" ? 6 : 0; // Adjust the value based on the width of your icon
-    const pl = `pl-${searchIconWidth + 4}`;
+
+    const inputClass = classNames(
+        "bg-white focus:outline-none focus:shadow-outline border border-neutral-300 rounded-lg py-2",
+        {
+            "pl-10": type === "search",
+            "pl-4": type !== "search",
+        },
+        "pr-4 w-full appearance-none leading-normal"
+    );
+    
     return (
         <div className="relative">
             <input
@@ -17,7 +26,7 @@ export default function Input({
                 onChange={onChange}
                 placeholder={placeholder}
                 maxLength={maxLength}
-                className={`bg-white focus:outline-none focus:shadow-outline border border-neutral-300 rounded-lg py-2 ${pl} pr-4 w-full appearance-none leading-normal`}
+                className={inputClass}
             />
             {type === "search" && (
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400 text-xl">

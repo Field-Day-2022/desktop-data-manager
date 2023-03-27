@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import { useEffect } from 'react';
-import { SortAscIcon, SortDescIcon } from '../assets/icons';
+import { SortAscIcon, SortDescIcon } from '../../assets/icons';
 
 export const TableHeading = ({ label, active, sortDirection, onClick }) => {
 

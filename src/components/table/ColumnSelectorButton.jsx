@@ -1,4 +1,4 @@
-import { ColumnToggleIcon } from '../assets/icons';
+import { ColumnToggleIcon } from '../../assets/icons';
 import { useState } from 'react';
 import ColumnSelector from './ColumnSelector';
 

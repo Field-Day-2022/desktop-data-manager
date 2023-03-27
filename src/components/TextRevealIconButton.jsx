@@ -1,6 +1,7 @@
 import { useRef, forwardRef } from 'react';
 import { LayoutGroup, motion, useAnimationControls } from 'framer-motion';
 import { useEffect } from 'react';
+import { slideInVariant } from '../const/animationVariants';
 
 export default function TextRevealIconButton({ icon, text, onClick }) {
     const buttonControls = useAnimationControls();
@@ -45,18 +46,7 @@ export default function TextRevealIconButton({ icon, text, onClick }) {
 }
 
 const SlideInFromLeft = forwardRef((props, ref) => {
-    const slideInVariant = {
-        hidden: {
-            visibility: 'hidden',
-            opacity: 0,
-            x: '-25%',
-        },
-        visible: {
-            visibility: 'visible',
-            opacity: 1,
-            x: 0,
-        }
-    }
+    
     const {children, controls} = props;
     return (
         <motion.div

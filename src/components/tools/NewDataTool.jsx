@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Dropdown from "../components/Dropdown";
-import { useFirestore } from "../utils/firestore";
+import Dropdown from "../Dropdown";
+import { useFirestore } from "../../utils/firestore";
 
 export default function NewDataTool() {
     const [sessions, setSessions] = useState([]);

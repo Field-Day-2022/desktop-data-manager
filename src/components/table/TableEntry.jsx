@@ -1,14 +1,14 @@
 import { useEffect, useState, forwardRef } from 'react';
 import { useAtom } from 'jotai';
-import { currentTableName } from '../utils/jotai'
+import { currentTableName } from '../../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { currentProjectName, appMode } from '../utils/jotai';
-import { notify, Type } from './Notifier';
-import { db } from '../utils/firebase';
-import { tableRows } from '../utils/variants';
-import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
-import { getKey, getKeys, getLabel } from '../const/tableLabels';
+import { currentProjectName, appMode } from '../../utils/jotai';
+import { notify, Type } from '../Notifier';
+import { db } from '../../utils/firebase';
+import { tableRows } from '../../const/animationVariants';
+import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../../assets/icons';
+import { getKey, getKeys, getLabel } from '../../const/tableLabels';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {

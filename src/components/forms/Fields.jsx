@@ -1,8 +1,18 @@
 import { useAtom, useAtomValue } from "jotai"
-import Dropdown from "../components/Dropdown"
-import Input from "../components/Input"
-import { currentProjectName } from "../utils/jotai"
-import { sites } from "../const/projects"
+import Dropdown from "../Dropdown"
+import Input from "../Input"
+import { currentProjectName } from "../../utils/jotai"
+import { sites } from "../../const/projects"
+
+const SearchField = ({ setField }) => {
+    return (
+        <Input
+            type="search"
+            placeholder='Search'
+            onChange={(e) => setField('search', e.target.value)}
+        />
+    )
+}
 
 const DateField = ({ setField }) => {
     return (
@@ -115,4 +125,4 @@ const CommentsField = ({ setField }) => {
     );
 };
 
-export { DateField, TimeField, RecorderField, HandlerField, ProjectField, SiteField, ArrayField, NoCapturesField, TrapStatusField, CommentsField }
+export { DateField, TimeField, RecorderField, HandlerField, ProjectField, SiteField, ArrayField, NoCapturesField, TrapStatusField, CommentsField, SearchField }

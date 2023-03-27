@@ -1,8 +1,7 @@
-import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
 import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
-import { db } from '../utils/firebase';
-import { notify, Type } from '../components/Notifier';
+import { db } from '../../utils/firebase';
+import { notify, Type } from '../../components/Notifier';
 import { LayoutGroup, motion } from 'framer-motion';
 
 export default function FormBuilder() {

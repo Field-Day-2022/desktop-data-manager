@@ -1,6 +1,6 @@
 import Card from "../components/Card";
 import Button from "../components/Button";
-import PageWrapper from "./PageWrapper";
+import PageWrapper from "../components/containers/PageWrapper";
 import { useAtom } from "jotai";
 import { currentPageName } from '../utils/jotai';
 

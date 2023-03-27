@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ColumnCheckbox from './ColumnCheckbox';
-import { notify, Type } from './Notifier';
+import { notify, Type } from '../Notifier';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     const ref = useRef();
