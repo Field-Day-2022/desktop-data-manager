@@ -16,7 +16,12 @@ import { appMode, currentBatchSize, currentProjectName, currentTableName } from 
 import { notify, Type } from '../components/Notifier';
 
 export const usePagination = () => {
-    const { batchSize, currentProject, currentTable, environment } = useAtoms([ currentBatchSize, currentProjectName, currentTableName, appMode ]);
+    const { batchSize, currentProject, currentTable, environment } = useAtoms([
+        currentBatchSize,
+        currentProjectName,
+        currentTableName,
+        appMode,
+    ]);
 
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
