@@ -1,7 +1,5 @@
-import { useAtom, useAtomValue } from "jotai"
 import Dropdown from "../Dropdown"
 import Input from "../Input"
-import { currentProjectName } from "../../utils/jotai"
 import { sites } from "../../const/projects"
 
 const SearchField = ({ setField }) => {
@@ -50,8 +48,7 @@ const HandlerField = ({ setField }) => {
     )
 }
 
-const ProjectField = () => {
-    const [project, setProject] = useAtom(currentProjectName)
+const ProjectField = ({project, setProject}) => {
     return (
         <div className='flex items-center space-x-2'>
             <div className='text-sm'>Project:</div>
@@ -66,8 +63,7 @@ const ProjectField = () => {
     )
 }
 
-const SiteField = ({ data, setField }) => {
-    const project = useAtomValue(currentProjectName)
+const SiteField = ({ project, setField }) => {
     return (
         <div className='flex-col p-2'>
             <div className='text-sm'>Site:</div>

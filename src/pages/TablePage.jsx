@@ -7,10 +7,9 @@ import TabBar from '../components/TabBar';
 import { TABLE_LABELS } from '../const/tableLabels';
 import { useAtom, useAtomValue } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
-import Dropdown from '../components/Dropdown';
 import TableTools from '../components/TableTools';
 import TextRevealIconButton from '../components/TextRevealIconButton';
-import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
@@ -68,7 +67,7 @@ export default function TablePage() {
                 />
                 <div className='pr-2'>
                     <ProjectField
-                        setField={(value) => setCurrentProject(value)}
+                        setProject={(value) => setCurrentProject(value)}
                     />
                 </div>
 

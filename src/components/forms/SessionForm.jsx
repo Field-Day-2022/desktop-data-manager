@@ -11,12 +11,12 @@ import {
     CommentsField
 } from "./Fields"
 
-export default function SessionForm({ session, setField }) {
+export default function SessionForm({ session, setField, project, setProject }) {
     return (
         <div className='flex-co p-4'>
             <div className='flex justify-between'>
                 <h1 className='heading'>Add New Session</h1>
-                <ProjectField setField={setField} />
+                <ProjectField setProject={setProject} />
             </div>
             <div className='flex'>
                 <DateField setField={setField} />
@@ -25,7 +25,7 @@ export default function SessionForm({ session, setField }) {
             <div className='grid grid-cols-2'>
                 <RecorderField setField={setField} />
                 <HandlerField setField={setField} />
-                <SiteField data={session} setField={setField} />
+                <SiteField project={project} setField={setField} />
                 <ArrayField setField={setField} />
                 <NoCapturesField setField={setField} />
                 <TrapStatusField setField={setField} />

@@ -4,6 +4,8 @@ import SessionForm from "../forms/SessionForm";
 
 export default function NewSessionTool({ setData }) {
 
+    const [project, setProject] = useState('Gateway');
+
     const [sessionData, setSessionData] = useState({
         date: '',
         time: '',
@@ -57,6 +59,8 @@ export default function NewSessionTool({ setData }) {
         <SessionForm
             session={sessionData}
             setField={setField}
+            project={project}
+            setProject={setProject}
         />
     );
 }
