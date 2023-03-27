@@ -9,64 +9,52 @@ import {
     startAt,
     where,
 } from 'firebase/firestore';
-import { useAtomValue, useAtoms } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { db } from './firebase';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from './jotai';
 import { notify, Type } from '../components/Notifier';
 
 export const usePagination = () => {
-    const { batchSize, currentProject, currentTable, environment } = useAtoms([ currentBatchSize, currentProjectName, currentTableName, appMode ]);
+
+    const batchSize = useAtomValue(currentBatchSize);
+    const currentProject = useAtomValue(currentProjectName);
+    const currentTable = useAtomValue(currentTableName);
+    const environment = useAtomValue(appMode);
 
     const [documentQueryCursor, setDocumentQueryCursor] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
     const [entries, setEntries] = useState([]);
 
-    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${
-        currentTable === 'Session' ? 'Session' : 'Data'
-    }`;
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${currentProject}${currentTable === 'Session' ? 'Session' : 'Data'
+        }`;
 
-    const defaultConstraints = [
-        collection(db, collectionName),
-        orderBy('dateTime', 'desc'),
-        limit(batchSize),
-    ];
+    const loadBatch = async (constraints = []) => {
 
-    const whereClause = currentTable !== 'Session' && [
-        'taxa',
-        '==',
-        currentTable === 'Arthropod' ? 'N/A' : currentTable,
-    ];
+        // TODO: This is a hack to get around the fact that the Arthropod table doesn't have a taxa field.
+        // This should be fixed in the future.
 
-    const generateQueryConstraints = ({ constraints = {} }) => {
-        const { at, after } = constraints;
-        const queryConstraints = [...defaultConstraints];
+        if (!Array.isArray(constraints)) {
+            constraints = [constraints];
+        }
 
-        whereClause?.length && queryConstraints.push(where(...whereClause));
-        at ? queryConstraints.push(startAt(at)) : after && queryConstraints.push(startAfter(after));
+        const whereClause = currentTable !== 'Session' && where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
+        whereClause && constraints.push(whereClause);
 
-        return queryConstraints;
-    };
-
-    const loadBatch = async (queryConstraints) => {
-        console.log('Loading batch from collection:', collectionName);
         try {
             const currentQuery = query(
-                ...generateQueryConstraints({ constraints: queryConstraints })
+                collection(db, collectionName),
+                orderBy('dateTime', 'desc'),
+                limit(batchSize),
+                ...constraints
             );
             const { docs } = await getDocs(currentQuery);
-            setEntries(docs);
-            console.log('Number of entries loaded:', docs.length);
             const lastVisibleDoc = docs[docs.length - 1];
+            setEntries(docs);
             setDocumentQueryCursor(lastVisibleDoc);
         } catch (error) {
             console.error('Error loading entries:', error);
         }
-    };
-
-    const loadEntries = async () => {
-        const queryConstraints = { whereClause };
-        await loadBatch(queryConstraints);
     };
 
     const loadPrevBatch = async () => {
@@ -77,18 +65,15 @@ export const usePagination = () => {
 
         const prevQueryCursor = queryCursorStack[queryCursorStack.length - 1];
         setQueryCursorStack(queryCursorStack.slice(0, -1));
-
-        const constraints = { whereClause, at: prevQueryCursor };
-        await loadBatch(constraints);
+        await loadBatch(startAt(prevQueryCursor));
     };
 
     const loadNextBatch = async () => {
-        const constraints = { whereClause, after: documentQueryCursor };
         setQueryCursorStack([...queryCursorStack, entries[0]]);
-        await loadBatch(constraints);
+        await loadBatch(startAfter(documentQueryCursor));
     };
 
-    return { loadEntries, loadPrevBatch, loadNextBatch, entries, setEntries };
+    return { loadBatch, loadPrevBatch, loadNextBatch, entries, setEntries };
 };
 
 export const useFirestore = () => {

@@ -24,11 +24,11 @@ export default function TablePage() {
     const [tableName, setTableName] = useAtom(currentTableName);
     const batchSize = useAtomValue(currentBatchSize);
 
-    const { entries, setEntries, loadEntries, loadNextBatch, loadPrevBatch } = usePagination();
+    const { entries, setEntries, loadBatch, loadNextBatch, loadPrevBatch } = usePagination();
 
     useEffect(() => {
         setLabels(TABLE_LABELS[tableName]);
-        loadEntries();
+        loadBatch();
     }, [tableName, batchSize, currentProject]);
 
     const tabsData = [
