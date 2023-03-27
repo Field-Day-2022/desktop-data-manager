@@ -14,7 +14,7 @@ import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
 import TableManager from '../components/tools/TableManager';
-import { useFirestore } from '../utils/firestore';
+import { usePagination } from '../utils/firestore';
 import { ProjectField } from '../components/forms/Fields';
 
 export default function TablePage() {
@@ -24,7 +24,7 @@ export default function TablePage() {
     const [tableName, setTableName] = useAtom(currentTableName);
     const batchSize = useAtomValue(currentBatchSize);
 
-    const { entries, setEntries, loadEntries, loadNextBatch, loadPrevBatch } = useFirestore();
+    const { entries, setEntries, loadEntries, loadNextBatch, loadPrevBatch } = usePagination();
 
     useEffect(() => {
         setLabels(TABLE_LABELS[tableName]);

@@ -8,7 +8,7 @@ const SearchField = ({ setField }) => {
         <Input
             type="search"
             placeholder='Search'
-            onChange={(e) => setField('search', e.target.value)}
+            onChange={(e) => setField(e.target.value)}
         />
     )
 }

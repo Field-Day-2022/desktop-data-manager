@@ -50,4 +50,8 @@
     .button:active {
         border-color: #ffc627;
     }
+
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-filter: grayscale(100%);
+      }
 }

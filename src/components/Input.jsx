@@ -15,7 +15,7 @@ export default function Input({
             "pl-10": type === "search",
             "pl-4": type !== "search",
         },
-        "pr-4 w-full appearance-none leading-normal"
+        "pr-4 w-full appearance-none leading-normal accent-asu-maroon"
     );
     
     return (

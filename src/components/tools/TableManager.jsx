@@ -47,7 +47,9 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">
-                    <SearchField setField={(e) => setSearch(e)} />
+                    <SearchField setField={(e) => {
+                        console.log(e);
+                        setSearch(e)}} />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}

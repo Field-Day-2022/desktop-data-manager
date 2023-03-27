@@ -15,7 +15,6 @@ const ColumnCheckbox = ({ label, defaultChecked, disabled, onChange, onClick }) 
 
     return (
         <div key={label} className='flex p-2 space-x-5 hover:bg-neutral-100 text-base'>
-            
             <input
                 className={style + "w-4"}
                 type="checkbox"
