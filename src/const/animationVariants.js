@@ -51,5 +51,5 @@ export const slideInVariant = {
         visibility: 'visible',
         opacity: 1,
         x: 0,
-    }
-}
+    },
+};
