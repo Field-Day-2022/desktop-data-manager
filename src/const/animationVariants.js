@@ -11,7 +11,7 @@ export const tableRows = {
             delay: i * 0.02,
         },
     }),
-};
+}; 
 
 export const tableBody = {
     hidden: {
@@ -53,3 +53,36 @@ export const slideInVariant = {
         x: 0,
     }
 }
+
+export const modalOverlayVariant = {
+    hidden: {
+        opacity: 0,
+    },
+    visible: {
+        opacity: 0.75,
+    },
+};
+
+export const columnSelectorVariant = {
+    hidden: {
+        opacity: 0,
+        x: '-100%',
+        y: '-100%',
+    },
+    visible: {
+        opacity: 1,
+        x: '-100%',
+        y: 0,
+    },
+};
+
+export const deleteMessageVariant = {
+    hidden: {
+        opacity: 0,
+        left: '-20rem',
+    },
+    visible: {
+        opacity: 1,
+        left: '2rem',
+    },
+};

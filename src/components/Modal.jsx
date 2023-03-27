@@ -1,6 +1,6 @@
 import Button from '../components/Button';
 import { AnimatePresence, motion } from 'framer-motion';
-import { modalVariant } from '../const/animationVariants';
+import { modalOverlayVariant, modalVariant } from '../const/animationVariants';
 import React from 'react';
 
 export default function Modal({
@@ -35,18 +35,7 @@ export default function Modal({
                                 <ModalWrapper>
                                     <ModalHeader title={title} text={text} />
                                     <ModalContent>{children}</ModalContent>
-                                    <ModalFooter>
-                                        <Button
-                                            onClick={() => onCancel()}
-                                            text="Cancel"
-                                            enabled={true}
-                                        />
-                                        <Button
-                                            onClick={() => onOkay()}
-                                            text="Okay"
-                                            enabled={true}
-                                        />
-                                    </ModalFooter>
+                                    <ModalFooter onOkay={onOkay} onCancel={onCancel}/>
                                 </ModalWrapper>
                             </ModalBuffer>
                         </motion.div>
@@ -61,10 +50,11 @@ function ModalOverlay() {
     return (
         <motion.div
             className="fixed inset-0 bg-neutral-300 opacity-0"
+            variants={modalOverlayVariant}
             key="overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.75 }}
-            exit={{ opacity: 0 }}
+            initial={'hidden'}
+            animate={'visible'}
+            exit={'hidden'}
         />
     );
 }
@@ -94,6 +84,11 @@ function ModalContent({ children }) {
     return <div className="bg-white max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
-function ModalFooter({ children }) {
-    return <div className="bg-neutral-100 p-4 flex justify-end space-x-5">{children}</div>;
-}
+function ModalFooter({ onCancel, onOkay }) {
+    return (
+      <div className="bg-neutral-100 p-4 flex justify-end space-x-5">
+        <Button onClick={onCancel} text={'Cancel'} enabled={true} />
+        <Button onClick={onOkay} text={'Okay'} enabled={true} />
+      </div>
+    );
+  }
