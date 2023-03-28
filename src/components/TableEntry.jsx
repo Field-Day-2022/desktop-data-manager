@@ -22,10 +22,6 @@ export const TableEntry = forwardRef((props, ref) => {
     const [environment, setEnvironment] = useAtom(appMode);
     const [tableName, setTableName] = useAtom(currentTableName);
 
-    useEffect(() => {
-        console.log('Keys: ', keys);
-    }, [keys])
-
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
         setCurrentState('editing');
