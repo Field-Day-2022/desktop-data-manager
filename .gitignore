@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .firebase
+
+# Files generated VS Code Counter extension
+.VSCodeCounter
