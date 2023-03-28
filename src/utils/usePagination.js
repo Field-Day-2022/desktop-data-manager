@@ -4,7 +4,12 @@ import { limit, startAfter, startAt, where } from 'firebase/firestore';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from './jotai';
 import { notify, Type } from '../components/Notifier';
 import { keyLabelMap, TABLE_LABELS } from '../const/tableLabels';
-import { getDocsFromCollection, updateDocInCollection, deleteDocFromCollection, getCollectionName } from './firestore';
+import {
+    getDocsFromCollection,
+    updateDocInCollection,
+    deleteDocFromCollection,
+    getCollectionName,
+} from './firestore';
 
 export const usePagination = () => {
     const batchSize = useAtomValue(currentBatchSize);
@@ -99,17 +104,17 @@ export const usePagination = () => {
         await loadBatch(startAfter(documentQueryCursor));
     };
 
-    return { 
-        entries, 
-        setEntries, 
-        updateEntry, 
-        deleteEntry, 
-        loadBatch, 
-        loadPrevBatch, 
-        loadNextBatch, 
+    return {
+        entries,
+        setEntries,
+        updateEntry,
+        deleteEntry,
+        loadBatch,
+        loadPrevBatch,
+        loadNextBatch,
         getEntryValue,
         getKey,
         getKeys,
-        getLabel
+        getLabel,
     };
 };
