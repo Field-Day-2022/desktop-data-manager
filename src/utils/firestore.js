@@ -27,6 +27,7 @@ export const getDocsFromCollection = async (collectionName, constraints = []) =>
             ...constraints
         );
         const docs = await getDocs(currentQuery);
+        console.log(`Read ${docs.size} docs from ${collectionName}.`);
         return docs;
     } catch (error) {
         console.error('Error loading entries:', error);
@@ -36,7 +37,7 @@ export const getDocsFromCollection = async (collectionName, constraints = []) =>
 export const addDocToCollection = async (collectionName, data) => {
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
-        console.log('Document written with ID: ', docRef.id);
+        console.log(`Document written to collection: ${collectionName} with ID: ${docRef.id}`);
     } catch (error) {
         console.error('Error adding document: ', error);
     }

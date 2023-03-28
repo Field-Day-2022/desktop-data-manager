@@ -31,11 +31,9 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
     }, []);
 
     const filteredEntries = useCallback((entries, search) => {
-
         if (search === '') {
             return entries;
         }
-
         return entries.filter((entry) => {
             return labels.some((label) => {
                 const entryValue = getEntryValue(entry, label);

@@ -8,10 +8,11 @@ module.exports = {
     extend: {
       colors: {
         'asu-maroon': '#8c1d40',
-        'asu-gold': '#ffc627'
+        'asu-gold': '#ffc627',
       },
       height: {
         'table': 'calc(100vh - 257px)',
+        'data-input': 'calc(100vh - 326px)',
       },
       minWidth: {
         'data-input': '500px',
