@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, addDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import { notify, Type } from '../../components/Notifier';
-import { LayoutGroup, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function FormBuilder() {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
