@@ -15,30 +15,24 @@ export const useColumns = (labels) => {
         );
     }, [labels]);
 
-    const getShownColumns = useCallback(
-        (columns) => {
-            return Object.keys(columns).reduce((acc, key) => {
-                if (columns[key].show) {
-                    acc[key] = columns[key];
-                }
-                return acc;
-            }, {});
-        },
-        []
-    );
+    const getShownColumns = useCallback((columns) => {
+        return Object.keys(columns).reduce((acc, key) => {
+            if (columns[key].show) {
+                acc[key] = columns[key];
+            }
+            return acc;
+        }, {});
+    }, []);
 
-    const toggleColumnVisibility = useCallback(
-        (label) => {
-            setColumns((prevColumns) => ({
-                ...prevColumns,
-                [label]: {
-                    ...prevColumns?.[label],
-                    show: !prevColumns?.[label]?.show,
-                },
-            }));
-        },
-        []
-    );
+    const toggleColumnVisibility = useCallback((label) => {
+        setColumns((prevColumns) => ({
+            ...prevColumns,
+            [label]: {
+                ...prevColumns?.[label],
+                show: !prevColumns?.[label]?.show,
+            },
+        }));
+    }, []);
 
     const [sortDirection, setSortDirection] = useState('asc');
 
@@ -77,22 +71,27 @@ export const useColumns = (labels) => {
         [sortDirection, getSortedColumn]
     );
 
-    const sortedEntries = useCallback(
-        (entries) => {
-            const sortedEntries = [...entries];
-            sortedEntries.sort((a, b) => {
-                if (getEntryValue(a, getSortedColumn()) > getEntryValue(b, getSortedColumn())) {
-                    return sortDirection === 'asc' ? 1 : -1;
-                }
-                if (getEntryValue(a, getSortedColumn()) < getEntryValue(b, getSortedColumn())) {
-                    return sortDirection === 'asc' ? -1 : 1;
-                }
-                return 0;
-            });
-            return sortedEntries;
-        },
-        []
-    );
+    const sortedEntries = useCallback((entries) => {
+        const sortedEntries = [...entries];
+        sortedEntries.sort((a, b) => {
+            if (getEntryValue(a, getSortedColumn()) > getEntryValue(b, getSortedColumn())) {
+                return sortDirection === 'asc' ? 1 : -1;
+            }
+            if (getEntryValue(a, getSortedColumn()) < getEntryValue(b, getSortedColumn())) {
+                return sortDirection === 'asc' ? -1 : 1;
+            }
+            return 0;
+        });
+        return sortedEntries;
+    }, []);
 
-    return { columns, getShownColumns, toggleColumnVisibility, sortDirection, sortByColumn, getSortedColumn, sortedEntries };
+    return {
+        columns,
+        getShownColumns,
+        toggleColumnVisibility,
+        sortDirection,
+        sortByColumn,
+        getSortedColumn,
+        sortedEntries,
+    };
 };

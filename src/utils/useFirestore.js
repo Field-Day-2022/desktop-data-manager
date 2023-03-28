@@ -16,9 +16,9 @@ export const useFirestore = () => {
         if (!Array.isArray(constraints)) {
             constraints = [constraints];
         }
-    
+
         console.log('Loading entries from collection:', collectionName, constraints);
-    
+
         try {
             const currentQuery = query(
                 collection(db, collectionName),
@@ -32,7 +32,7 @@ export const useFirestore = () => {
             console.error('Error loading entries:', error);
         }
     };
-    
+
     const addDocToCollection = async (collectionName, data) => {
         try {
             const docRef = await addDoc(collection(db, collectionName), data);
@@ -41,7 +41,7 @@ export const useFirestore = () => {
             console.error('Error adding document: ', error);
         }
     };
-    
+
     const updateDocInCollection = async (collectionName, docId, data) => {
         try {
             await updateDoc(doc(db, collectionName, docId), data);
@@ -50,7 +50,7 @@ export const useFirestore = () => {
             console.error('Error updating document: ', error);
         }
     };
-    
+
     const deleteDocFromCollection = async (collectionName, docId) => {
         try {
             await deleteDoc(doc(db, collectionName, docId));
@@ -59,7 +59,7 @@ export const useFirestore = () => {
             console.error('Error removing document: ', error);
         }
     };
-    
+
     const getCollectionName = (environment, projectName, tableName) => {
         return `${environment === 'test' ? 'Test' : ''}${projectName}${
             tableName === 'Session' ? 'Session' : 'Data'
