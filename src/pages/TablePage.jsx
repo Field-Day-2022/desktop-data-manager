@@ -14,7 +14,7 @@ import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
 import TableManager from '../components/tools/TableManager';
-import { usePagination } from '../utils/firestore';
+import { usePagination } from '../utils/usePagination';
 import { ProjectField } from '../components/forms/Fields';
 
 export default function TablePage() {

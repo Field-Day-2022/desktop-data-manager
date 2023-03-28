@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { TableEntry } from './TableEntry';
 import { TableHeading } from './TableHeading';
 import { tableBody } from '../../const/animationVariants';
-import { usePagination } from '../../utils/firestore';
+import { usePagination } from '../../utils/usePagination';
 
 export const Table = ({ labels, columns, entries, name }) => {
 

@@ -5,7 +5,7 @@ import ColumnSelectorButton from '../table/ColumnSelectorButton';
 import { Table } from '../table/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { SearchField } from '../forms/Fields';
-import { usePagination } from '../../utils/firestore';
+import { usePagination } from '../../utils/usePagination';
 
 export default function TableManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
