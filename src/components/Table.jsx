@@ -13,6 +13,7 @@ export const Table = ({ name, labels, columns, entries, removeEntry, sortDirecti
                     <TableHeading label="Actions" />
                     {labels &&
                         labels.map((label) =>
+                            columns[label]?.show &&
                             <TableHeading
                                 key={label}
                                 label={label}

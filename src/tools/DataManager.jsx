@@ -4,6 +4,8 @@ import { SearchIcon, ExportIcon } from '../assets/icons';
 import { Table } from '../components/Table';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { useColumns } from '../utils/useColumns';
+import { useTable } from '../utils/useTable';
+import { useEffect } from 'react';
 
 function SearchBar({ onChange }) {
 
@@ -21,20 +23,26 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
     const { columns, getShownColumns, toggleColumnVisibility, sortDirection, sortByColumn, getSortedColumn, sortedEntries } = useColumns(labels);
     const [entryFilter, setEntryFilter] = useState('');
 
+    const { getEntryValue } = useTable();
+
+    useEffect(() => {
+        console.log('Filtering entries by: ', entryFilter);
+    }, [entryFilter]);
+
     const handleFilterChange = useCallback((e) => {
         setEntryFilter(e.target.value);
     }, []);
 
     const filteredEntries = useCallback(
-        (entries, search) => {
-            if (search === '') {
+        (entries, filter) => {
+            if (filter === '') {
                 return entries;
             }
 
             return entries.filter((entry) => {
                 return labels.some((label) => {
-                    const entryValue = getValue(entry, label);
-                    return entryValue?.toString().toLowerCase().includes(search.toLowerCase());
+                    const entryValue = getEntryValue(entry, label);
+                    return entryValue?.toString().toLowerCase().includes(filter.toLowerCase());
                 });
             });
         },
@@ -48,15 +56,6 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
             return sorted;
         },
         [filteredEntries, sortedEntries]
-    );
-
-    const getValue = useCallback(
-        (entry, column) => {
-            const key = getKey(column, name);
-            const value = entry.data?.()[key] || 'N/A';
-            return value;
-        },
-        [name]
     );
 
     const removeEntry = useCallback(
