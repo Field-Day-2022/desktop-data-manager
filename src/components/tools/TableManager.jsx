@@ -4,12 +4,14 @@ import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../table/ColumnSelectorButton';
 import { Table } from '../table/Table';
 import { useState, useEffect, useCallback } from 'react';
-import { getValue } from '../table/TableEntry';
 import { SearchField } from '../forms/Fields';
+import { usePagination } from '../../utils/firestore';
 
 export default function TableManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
     const [search, setSearch] = useState('');
+
+    const { getEntryValue } = usePagination();
 
     useEffect(() => {
         setColumns(labels.reduce((acc, label) => {
@@ -36,7 +38,7 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
 
         return entries.filter((entry) => {
             return labels.some((label) => {
-                const entryValue = getValue(entry, label);
+                const entryValue = getEntryValue(entry, label);
                 return entryValue?.toString().toLowerCase().includes(search.toLowerCase());
             });
         });
@@ -49,7 +51,8 @@ export default function TableManager({ name, labels = [], entries = [], setEntri
                 <div className="flex px-5 items-center">
                     <SearchField setField={(e) => {
                         console.log(e);
-                        setSearch(e)}} />
+                        setSearch(e)
+                    }} />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}

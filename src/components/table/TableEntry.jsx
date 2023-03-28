@@ -1,117 +1,73 @@
-import { useEffect, useState, forwardRef } from 'react';
-import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+import { useAtomValue } from 'jotai';
 import { currentTableName } from '../../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { currentProjectName, appMode } from '../../utils/jotai';
-import { notify, Type } from '../Notifier';
-import { db } from '../../utils/firebase';
 import { deleteMessageVariant, tableRows } from '../../const/animationVariants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../../assets/icons';
-import { getKey, getKeys, getLabel } from '../../const/tableLabels';
+import { usePagination } from '../../utils/firestore';
 
-export const getValue = (entry, column) => {
-    if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
-        return 'N/A';
-    }
-    return entry._document.data.value.mapValue.fields[getKey(column, name)].stringValue;
-}
-
-export const TableEntry = forwardRef((props, ref) => {
-    const { entrySnapshot, shownColumns, removeEntry, index } = props;
-
+export const TableEntry = (props) => {
+    const { entrySnapshot, shownColumns, index } = props;
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
-    const [currentProject, setCurrentProject] = useAtom(currentProjectName);
-    const [environment, setEnvironment] = useAtom(appMode);
-    const [tableName, setTableName] = useAtom(currentTableName);
+    const currentProject = useAtomValue(currentProjectName);
+    const environment = useAtomValue(appMode);
+    const tableName = useAtomValue(currentTableName);
 
-    const onEditClickedHandler = () => {
-        console.log('Edit clicked');
-        setCurrentState('editing');
-    };
+    const { updateEntry, deleteEntry, getKeys, getLabel } = usePagination();
 
-    const onDeleteClickedHandler = () => {
-        setCurrentState('deleting');
+    const onSaveClickedHandler = () => {
+        if (currentState === 'editing') {
+            setCurrentState('viewing');
+            updateEntry(getCollectionName(), entrySnapshot.id, entryData);
+        } else if (currentState === 'deleting') {
+            setCurrentState('viewing');
+            deleteEntry(getCollectionName(), entrySnapshot.id);
+        }
     };
 
     const getCollectionName = () => {
-        return ((environment === 'test') ? 'Test' : '') + currentProject + ((tableName === 'Session') ? 'Session' : 'Data')
-    }
-
-    const deleteDocumentFromFirestore = async () => {
-        setCurrentState('viewing');
-        removeEntry();
-        await deleteDoc(
-            doc(db, getCollectionName(), entrySnapshot.id)
-        )
-            .then(() => {
-                notify(Type.success, 'Document successfully deleted!');
-            })
-            .catch((e) => {
-                notify(Type.error, `Error deleting document: ${e}`);
-            });
-    };
-
-    const pushChangesToFirestore = async () => {
-        setCurrentState('viewing');
-        await setDoc(
-            doc(db, getCollectionName(), entrySnapshot.id),
-            entryData
-        )
-            .then(() => {
-                notify(Type.success, 'Changes successfully written to database!');
-            })
-            .catch((e) => {
-                notify(Type.error, `Error writing changes to database: ${e}`);
-            });
-    };
-
-    const onSaveClickedHandler = () => {
-        currentState === 'editing' && pushChangesToFirestore();
-        currentState === 'deleting' && deleteDocumentFromFirestore();
-    };
-
-    const onCancelClickedHandler = () => {
-        console.log('Cancel clicked');
-        setCurrentState('viewing');
+        const tablePrefix = (tableName === 'Session') ? 'Session' : 'Data';
+        return `${environment === 'test' ? 'Test' : ''}${currentProject}${tablePrefix}`;
     };
 
     useEffect(() => {
         setKeys(getKeys(tableName));
-    }, [])
+    }, [tableName]);
+
+    const filteredKeys = keys?.filter(key => shownColumns.includes(getLabel(key, tableName)));
 
     return (
-        <motion.tr className="relative hover:bg-neutral-100"
+        <motion.tr
+            className="relative hover:bg-neutral-100"
             variants={tableRows}
             initial='initial'
             animate='visible'
             custom={index}
             exit='exit'
-            ref={ref}
         >
             <Actions
-                onEditClickedHandler={onEditClickedHandler}
-                onCancelClickedHandler={onCancelClickedHandler}
-                onDeleteClickedHandler={onDeleteClickedHandler}
+                onEditClickedHandler={() => setCurrentState('editing')}
+                onCancelClickedHandler={() => setCurrentState('viewing')}
+                onDeleteClickedHandler={() => setCurrentState('deleting')}
                 onSaveClickedHandler={onSaveClickedHandler}
                 currentState={currentState}
             />
-            {keys && keys.map((key) => (
-                shownColumns.includes(getLabel(key)) && (
+            {filteredKeys?.map((key) => (
                 <EntryItem
-                    entrySnapshot={entrySnapshot}
-                    currentState={currentState}
+                    key={key}
                     dbKey={key}
                     entryData={entryData}
                     setEntryData={setEntryData}
-                    key={key}
-                />)
+                    entrySnapshot={entrySnapshot}
+                    currentState={currentState}
+                />
             ))}
         </motion.tr>
     );
-});
+};
 
 const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData }) => {
     const [displayText, setDisplayText] = useState(entrySnapshot.data()[dbKey]);

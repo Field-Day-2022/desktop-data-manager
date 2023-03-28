@@ -3,20 +3,23 @@ import { motion } from 'framer-motion';
 import { TableEntry } from './TableEntry';
 import { TableHeading } from './TableHeading';
 import { tableBody } from '../../const/animationVariants';
-import { getKey } from '../../const/tableLabels';
+import { usePagination } from '../../utils/firestore';
 
-export const Table = ({ labels, columns, entries, name, setEntries }) => {
+export const Table = ({ labels, columns, entries, name }) => {
 
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
 
+    const { getEntryValue, getKey } = usePagination();
+
     const sortedEntries = (entries , column, direction) => {
         const sortedEntries = [...entries];
+        const key = getKey(column);
         sortedEntries.sort((a, b) => {
-            if (getValue(a, column) > getValue(b, column)) {
+            if (getEntryValue(a, key) > getEntryValue(b, key)) {
                 return (direction === 'asc') ? 1 : -1;
             }
-            if (getValue(a, column) < getValue(b, column)) {
+            if (getEntryValue(a, key) < getEntryValue(b, key)) {
                 return (direction === 'asc') ? -1 : 1;
             }
             return 0;
@@ -29,12 +32,6 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
         setSortedColumn(column)
         setSortDirection(newSortDirection);
     };
-
-    const getValue = (entry, column) => {
-        const key = getKey(column, name);
-        const value = entry.data?.()[key] || 'N/A';
-        return value;
-    }
 
     return (
         <table className="w-full table-auto border-separate border-spacing-0">
@@ -66,9 +63,6 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
                         entrySnapshot={entry}
                         shownColumns={[...labels].filter(label => columns[label]?.show)}
                         tableName={name}
-                        removeEntry={() => {
-                            setEntries(entries.filter(e => e !== entry));
-                        }}
                     />
                 ))}
             </motion.tbody>
