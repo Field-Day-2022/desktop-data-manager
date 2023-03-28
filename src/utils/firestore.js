@@ -156,18 +156,18 @@ export const usePagination = () => {
         await loadBatch(startAfter(documentQueryCursor));
     };
 
-    return { 
-        loadBatch, 
-        loadPrevBatch, 
-        loadNextBatch, 
-        entries, 
-        setEntries, 
-        updateEntry, 
-        deleteEntry, 
+    return {
+        loadBatch,
+        loadPrevBatch,
+        loadNextBatch,
+        entries,
+        setEntries,
+        updateEntry,
+        deleteEntry,
         getEntryValue,
         getKey,
         getKeys,
-        getLabel
+        getLabel,
     };
 };
 
