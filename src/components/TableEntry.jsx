@@ -8,17 +8,12 @@ import { notify, Type } from './Notifier';
 import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
-import { getKey, getKeys, getLabel } from '../const/tableLabels';
-
-export const getValue = (entry, column) => {
-    if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
-        return 'N/A';
-    }
-    return entry._document.data.value.mapValue.fields[getKey(column, name)].stringValue;
-}
+import { useTable } from '../utils/useTable';
 
 export const TableEntry = forwardRef((props, ref) => {
     const { entrySnapshot, shownColumns, removeEntry, index } = props;
+
+    const { getKeys, getLabel } = useTable();
 
     const [currentState, setCurrentState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
@@ -26,6 +21,10 @@ export const TableEntry = forwardRef((props, ref) => {
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [environment, setEnvironment] = useAtom(appMode);
     const [tableName, setTableName] = useAtom(currentTableName);
+
+    useEffect(() => {
+        console.log('Keys: ', keys);
+    }, [keys])
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');

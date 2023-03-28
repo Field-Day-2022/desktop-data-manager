@@ -8,9 +8,6 @@ export const Pagination = ({
     loadPrevBatch
 }) => {
     const [batchSize, setBatchSize] = useAtom(currentBatchSize);
-    const onClickHandler = (size) => {
-        setBatchSize(size)
-    }
 
     return (
         <div className="w-full p-2 flex justify-end items-center">
@@ -22,7 +19,7 @@ export const Pagination = ({
 
             <div className='relative p-2'>
                 <Dropdown
-                    onClickHandler={(selectedOption) => onClickHandler(selectedOption.replace(' Rows', ''))}
+                    onClickHandler={(selectedOption) => setBatchSize(selectedOption.replace(' Rows', ''))}
                     options={['15 Rows', '50 Rows', '100 Rows']}
                     value={`${batchSize} Rows`}
                 />

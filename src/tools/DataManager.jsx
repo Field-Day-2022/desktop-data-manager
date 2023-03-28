@@ -1,11 +1,9 @@
-import React from 'react';
-import { ExportIcon, SearchIcon } from '../assets/icons';
+import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import ColumnSelectorButton from '../components/ColumnSelectorButton';
+import { SearchIcon, ExportIcon } from '../assets/icons';
 import { Table } from '../components/Table';
-import { useState, useEffect, useCallback } from 'react';
-import { getValue } from '../components/TableEntry';
-import Dropdown from '../components/Dropdown';
+import ColumnSelectorButton from '../components/ColumnSelectorButton';
+import { useColumns } from '../utils/useColumns';
 
 function SearchBar({ onChange }) {
 
@@ -20,55 +18,65 @@ function SearchBar({ onChange }) {
 const MemoizedSearchBar = React.memo(SearchBar);
 
 export default function DataManager({ name, labels = [], entries = [], setEntries }) {
-    const [columns, setColumns] = useState({});
-    const [search, setSearch] = useState('');
+    const { columns, getShownColumns, toggleColumnVisibility, sortDirection, sortByColumn, getSortedColumn, sortedEntries } = useColumns(labels);
+    const [entryFilter, setEntryFilter] = useState('');
 
-    useEffect(() => {
-        setColumns(labels.reduce((acc, label) => {
-            acc[label] = { show: true };
-            return acc;
-        }, {}));
-    }, [labels]);
+    const handleFilterChange = useCallback((e) => {
+        setEntryFilter(e.target.value);
+    }, []);
 
-    const toggleColumn = useCallback((label) => {
-        setColumns(prevColumns => ({
-            ...prevColumns,
-            [label]: {
-                ...prevColumns?.[label],
-                show: !prevColumns?.[label]?.show
+    const filteredEntries = useCallback(
+        (entries, search) => {
+            if (search === '') {
+                return entries;
             }
-        }));
-    }, []);
 
-    const handleSearchChange = useCallback((e) => {
-        setSearch(e.target.value);
-    }, []);
-
-    const filteredEntries = useCallback((entries, search) => {
-
-        if (search === '') {
-            return entries;
-        }
-
-        return entries.filter((entry) => {
-            return labels.some((label) => {
-                const entryValue = getValue(entry, label);
-                return entryValue?.toString().toLowerCase().includes(search.toLowerCase());
+            return entries.filter((entry) => {
+                return labels.some((label) => {
+                    const entryValue = getValue(entry, label);
+                    return entryValue?.toString().toLowerCase().includes(search.toLowerCase());
+                });
             });
-        });
-    }, [labels]);
+        },
+        [labels]
+    );
+
+    const filteredAndSortedEntries = useCallback(
+        (entries, column, direction, search) => {
+            const filtered = filteredEntries(entries, search);
+            const sorted = sortedEntries(filtered, column, direction);
+            return sorted;
+        },
+        [filteredEntries, sortedEntries]
+    );
+
+    const getValue = useCallback(
+        (entry, column) => {
+            const key = getKey(column, name);
+            const value = entry.data?.()[key] || 'N/A';
+            return value;
+        },
+        [name]
+    );
+
+    const removeEntry = useCallback(
+        (entry) => {
+            setEntries((prevEntries) => prevEntries.filter((e) => e.id !== entry.id));
+        },
+        [setEntries]
+    );
 
     return (
         <motion.div className="bg-white">
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">
-                    <MemoizedSearchBar onChange={handleSearchChange} />
+                    <MemoizedSearchBar onChange={handleFilterChange} />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}
                             columns={columns}
-                            toggleColumn={toggleColumn}
+                            toggleColumn={toggleColumnVisibility}
                         />
                         <ExportIcon />
                     </div>
@@ -77,11 +85,13 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
             </div>
             <div className="overflow-auto w-full h-full-table">
                 <Table
-                    labels={labels}
-                    columns={columns}
-                    entries={filteredEntries(entries, search)}
                     name={name}
-                    setEntries={setEntries}
+                    labels={labels}
+                    columns={getShownColumns(columns)}
+                    entries={filteredAndSortedEntries(entries, getSortedColumn(), sortDirection, entryFilter)}
+                    removeEntry={removeEntry}
+                    sortDirection={sortDirection}
+                    sortByColumn={sortByColumn}
                 />
             </div>
         </motion.div>
