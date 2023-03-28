@@ -1,8 +1,8 @@
-import { limit, startAfter, startAt, where } from "firebase/firestore";
-import { useAtomValue } from "jotai";
-import { useState } from "react";
-import { appMode, currentBatchSize, currentProjectName, currentTableName } from "./jotai";
-import { useFirestore } from "./useFirestore";
+import { limit, startAfter, startAt, where } from 'firebase/firestore';
+import { useAtomValue } from 'jotai';
+import { useState } from 'react';
+import { appMode, currentBatchSize, currentProjectName, currentTableName } from './jotai';
+import { useFirestore } from './useFirestore';
 
 /**
  * This hook is responsible for loading paginated data from Firestore.
@@ -17,52 +17,52 @@ import { useFirestore } from "./useFirestore";
  */
 
 export const usePagination = (updateEntries) => {
-  const { getDocsFromCollection, getCollectionName } = useFirestore();
+    const { getDocsFromCollection, getCollectionName } = useFirestore();
 
-  const batchSize = useAtomValue(currentBatchSize);
-  const currentProject = useAtomValue(currentProjectName);
-  const currentTable = useAtomValue(currentTableName);
-  const environment = useAtomValue(appMode);
+    const batchSize = useAtomValue(currentBatchSize);
+    const currentProject = useAtomValue(currentProjectName);
+    const currentTable = useAtomValue(currentTableName);
+    const environment = useAtomValue(appMode);
 
-  const collectionName = getCollectionName(environment, currentProject, currentTable);
+    const collectionName = getCollectionName(environment, currentProject, currentTable);
 
-  const [lastVisibleDoc, setLastVisibleDoc] = useState();
-  const [queryCursorStack, setQueryCursorStack] = useState([]);
+    const [lastVisibleDoc, setLastVisibleDoc] = useState();
+    const [queryCursorStack, setQueryCursorStack] = useState([]);
 
-  const loadBatch = async (constraints = []) => {
-    if (!Array.isArray(constraints)) {
-      constraints = [constraints];
-    }
+    const loadBatch = async (constraints = []) => {
+        if (!Array.isArray(constraints)) {
+            constraints = [constraints];
+        }
 
-    const whereClause =
-      currentTable !== 'Session' &&
-      where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
-    whereClause && constraints.push(whereClause);
+        const whereClause =
+            currentTable !== 'Session' &&
+            where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
+        whereClause && constraints.push(whereClause);
 
-    constraints.push(limit(batchSize));
+        constraints.push(limit(batchSize));
 
-    const { docs } = await getDocsFromCollection(collectionName, constraints);
-    const newLastVisibleDoc = docs[docs.length - 1];
-    updateEntries(docs);
-    setLastVisibleDoc(newLastVisibleDoc);
-  };
+        const { docs } = await getDocsFromCollection(collectionName, constraints);
+        const newLastVisibleDoc = docs[docs.length - 1];
+        updateEntries(docs);
+        setLastVisibleDoc(newLastVisibleDoc);
+    };
 
-  const getQueryCursorStack = (currentCursor, cursorStack) => {
-    return [...cursorStack, currentCursor];
-  };
+    const getQueryCursorStack = (currentCursor, cursorStack) => {
+        return [...cursorStack, currentCursor];
+    };
 
-  const loadNextBatch = async () => {
-    const newQueryCursorStack = getQueryCursorStack(lastVisibleDoc, queryCursorStack);
-    setQueryCursorStack(newQueryCursorStack);
-    await loadBatch(startAfter(lastVisibleDoc));
-  };
+    const loadNextBatch = async () => {
+        const newQueryCursorStack = getQueryCursorStack(lastVisibleDoc, queryCursorStack);
+        setQueryCursorStack(newQueryCursorStack);
+        await loadBatch(startAfter(lastVisibleDoc));
+    };
 
-  const loadPreviousBatch = async () => {
-    const prevQueryCursor = queryCursorStack[queryCursorStack.length - 1];
-    const newQueryCursorStack = queryCursorStack.slice(0, -1);
-    setQueryCursorStack(newQueryCursorStack);
-    await loadBatch(startAt(prevQueryCursor));
-  };
+    const loadPreviousBatch = async () => {
+        const prevQueryCursor = queryCursorStack[queryCursorStack.length - 1];
+        const newQueryCursorStack = queryCursorStack.slice(0, -1);
+        setQueryCursorStack(newQueryCursorStack);
+        await loadBatch(startAt(prevQueryCursor));
+    };
 
-  return { loadBatch, loadNextBatch, loadPreviousBatch };
+    return { loadBatch, loadNextBatch, loadPreviousBatch };
 };
