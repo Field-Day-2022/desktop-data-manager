@@ -1,7 +1,7 @@
-import { limit, startAfter, startAt, where } from 'firebase/firestore';
+import { limit, startAfter, startAt, where, orderBy } from 'firebase/firestore';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
-import { appMode, currentBatchSize, currentProjectName, currentTableName } from './jotai';
+import { appMode, currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import { useFirestore } from './useFirestore';
 
 /**
@@ -17,7 +17,7 @@ import { useFirestore } from './useFirestore';
  */
 
 export const usePagination = (updateEntries) => {
-    const { getDocsFromCollection, getCollectionName } = useFirestore();
+    const { getDocsFromCollection, getCollectionName } = useFirestore;
 
     const batchSize = useAtomValue(currentBatchSize);
     const currentProject = useAtomValue(currentProjectName);

@@ -4,11 +4,10 @@ import {
     deleteDoc,
     doc,
     getDocs,
-    orderBy,
     query,
     updateDoc,
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { db } from '../utils/firebase';
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
     if (!Array.isArray(constraints)) {
