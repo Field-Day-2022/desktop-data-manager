@@ -1,4 +1,13 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    updateDoc,
+} from 'firebase/firestore';
 import { db } from './firebase';
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
@@ -6,7 +15,12 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
         constraints = [constraints];
     }
 
-    console.log('Loading entries from collection:', collectionName, 'with constraints:', constraints);
+    console.log(
+        'Loading entries from collection:',
+        collectionName,
+        'with constraints:',
+        constraints
+    );
 
     try {
         const currentQuery = query(collection(db, collectionName), ...constraints);
@@ -46,7 +60,9 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'}`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${
+        tableName === 'Session' ? 'Session' : 'Data'
+    }`;
 };
 
 export const useFirestore = {

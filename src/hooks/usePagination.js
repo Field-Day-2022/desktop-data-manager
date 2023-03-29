@@ -30,14 +30,16 @@ export const usePagination = (updateEntries) => {
     const [queryCursorStack, setQueryCursorStack] = useState([]);
 
     const loadBatch = async (constraints = []) => {
-        if (!Array.isArray(constraints)) { constraints = [constraints]; }
+        if (!Array.isArray(constraints)) {
+            constraints = [constraints];
+        }
 
         const whereClause =
             currentTable !== 'Session' &&
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
         whereClause && constraints.push(whereClause);
         constraints.push(limit(batchSize));
-        constraints.push(orderBy('dateTime', 'desc'))
+        constraints.push(orderBy('dateTime', 'desc'));
 
         const { docs } = await getDocsFromCollection(collectionName, constraints);
         const newLastVisibleDoc = docs[docs.length - 1];
