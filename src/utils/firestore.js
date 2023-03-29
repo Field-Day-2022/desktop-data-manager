@@ -1,12 +1,4 @@
-import {
-    addDoc,
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    query,
-    updateDoc,
-} from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc } from 'firebase/firestore';
 import { db } from './firebase';
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
@@ -64,4 +56,10 @@ const getCollectionName = (environment, projectName, tableName) => {
     }`;
 };
 
-export { getDocsFromCollection, addDocToCollection, updateDocInCollection, deleteDocFromCollection, getCollectionName };
+export {
+    getDocsFromCollection,
+    addDocToCollection,
+    updateDocInCollection,
+    deleteDocFromCollection,
+    getCollectionName,
+};
