@@ -9,7 +9,7 @@ import { currentBatchSize, currentProjectName, currentTableName } from '../utils
 import Dropdown from '../components/Dropdown';
 import TableTools from '../components/TableTools';
 import TextRevealIconButton from '../components/TextRevealIconButton';
-import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
@@ -33,6 +33,16 @@ export default function TablePage() {
         loadBatch();
     }, [tableName, batchSize, currentProject]);
 
+    const tabsData = [
+        { text: 'Turtle', icon: <TurtleIcon /> },
+        { text: 'Lizard', icon: <LizardIcon className="h-6" /> },
+        { text: 'Mammal', icon: <MammalIcon /> },
+        { text: 'Snake', icon: <SnakeIcon /> },
+        { text: 'Arthropod', icon: <ArthropodIcon /> },
+        { text: 'Amphibian', icon: <AmphibianIcon /> },
+        { text: 'Session', icon: <SessionIcon /> },
+    ];
+
     return (
         <PageWrapper>
             <FormBuilderModal
@@ -53,7 +63,13 @@ export default function TablePage() {
                 onCancel={() => setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
-                <TabBar />
+                <TabBar 
+                    tabs={tabsData.map((tab) => ({
+                        ...tab,
+                        active: tab.text === tableName,
+                        onClick: () => setTableName(tab.text),
+                    }))}
+                />
                 <div className="flex items-center px-5 space-x-5">
                     <div>Project: </div>
                     <Dropdown
