@@ -23,7 +23,11 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
     );
 
     try {
-        const currentQuery = query(collection(db, collectionName), orderBy('dateTime', 'desc'), ...constraints);
+        const currentQuery = query(
+            collection(db, collectionName),
+            orderBy('dateTime', 'desc'),
+            ...constraints
+        );
         const docs = await getDocs(currentQuery);
         console.log(`Read ${docs.size} docs from ${collectionName}.`);
         return docs;
