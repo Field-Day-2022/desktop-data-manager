@@ -20,31 +20,16 @@
         padding-bottom: 1.5rem;
     }
 
-    .button {
-        display: flex;
-        border-radius: 0.375rem;
-        padding: 0.357rem;
-        color: white;
-        white-space: nowrap;
-        background: #8c1d40;
-        border-width: 2px;
-        border-color: transparent;
+    button {
+        @apply flex rounded-md p-1.5 text-white whitespace-nowrap bg-asu-maroon border-2 border-transparent;
     }
 
     .icon-button {
-        display: flex;
-        border-radius: 0.375rem;
-        padding: 0.357rem;
-        color: white;
-        white-space: nowrap;
-        background: #8c1d40;
-        border-width: 2px;
-        border-color: transparent;
-        width: 40px;
+        @apply w-10;
     }
 
-    .icon-button:active {
-        border-color: #ffc627;
+    button:disabled {
+        @apply cursor-not-allowed bg-neutral-800;
     }
 
     button:active {

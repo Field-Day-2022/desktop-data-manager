@@ -5,8 +5,10 @@ export default function Button({ className, text, onClick, disabled, icon }) {
     return (
         <motion.button
             key={text}
-            className={'button ' + (disabled && 'bg-neutral-800 ') + className}
-            onClick={() => onClick()}>
+            className={className}
+            onClick={() => onClick()}
+            disabled={disabled}
+            >
             {icon && <ButtonIcon>{icon}</ButtonIcon>}
             <ButtonText>{(text) && text}</ButtonText>
         </motion.button>
