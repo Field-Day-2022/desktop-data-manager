@@ -9,7 +9,7 @@ import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
-import TextField from './TextField';
+import InputField from './InputField';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
@@ -168,10 +168,9 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
 
     return (
         <td key={dbKey} className="text-center border-b border-gray-400 p-1">
-            <TextField
+            <InputField
                 disabled={disabled}
                 className="text-center"
-                type="text"
                 value={dbKey === 'dateTime' ? displayText : entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 size={size}

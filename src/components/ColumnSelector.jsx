@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import ColumnCheckbox from './ColumnCheckbox';
-import { notify, Type } from './Notifier';
+import InputField from './InputField';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     const ref = useRef();
@@ -36,19 +35,16 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                     <div className='flex-col space-y-3 whitespace-nowrap max-h-full-column-selector-height'>
                         <h1 className='text-xl'>Column Selector</h1>
                         {labels && labels.map((label) =>
-                            <ColumnCheckbox
+                            <InputField
                                 key={label}
                                 label={label}
-                                defaultChecked={columns[label]?.show}
+                                type='checkbox'
+                                checked={columns[label]?.show}
                                 disabled={getShownColumnCount() === 1 && columns[label].show}
                                 onChange={() => {
                                     toggleColumn(label);
                                 }}
-                                onClick={() => {
-                                    if (getShownColumnCount() === 1 && columns[label].show) {
-                                        notify(Type.error, 'You must have at least one column selected.');
-                                    }
-                                }} />
+                            />
                         )}
                     </div>
                 </motion.div>

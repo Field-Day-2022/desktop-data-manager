@@ -5,11 +5,11 @@ import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import TextField from '../components/TextField';
+import InputField from '../components/InputField';
 
 const SearchField = ({ onChange }) => {
     return (
-        <TextField type="search" onChange={onChange} placeholder="Search" />
+        <InputField type="search" onChange={onChange} placeholder="Search" />
     );
 };
 
