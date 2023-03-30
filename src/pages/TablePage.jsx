@@ -71,8 +71,9 @@ export default function TablePage() {
                     }))}
                 />
                 <div className="flex items-center px-5 space-x-5">
-                    <div>Project: </div>
                     <Dropdown
+                        label="Project"
+                        layout="horizontal"
                         onClickHandler={(selectedOption) => {
                             if (selectedOption !== currentProject)
                                 setCurrentProject(selectedOption.replace(/\s/g, ''));
