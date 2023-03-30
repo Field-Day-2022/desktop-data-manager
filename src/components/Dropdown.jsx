@@ -21,7 +21,6 @@ export default function Dropdown({
     );
 
     return (
-
         <div className={containerClass}>
                 {label && (<label className={labelClass}>{`${label}:`}</label>)}
                 <select

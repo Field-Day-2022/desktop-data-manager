@@ -4,7 +4,6 @@ const ColumnCheckbox = ({ label, defaultChecked, disabled, onChange, onClick }) 
     const [isChecked, setIsChecked] = useState(defaultChecked);
 
     const handleOnChange = () => {
-
         if (!disabled) {
             setIsChecked(!isChecked);
             onChange(!isChecked);
