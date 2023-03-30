@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
-import { useFirestore }  from '../hooks/useFirestore';
+import { startEntryOperation } from '../utils/firestore';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
@@ -22,7 +22,6 @@ export const TableEntry = forwardRef((props, ref) => {
     const [keys, setKeys] = useState();
     const tableName = useAtomValue(currentTableName);
 
-    const { startEntryOperation } = useFirestore();
 
     const onEditClickedHandler = () => {
         console.log('Edit clicked');
