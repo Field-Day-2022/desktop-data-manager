@@ -9,6 +9,7 @@ import { db } from '../utils/firebase';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
+import TextField from './TextField';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
@@ -167,7 +168,7 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
 
     return (
         <td key={dbKey} className="text-center border-b border-gray-400 p-1">
-            <input
+            <TextField
                 disabled={disabled}
                 className="text-center"
                 type="text"
