@@ -14,7 +14,7 @@
     .heading {
         @apply text-2xl pb-6;
     }
-    
+
     .icon-button {
         @apply w-10;
     }
