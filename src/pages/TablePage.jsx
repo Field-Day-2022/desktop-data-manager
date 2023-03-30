@@ -1,5 +1,3 @@
-// https://firebase.google.com/docs/firestore/query-data/query-cursors
-// https://firebase.google.com/docs/firestore/query-data/order-limit-data
 import { useState, useEffect } from 'react';
 import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
@@ -9,7 +7,6 @@ import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
-import { notify, Type } from '../components/Notifier';
 import TableTools from '../components/TableTools';
 import TextRevealIconButton from '../components/TextRevealIconButton';
 import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon } from '../assets/icons';
@@ -100,7 +97,9 @@ export default function TablePage() {
                             onClick={() => setActiveTool('newData')}
                         />
                     </TableTools>
-                    <Pagination loadPrevBatch={loadPreviousBatch} loadNextBatch={loadNextBatch} />
+                    <Pagination
+                        loadPrevBatch={loadPreviousBatch}
+                        loadNextBatch={loadNextBatch} />
                 </div>
             </div>
         </PageWrapper>

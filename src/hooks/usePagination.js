@@ -1,6 +1,6 @@
-import { limit, startAfter, startAt, where, orderBy } from 'firebase/firestore';
+import { limit, startAfter, where, endAt } from 'firebase/firestore';
 import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { appMode, currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import { getDocsFromCollection, getCollectionName } from '../utils/firestore';
 
@@ -27,7 +27,12 @@ export const usePagination = (updateEntries) => {
     const [lastVisibleDoc, setLastVisibleDoc] = useState();
     const [queryCursorStack, setQueryCursorStack] = useState([]);
 
-    const loadBatch = async (constraints = []) => {
+    useEffect(() => {
+        setLastVisibleDoc(null);
+        setQueryCursorStack([]);
+    }, [currentTableName, batchSize]);
+
+    const getBatch = async (constraints = []) => {
         if (!Array.isArray(constraints)) {
             constraints = [constraints];
         }
@@ -37,29 +42,41 @@ export const usePagination = (updateEntries) => {
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
         whereClause && constraints.push(whereClause);
         constraints.push(limit(batchSize));
-        constraints.push(orderBy('dateTime', 'desc'));
 
-        const { docs } = await getDocsFromCollection(collectionName, constraints);
+        return await getDocsFromCollection(collectionName, constraints);
+    };
+
+    const loadBatch = async (constraints = []) => {
+        const docs = (await getBatch(constraints)).docs;
         const newLastVisibleDoc = docs[docs.length - 1];
         updateEntries(docs);
         setLastVisibleDoc(newLastVisibleDoc);
     };
 
-    const getQueryCursorStack = (currentCursor, cursorStack) => {
-        return [...cursorStack, currentCursor];
-    };
-
     const loadNextBatch = async () => {
-        const newQueryCursorStack = getQueryCursorStack(lastVisibleDoc, queryCursorStack);
+        const newQueryCursorStack = [...queryCursorStack, lastVisibleDoc];
         setQueryCursorStack(newQueryCursorStack);
-        await loadBatch(startAfter(lastVisibleDoc));
+        const batch = await getBatch(startAfter(lastVisibleDoc));
+        const docs = batch.docs;
+        if (docs.length === 0) {
+            setQueryCursorStack(queryCursorStack);
+            return false;
+        } else {
+            console.log('New last visible doc: ', docs[docs.length - 1]);
+            const newLastVisibleDoc = docs[docs.length - 1];
+            updateEntries(docs);
+            setLastVisibleDoc(newLastVisibleDoc);
+            return true;
+        }
     };
 
     const loadPreviousBatch = async () => {
-        const prevQueryCursor = queryCursorStack[queryCursorStack.length - 1];
-        const newQueryCursorStack = queryCursorStack.slice(0, -1);
-        setQueryCursorStack(newQueryCursorStack);
-        await loadBatch(startAt(prevQueryCursor));
+        if (queryCursorStack.length === 0) return false;
+        const previousCursor = queryCursorStack.pop();
+        setQueryCursorStack([...queryCursorStack]);
+        await loadBatch(endAt(previousCursor)).then(() => {
+            return true;
+        });
     };
 
     return { loadBatch, loadNextBatch, loadPreviousBatch };

@@ -6,6 +6,7 @@ import {
     getDocs,
     query,
     updateDoc,
+    orderBy,
 } from 'firebase/firestore';
 import { db } from './firebase';
 
@@ -22,7 +23,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
     );
 
     try {
-        const currentQuery = query(collection(db, collectionName), ...constraints);
+        const currentQuery = query(collection(db, collectionName), orderBy('dateTime', 'desc'), ...constraints);
         const docs = await getDocs(currentQuery);
         console.log(`Read ${docs.size} docs from ${collectionName}.`);
         return docs;
