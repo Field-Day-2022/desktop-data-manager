@@ -65,4 +65,10 @@ const getCollectionName = (environment, projectName, tableName) => {
     }`;
 };
 
-export { getDocsFromCollection, addDocToCollection, updateDocInCollection, deleteDocFromCollection, getCollectionName };
+export {
+    getDocsFromCollection,
+    addDocToCollection,
+    updateDocInCollection,
+    deleteDocFromCollection,
+    getCollectionName,
+};
