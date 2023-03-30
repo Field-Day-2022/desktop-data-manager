@@ -5,19 +5,15 @@ import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import Dropdown from '../components/Dropdown';
+import TextField from '../components/TextField';
 
-function SearchBar({ onChange }) {
-
+const SearchField = ({ onChange }) => {
     return (
-        <div className='flex items-center space-x-2'>
-            <div className='text-2xl'><SearchIcon /></div>
-            <input className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 w-full appearance-none leading-normal" type="text" placeholder="Search" onChange={onChange} />
-        </div>
-    )
-}
+        <TextField type="search" onChange={onChange} placeholder="Search" />
+    );
+};
 
-const MemoizedSearchBar = React.memo(SearchBar);
+const MemoizedSearchBar = React.memo(SearchField);
 
 export default function DataManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
