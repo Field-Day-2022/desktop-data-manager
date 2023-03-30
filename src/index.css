@@ -47,7 +47,11 @@
         border-color: #ffc627;
     }
 
-    .button:active {
-        border-color: #ffc627;
+    button:active {
+        @apply border-asu-gold;
+    }
+
+    select {
+        @apply cursor-pointer w-auto p-1.5 bg-neutral-200 rounded-md border-solid border-2 focus:border-asu-gold;
     }
 }

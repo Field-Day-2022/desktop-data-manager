@@ -20,19 +20,11 @@ export default function Dropdown({
         "text-sm w-full text-left p-2",
     );
 
-    const selectClass = classNames(
-        "cursor-pointer w-auto",
-        "p-1.5 bg-neutral-200 rounded-md",
-        "border-solid border-2 focus:border-asu-gold"
-    );
-
-
     return (
 
         <div className={containerClass}>
-                {label && (<div className={labelClass}>{`${label}:`}</div>)}
+                {label && (<label className={labelClass}>{`${label}:`}</label>)}
                 <select
-                    className={selectClass}
                     onChange={(e) => onClickHandler(e.target.value)}
                     value={value}
                 >
