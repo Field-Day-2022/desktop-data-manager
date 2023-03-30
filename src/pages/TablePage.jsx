@@ -8,7 +8,6 @@ import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import Dropdown from '../components/Dropdown';
 import TableTools from '../components/TableTools';
-import TextRevealIconButton from '../components/TextRevealIconButton';
 import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
@@ -16,6 +15,7 @@ import NewSessionModal from '../modals/NewSessionModal';
 import NewDataModal from '../modals/NewDataModal';
 
 import { usePagination } from '../hooks/usePagination';
+import Button from '../components/Button';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -93,22 +93,26 @@ export default function TablePage() {
                 />
                 <div className="flex justify-between overflow-auto">
                     <TableTools>
-                        <TextRevealIconButton
+                        <Button
+                            flexible={true}
                             text="Form Builder"
                             icon={<FormBuilderIcon />}
                             onClick={() => setActiveTool('formBuilder')}
                         />
-                        <TextRevealIconButton
+                        <Button
+                            flexible={true}
                             text="Export to CSV"
                             icon={<ExportIcon />}
                             onClick={() => setActiveTool('export')}
                         />
-                        <TextRevealIconButton
+                        <Button
+                            flexible={true}
                             text="New Session"
                             icon={<NewSessionIcon />}
                             onClick={() => setActiveTool('newSession')}
                         />
-                        <TextRevealIconButton
+                        <Button
+                            flexible={true}
                             text="New Data Entry"
                             icon={<NewDataIcon />}
                             onClick={() => setActiveTool('newData')}

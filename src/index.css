@@ -4,15 +4,11 @@
 
 @layer components {
     .title {
-        font-size: 4.5rem;
-        padding-top: 1.25rem;
-        line-height: 1;
+        @apply text-7xl pt-5 leading-none;
     }
 
     .subtitle {
-        font-size: 1.25rem;
-        padding-bottom: 2.5rem;
-        line-height: 1.75rem;
+        @apply text-xl pb-10;
     }
 
     .heading {
