@@ -44,7 +44,10 @@ export const TableEntry = forwardRef((props, ref) => {
             );
         entryUIState === 'deleting' && 
             startEntryOperation(
-                'deleteEntry', 
+                tableName.includes('Session') ? 
+                    'deleteSession' 
+                    : 
+                    'deleteEntry', 
                 {
                     entrySnapshot,
                     removeEntryFromUI,

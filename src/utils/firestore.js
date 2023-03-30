@@ -9,6 +9,7 @@ import {
     orderBy,
     arrayUnion,
     setDoc,
+    where,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { notify, Type } from '../components/Notifier'
@@ -91,10 +92,18 @@ const updateLizardMetadata = async (
     operation,
     operationDataObject
 ) => {
-    if (operation === 'change') {
+    if (operation === 'create') {
 
-    } else if (operation === 'add') {
-
+    } else if (operation === 'update') {
+        await updateDoc(
+            doc(db, 'Metadata', 'LizardData'), {
+                lastEditTime: operationDataObject.lastEditTime
+            }
+        ).then(() => {
+            notify(Type.success, 'Sent update to the PWA');
+        }).catch((e) => {
+            notify(Type.error, `Error sending deletion to PWA: ${e}`);
+        });
     } else if (operation === 'delete') {
         const { entrySnapshot } = operationDataObject;
         await updateDoc(
@@ -117,6 +126,11 @@ const pushEntryChangesToFirestore = async (
     entrySnapshot,
     entryData,
 ) => {
+    if (entryData.taxa === 'Lizard') {
+        const lastEditTime = new Date().getTime();
+        entryData.lastEdit = lastEditTime
+        updateLizardMetadata( 'update', { lastEditTime } );
+    }
     await setDoc(
         doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id),
         entryData
@@ -129,12 +143,12 @@ const pushEntryChangesToFirestore = async (
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     const entries = await getDocs(query(
-        collection(db, `${sessionSnapshot.ref.parent.id.substr(-7)}Data`),
-        where('sessionDateTime', '==', sessionSnapshot.dateTime)
+        collection(db, `${sessionSnapshot.ref.parent.id.substr(0, sessionSnapshot.ref.parent.id.length - 7)}Data`),
+        where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
     ));
-    for (const entry of entries) {
+    entries.docs.forEach(entry => {
         deleteDocumentFromFirestore(entry, 'Session entry successfully deleted');
-    }
+    })
     deleteDocumentFromFirestore(sessionSnapshot, 'Session successfully deleted')
 }
 
