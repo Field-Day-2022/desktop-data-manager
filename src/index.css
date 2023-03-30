@@ -12,8 +12,7 @@
     }
 
     .heading {
-        font-size: 1.5rem;
-        padding-bottom: 1.5rem;
+        @apply text-2xl pb-6;
     }
 
     button {
