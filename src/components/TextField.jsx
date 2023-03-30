@@ -1,6 +1,6 @@
 import { SearchIcon } from "../assets/icons";
 import classNames from "classnames";
-
+ 
 export default function TextField({
     label,
     value,
@@ -25,14 +25,10 @@ export default function TextField({
     );
 
     const inputClass = classNames(
-        "bg-white accent-asu-maroon",
-        "focus:outline-none focus:shadow-outline",
-        "border border-neutral-300 rounded-lg py-2",
         {
             "pl-10": type === "search",
             "pl-4": type !== "search",
         },
-        "pr-4 w-full appearance-none leading-normal"
     );
 
     const labelClass = classNames(

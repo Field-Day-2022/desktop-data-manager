@@ -166,10 +166,10 @@ const EntryItem = ({ entrySnapshot, dbKey, currentState, setEntryData, entryData
     }
 
     return (
-        <td key={dbKey} className="text-center border-b border-gray-400 p-2">
+        <td key={dbKey} className="text-center border-b border-gray-400 p-1">
             <input
                 disabled={disabled}
-                className="text-center transition disabled:bg-transparent outline-none rounded-lg"
+                className="text-center"
                 type="text"
                 value={dbKey === 'dateTime' ? displayText : entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
