@@ -7,6 +7,7 @@ import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
 import { updateEntry, deleteEntry } from '../utils/firestore';
 import InputField from './InputField';
+import { notify, Type } from '../components/Notifier';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
@@ -32,12 +33,19 @@ export const TableEntry = forwardRef((props, ref) => {
         setEntryUIState('deleting');
     };
 
-    const onSaveClickedHandler = () => {
+    const onSaveClickedHandler = async () => {
         if (entryUIState === 'editing') {
-            updateEntry(entrySnapshot, entryData);
-            setEntryUIState('viewing');
+            if (await updateEntry(entrySnapshot, entryData)) {
+                notify(Type.success, 'Entry updated successfully.');
+            } else {
+                notify(Type.error, 'Entry failed to update.');
+            }
         } else if (entryUIState === 'deleting') {
-            deleteEntry(entrySnapshot);
+            if (await deleteEntry(entrySnapshot)) {
+                notify(Type.success, 'Entry deleted successfully.');
+            } else {
+                notify(Type.error, 'Entry failed to delete.');
+            }
             removeEntryFromUI(entrySnapshot);
         }
         setEntryUIState('viewing');

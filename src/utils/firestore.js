@@ -57,34 +57,61 @@ const getCollectionName = (environment, projectName, tableName) => {
 const updateEntry = async (entry, data) => {
     const collectionName = getDocCollectionName(entry);
     console.log('Updating entry:', entry.id, 'in collection:', collectionName)
-    await updateDoc(doc(db, collectionName, entry.id), data)
+    if (entry.data().taxa === 'Lizard') {
+        await setLastLizardEditTime(new Date().getTime())
+            .then(() => {
+                console.log('Updated lizard edit time');
+            })
+            .catch((e) => {
+                console.log(`Error updating lizard edit time: ${e}`);
+                return false;
+            });
+    }
+    return updateDoc(doc(db, collectionName, entry.id), data)
         .then(() => {
             console.log('Updated entry');
+            return true;
         })
         .catch((e) => {
             console.log(`Error updating entry: ${e}`);
+            return false;
         });
-    if (entry.data().taxa === 'Lizard') {
-        setLastLizardEditTime(new Date().getTime())
-    }
 };
 
 const deleteEntry = async (entry) => {
     const collectionName = getDocCollectionName(entry);
     const isSession = collectionName.includes('Session');
-    console.log('Deleting entry:', entry.id, 'in collection:', collectionName)
-    await deleteDoc(doc(db, collectionName, entry.id))
+    const isLizard = entry.data().taxa === 'Lizard';
+    if (isLizard) {
+        await addDeletedLizardRecord(entry)
+            .then(() => {
+                console.log('Added deleted lizard record');
+            })
+            .catch((e) => {
+                console.log(`Error adding deleted lizard record: ${e}`);
+                return false;
+            });
+    }
+    return deleteDoc(doc(db, collectionName, entry.id))
         .then(() => {
             console.log('Deleted entry');
+            if (isSession) {
+                return deleteSessionEntries(entry)
+                    .then(() => {
+                        console.log('Deleted session entries');
+                        return true;
+                    })
+                    .catch((e) => {
+                        console.log(`Error deleting session entries: ${e}`);
+                        return false;
+                    });
+            }
+            return true;
         })
         .catch((e) => {
             console.log(`Error deleting entry: ${e}`);
+            return false;
         });
-    if (entry.data().taxa === 'Lizard') {
-        addDeletedLizardRecord(entry);
-    } else if (isSession) {
-        deleteSessionEntries(entry);
-    }
 };
 
 const setLastLizardEditTime = async (lastEditTime) => {
