@@ -17,7 +17,7 @@ export const getValue = (entry, column) => {
 }
 
 export const TableEntry = forwardRef((props, ref) => {
-    const { entrySnapshot, shownColumns, removeEntry: removeEntryFromUI, index } = props;
+    const { entrySnapshot, shownColumns, removeEntryUI, updateEntryUI, index } = props;
 
     const [entryUIState, setEntryUIState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
@@ -35,19 +35,23 @@ export const TableEntry = forwardRef((props, ref) => {
 
     const onSaveClickedHandler = async () => {
         if (entryUIState === 'editing') {
-            if (await updateEntry(entrySnapshot, entryData)) {
-                notify(Type.success, 'Entry updated successfully.');
-            } else {
-                notify(Type.error, 'Entry failed to update.');
-            }
+            await updateEntry(entrySnapshot, entryData).then(([success, message]) => {
+                const notificationType = success ? Type.success : Type.error;
+                notify(notificationType, message);
+                updateEntryUI(entrySnapshot);
+            }).catch((error) => {
+                notify(Type.error, 'Unknown error occured while updating entry: ' + error.message);
+                console.error(error);
+            });
             setEntryData(entrySnapshot.data());
         } else if (entryUIState === 'deleting') {
-            if (await deleteEntry(entrySnapshot)) {
-                notify(Type.success, 'Entry deleted successfully.');
-            } else {
-                notify(Type.error, 'Entry failed to delete.');
-            }
-            removeEntryFromUI(entrySnapshot);
+            await deleteEntry(entrySnapshot).then(([success, message]) => {
+                const notificationType = success ? Type.success : Type.error;
+                notify(notificationType, message);
+                removeEntryUI(entrySnapshot);
+            }).catch((error) => {
+                notify(Type.error, 'Unknown error occured while deleting entry: ' + error.message);
+            });
         }
         setEntryUIState('viewing');
     };
@@ -60,9 +64,6 @@ export const TableEntry = forwardRef((props, ref) => {
     useEffect(() => {
         setKeys(getKeys(tableName));
     }, [])
-
-    useEffect(() => {
-    }, [entrySnapshot]);
 
     return (
         <motion.tr
@@ -109,6 +110,7 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
     };
 
     const onChangeHandler = (e) => {
+        console.log(e.target.value)
         if (BINARY_KEYS.includes(dbKey)) {
             const lastChar = e.target.value.slice(-1);
             const value = KEY_MAP[lastChar];
@@ -124,15 +126,11 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         }
     };
 
-    useEffect(() => {
-        console.log(entrySnapshot.data());
-    }, [entrySnapshot]);
-
     const disabled = entryUIState !== 'editing' || dbKey === 'dateTime';
 
     const size = entryData[dbKey]?.length || 1;
 
-    let value = entryUIState === 'editing' ? entryData[dbKey] : entrySnapshot.data()[dbKey] ?? 'N/A';
+    let value = entryData[dbKey] || getValue(entrySnapshot, dbKey);
 
     value = (dbKey === 'dateTime') ? new Date(value).toLocaleString() : value;
 

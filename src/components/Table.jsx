@@ -4,13 +4,14 @@ import { TableEntry } from './TableEntry';
 import { TableHeading } from './TableHeading';
 import { tableBody } from '../utils/variants';
 import { getKey } from '../const/tableLabels';
+import { getEntry, getDocCollectionName } from '../utils/firestore';
 
 export const Table = ({ labels, columns, entries, name, setEntries }) => {
 
     const [sortedColumn, setSortedColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
 
-    const sortedEntries = (entries , column, direction) => {
+    const sortedEntries = (entries, column, direction) => {
         const sortedEntries = [...entries];
         sortedEntries.sort((a, b) => {
             if (getValue(a, column) > getValue(b, column)) {
@@ -66,7 +67,12 @@ export const Table = ({ labels, columns, entries, name, setEntries }) => {
                         entrySnapshot={entry}
                         shownColumns={[...labels].filter(label => columns[label]?.show)}
                         tableName={name}
-                        removeEntry={() => {
+                        updateEntryUI={(entry) => {
+                            getEntry(entry.id, getDocCollectionName(entry)).then((doc) => {
+                                setEntries(entries.map(e => e.id === doc.id ? doc : e));
+                            });
+                        }}
+                        removeEntryUI={() => {
                             setEntries(entries.filter(e => e !== entry));
                         }}
                     />

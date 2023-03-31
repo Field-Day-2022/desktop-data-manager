@@ -2,6 +2,7 @@ import {
     collection,
     deleteDoc,
     doc,
+    getDoc,
     getDocs,
     query,
     updateDoc,
@@ -47,9 +48,8 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${
-        tableName === 'Session' ? 'Session' : 'Data'
-    }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
+        }`;
 };
 
 const updateEntry = async (entry, data) => {
@@ -62,17 +62,17 @@ const updateEntry = async (entry, data) => {
             })
             .catch((e) => {
                 console.log(`Error updating lizard edit time: ${e}`);
-                return false;
+                return [false, 'Error updating lizard metadata.'];
             });
     }
     return updateDoc(doc(db, collectionName, entry.id), data)
         .then(() => {
             console.log('Updated entry');
-            return true;
+            return [true, 'Successfully updated entry.'];
         })
         .catch((e) => {
             console.log(`Error updating entry: ${e}`);
-            return false;
+            return [false, 'Error updating entry.'];
         });
 };
 
@@ -87,29 +87,32 @@ const deleteEntry = async (entry) => {
             })
             .catch((e) => {
                 console.log(`Error adding deleted lizard record: ${e}`);
-                return false;
+                return [false, 'Error updating lizard metadata.'];
             });
     }
     return deleteDoc(doc(db, collectionName, entry.id))
         .then(() => {
-            console.log('Deleted entry');
             if (isSession) {
                 return deleteSessionEntries(entry)
                     .then(() => {
-                        console.log('Deleted session entries');
-                        return true;
+                        return [true, 'Successfully deleted session and its data entries.'];
                     })
                     .catch((e) => {
                         console.log(`Error deleting session entries: ${e}`);
-                        return false;
+                        return [false, 'Error deleting session entries.'];
                     });
             }
-            return true;
+            return [true, 'Successfully deleted entry.'];
         })
         .catch((e) => {
-            console.log(`Error deleting entry: ${e}`);
-            return false;
+            console.log(`Error deleting entry: ${e}`)
+            return [false, 'Error deleting entry.'];
         });
+};
+
+const getEntry = async (entryId, collectionName) => {
+    console.log('Getting entry:', entryId, 'from collection:', collectionName);
+    return getDoc(doc(db, collectionName, entryId));
 };
 
 const setLastLizardEditTime = async (lastEditTime) => {
@@ -146,4 +149,4 @@ const deleteSessionEntries = async (sessionDoc) => {
     });
 };
 
-export { getDocsFromCollection, getCollectionName, updateEntry, deleteEntry };
+export { getDocsFromCollection, getCollectionName, getDocCollectionName, updateEntry, deleteEntry, getEntry };
