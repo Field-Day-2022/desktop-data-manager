@@ -40,6 +40,7 @@ export const TableEntry = forwardRef((props, ref) => {
             } else {
                 notify(Type.error, 'Entry failed to update.');
             }
+            setEntryData(entrySnapshot.data());
         } else if (entryUIState === 'deleting') {
             if (await deleteEntry(entrySnapshot)) {
                 notify(Type.success, 'Entry deleted successfully.');
@@ -59,6 +60,9 @@ export const TableEntry = forwardRef((props, ref) => {
     useEffect(() => {
         setKeys(getKeys(tableName));
     }, [])
+
+    useEffect(() => {
+    }, [entrySnapshot]);
 
     return (
         <motion.tr
@@ -92,9 +96,6 @@ export const TableEntry = forwardRef((props, ref) => {
 });
 
 const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData }) => {
-    const [displayText, setDisplayText] = useState('');
-    const [editable, setEditable] = useState(dbKey !== 'dateTime');
-
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
     const KEY_MAP = {
         Y: true,
@@ -106,15 +107,6 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         F: false,
         f: false,
     };
-
-    useEffect(() => {
-        if (dbKey === 'dateTime') {
-            const date = new Date(entrySnapshot.data()[dbKey]);
-            setDisplayText(date.toLocaleString());
-        } else {
-            setDisplayText(entrySnapshot.data()[dbKey]);
-        }
-    }, []);
 
     const onChangeHandler = (e) => {
         if (BINARY_KEYS.includes(dbKey)) {
@@ -132,11 +124,17 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         }
     };
 
-    const disabled = entryUIState !== 'editing' || !editable;
+    useEffect(() => {
+        console.log(entrySnapshot.data());
+    }, [entrySnapshot]);
 
-    const size = entrySnapshot.data()[dbKey]?.length || 1;
+    const disabled = entryUIState !== 'editing' || dbKey === 'dateTime';
 
-    const value = entryUIState === 'editing' && dbKey !== 'dateTime' ? entryData[dbKey] : displayText ?? 'N/A';
+    const size = entryData[dbKey]?.length || 1;
+
+    let value = entryUIState === 'editing' ? entryData[dbKey] : entrySnapshot.data()[dbKey] ?? 'N/A';
+
+    value = (dbKey === 'dateTime') ? new Date(value).toLocaleString() : value;
 
     return (
         <td key={dbKey}>
