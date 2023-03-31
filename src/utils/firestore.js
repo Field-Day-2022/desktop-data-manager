@@ -17,10 +17,7 @@ const getDocCollectionName = (doc) => {
 
 const getEntryCollectionName = (sessionDoc) => {
     const sessionCollection = getDocCollectionName(sessionDoc);
-    return `${sessionCollection.substr(
-        0,
-        sessionCollection.length - 7
-    )}Data`;
+    return `${sessionCollection.substr(0, sessionCollection.length - 7)}Data`;
 };
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
@@ -50,13 +47,14 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
-        }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${
+        tableName === 'Session' ? 'Session' : 'Data'
+    }`;
 };
 
 const updateEntry = async (entry, data) => {
     const collectionName = getDocCollectionName(entry);
-    console.log('Updating entry:', entry.id, 'in collection:', collectionName)
+    console.log('Updating entry:', entry.id, 'in collection:', collectionName);
     await updateDoc(doc(db, collectionName, entry.id), data)
         .then(() => {
             console.log('Updated entry');
@@ -65,14 +63,14 @@ const updateEntry = async (entry, data) => {
             console.log(`Error updating entry: ${e}`);
         });
     if (entry.data().taxa === 'Lizard') {
-        setLastLizardEditTime(new Date().getTime())
+        setLastLizardEditTime(new Date().getTime());
     }
 };
 
 const deleteEntry = async (entry) => {
     const collectionName = getDocCollectionName(entry);
     const isSession = collectionName.includes('Session');
-    console.log('Deleting entry:', entry.id, 'in collection:', collectionName)
+    console.log('Deleting entry:', entry.id, 'in collection:', collectionName);
     await deleteDoc(doc(db, collectionName, entry.id))
         .then(() => {
             console.log('Deleted entry');
@@ -90,8 +88,8 @@ const deleteEntry = async (entry) => {
 const setLastLizardEditTime = async (lastEditTime) => {
     await updateDoc(doc(db, 'Metadata', 'LizardData'), {
         lastEditTime,
-    })
-}
+    });
+};
 
 const addDeletedLizardRecord = async (deletedEntry) => {
     await updateDoc(doc(db, 'Metadata', 'LizardData'), {
@@ -99,8 +97,8 @@ const addDeletedLizardRecord = async (deletedEntry) => {
             entryId: deletedEntry.id,
             collectionId: deletedEntry.ref.parent.id,
         }),
-    })
-}
+    });
+};
 
 const deleteSessionEntries = async (sessionDoc) => {
     const entryCollection = getEntryCollectionName(sessionDoc);
@@ -110,15 +108,15 @@ const deleteSessionEntries = async (sessionDoc) => {
             where('sessionDateTime', '==', sessionDoc.data().dateTime)
         )
     );
-    console.log('Deleting session entries:', entries.docs.length, 'in collection:', entryCollection)
+    console.log(
+        'Deleting session entries:',
+        entries.docs.length,
+        'in collection:',
+        entryCollection
+    );
     entries.docs.forEach((entry) => {
         deleteEntry(entry);
     });
 };
 
-export {
-    getDocsFromCollection,
-    getCollectionName,
-    updateEntry,
-    deleteEntry,
-};
+export { getDocsFromCollection, getCollectionName, updateEntry, deleteEntry };
