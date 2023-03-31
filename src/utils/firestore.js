@@ -54,7 +54,7 @@ const getCollectionName = (environment, projectName, tableName) => {
 
 const updateEntry = async (entry, data) => {
     const collectionName = getDocCollectionName(entry);
-    console.log('Updating entry:', entry.id, 'in collection:', collectionName)
+    console.log('Updating entry:', entry.id, 'in collection:', collectionName);
     if (entry.data().taxa === 'Lizard') {
         await setLastLizardEditTime(new Date().getTime())
             .then(() => {
