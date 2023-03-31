@@ -48,8 +48,9 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
-        }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${
+        tableName === 'Session' ? 'Session' : 'Data'
+    }`;
 };
 
 const updateEntry = async (entry, data) => {
@@ -105,7 +106,7 @@ const deleteEntry = async (entry) => {
             return [true, 'Successfully deleted entry.'];
         })
         .catch((e) => {
-            console.log(`Error deleting entry: ${e}`)
+            console.log(`Error deleting entry: ${e}`);
             return [false, 'Error deleting entry.'];
         });
 };
@@ -149,4 +150,11 @@ const deleteSessionEntries = async (sessionDoc) => {
     });
 };
 
-export { getDocsFromCollection, getCollectionName, getDocCollectionName, updateEntry, deleteEntry, getEntry };
+export {
+    getDocsFromCollection,
+    getCollectionName,
+    getDocCollectionName,
+    updateEntry,
+    deleteEntry,
+    getEntry,
+};
