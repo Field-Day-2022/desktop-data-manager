@@ -17,10 +17,7 @@ const getDocCollectionName = (doc) => {
 
 const getEntryCollectionName = (sessionDoc) => {
     const sessionCollection = getDocCollectionName(sessionDoc);
-    return `${sessionCollection.substr(
-        0,
-        sessionCollection.length - 7
-    )}Data`;
+    return `${sessionCollection.substr(0, sessionCollection.length - 7)}Data`;
 };
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
@@ -50,8 +47,9 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
-        }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${
+        tableName === 'Session' ? 'Session' : 'Data'
+    }`;
 };
 
 const updateEntry = async (entry, data) => {
@@ -117,8 +115,8 @@ const deleteEntry = async (entry) => {
 const setLastLizardEditTime = async (lastEditTime) => {
     await updateDoc(doc(db, 'Metadata', 'LizardData'), {
         lastEditTime,
-    })
-}
+    });
+};
 
 const addDeletedLizardRecord = async (deletedEntry) => {
     await updateDoc(doc(db, 'Metadata', 'LizardData'), {
@@ -126,8 +124,8 @@ const addDeletedLizardRecord = async (deletedEntry) => {
             entryId: deletedEntry.id,
             collectionId: deletedEntry.ref.parent.id,
         }),
-    })
-}
+    });
+};
 
 const deleteSessionEntries = async (sessionDoc) => {
     const entryCollection = getEntryCollectionName(sessionDoc);
@@ -137,15 +135,15 @@ const deleteSessionEntries = async (sessionDoc) => {
             where('sessionDateTime', '==', sessionDoc.data().dateTime)
         )
     );
-    console.log('Deleting session entries:', entries.docs.length, 'in collection:', entryCollection)
+    console.log(
+        'Deleting session entries:',
+        entries.docs.length,
+        'in collection:',
+        entryCollection
+    );
     entries.docs.forEach((entry) => {
         deleteEntry(entry);
     });
 };
 
-export {
-    getDocsFromCollection,
-    getCollectionName,
-    updateEntry,
-    deleteEntry,
-};
+export { getDocsFromCollection, getCollectionName, updateEntry, deleteEntry };
