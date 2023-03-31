@@ -2,7 +2,7 @@ import { useEffect, useState, forwardRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { currentTableName } from '../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
-import { tableRows } from '../utils/variants';
+import { deleteEntryMessageVariant, tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
 import { updateEntry, deleteEntry } from '../utils/firestore';
@@ -60,7 +60,7 @@ export const TableEntry = forwardRef((props, ref) => {
     }, [])
 
     return (
-        <motion.tr className="relative hover:bg-neutral-100"
+        <motion.tr
             variants={tableRows}
             initial='initial'
             animate='visible'
@@ -92,33 +92,28 @@ export const TableEntry = forwardRef((props, ref) => {
 
 const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData }) => {
     const [displayText, setDisplayText] = useState(entrySnapshot.data()[dbKey]);
-    const [editable, setEditable] = useState(true);
+    const [editable, setEditable] = useState(dbKey !== 'dateTime');
 
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
-    const TRUE_KEYS = ['Y', 'y', 'T', 't'];
-    const FALSE_KEYS = ['N', 'n', 'F', 'f'];
-
-    useEffect(() => {
-        if (dbKey === 'dateTime') {
-            let tempDate = new Date(entrySnapshot.data()[dbKey]);
-            setDisplayText(tempDate.toLocaleString());
-            setEditable(false);
-        }
-    }, []);
+    const KEY_MAP = {
+        Y: true,
+        y: true,
+        T: true,
+        t: true,
+        N: false,
+        n: false,
+        F: false,
+        f: false,
+    };
 
     const onChangeHandler = (e) => {
         if (BINARY_KEYS.includes(dbKey)) {
-            if (TRUE_KEYS.includes(e.target.value.slice(-1))) {
-                setEntryData((prevEntryData) => ({
-                    ...prevEntryData,
-                    [dbKey]: 'true',
-                }));
-            } else if (FALSE_KEYS.includes(e.target.value.slice(-1))) {
-                setEntryData((prevEntryData) => ({
-                    ...prevEntryData,
-                    [dbKey]: 'false',
-                }));
-            }
+            const lastChar = e.target.value.slice(-1);
+            const value = KEY_MAP[lastChar];
+            setEntryData((prevEntryData) => ({
+                ...prevEntryData,
+                [dbKey]: value,
+            }));
         } else {
             setEntryData((prevEntryData) => ({
                 ...prevEntryData,
@@ -127,28 +122,26 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         }
     };
 
-    let disabled = false;
+    useEffect(() => {
+        if (dbKey === 'dateTime') {
+            let tempDate = new Date(entrySnapshot.data()[dbKey]);
+            setDisplayText(tempDate.toLocaleString());
+        }
+    }, []);
 
-    if (
-        entryUIState === 'viewing' ||
-        (entryUIState === 'editing' && !editable) ||
-        entryUIState === 'deleting'
-    ) {
-        disabled = true;
-    }
+    const disabled = entryUIState !== 'editing' || !editable;
 
-    let size = 1;
-    if (entrySnapshot.data()[dbKey] !== undefined) {
-        size = entrySnapshot.data()[dbKey].length;
-    }
+    const size = entrySnapshot.data()[dbKey]?.length || 1;
+
+    const value = displayText ?? 'N/A';
 
     return (
-        <td key={dbKey} className="text-center border-b border-gray-400 p-1">
+        <td key={dbKey}>
             <InputField
                 disabled={disabled}
                 className="text-center"
-                value={dbKey === 'dateTime' ? displayText : entryData[dbKey] ?? 'N/A'}
-                onChange={(e) => onChangeHandler(e)}
+                value={value}
+                onChange={onChangeHandler}
                 size={size}
             />
         </td>
@@ -163,25 +156,17 @@ const Actions = ({
     entryUIState,
 }) => {
     return (
-        <td className="border-b border-gray-400 p-2">
+        <td>
             <div className="flex flex-row w-full justify-around">
                 <AnimatePresence>
                     {entryUIState === 'deleting' && (
                         <motion.div
                             key='deleteMsg'
                             className="absolute left-8 -top-3 z-10 px-2 rounded-md drop-shadow-xl border-[1px] bg-red-800/10 backdrop-blur border-red-800 shadow-lg  shadow-red-800/25 leading-tight"
-                            initial={{
-                                left: '-2rem',
-                                opacity: 0,
-                            }}
-                            animate={{
-                                left: '2rem',
-                                opacity: 1,
-                            }}
-                            exit={{
-                                left: '-20rem',
-                                opacity: 0,
-                            }}
+                            variants={deleteEntryMessageVariant}
+                            initial='hidden'
+                            animate='visible'
+                            exit='hidden'
                         >
                             Are you sure you want to delete this row?
                         </motion.div>

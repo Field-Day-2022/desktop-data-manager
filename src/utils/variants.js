@@ -53,3 +53,14 @@ export const slideInVariant = {
         x: 0,
     },
 };
+
+export const deleteEntryMessageVariant = {
+    hidden: {
+        left: '-20rem',
+        opacity: 0,
+    },
+    visible: {
+        left: '2rem',
+        opacity: 1,
+    },
+};
