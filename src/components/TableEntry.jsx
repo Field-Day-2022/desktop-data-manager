@@ -91,7 +91,7 @@ export const TableEntry = forwardRef((props, ref) => {
 });
 
 const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData }) => {
-    const [displayText, setDisplayText] = useState(entrySnapshot.data()[dbKey]);
+    const [displayText, setDisplayText] = useState('');
     const [editable, setEditable] = useState(dbKey !== 'dateTime');
 
     const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
@@ -105,6 +105,22 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         F: false,
         f: false,
     };
+
+    useEffect(() => {
+        if (dbKey === 'dateTime') {
+            const date = new Date(entrySnapshot.data()[dbKey]);
+            setDisplayText(date.toLocaleString());
+        } else {
+            setDisplayText(entrySnapshot.data()[dbKey]);
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log(entryUIState);
+        if (entryUIState === 'editing') {
+            setEntryData(entrySnapshot.data()[dbKey]);
+        }
+    }, [entryUIState]);
 
     const onChangeHandler = (e) => {
         if (BINARY_KEYS.includes(dbKey)) {
@@ -122,18 +138,11 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         }
     };
 
-    useEffect(() => {
-        if (dbKey === 'dateTime') {
-            let tempDate = new Date(entrySnapshot.data()[dbKey]);
-            setDisplayText(tempDate.toLocaleString());
-        }
-    }, []);
-
     const disabled = entryUIState !== 'editing' || !editable;
 
     const size = entrySnapshot.data()[dbKey]?.length || 1;
 
-    const value = displayText ?? 'N/A';
+    const value = entryUIState === 'editing' && dbKey !== 'dateTime' ? entryData[dbKey] : displayText ?? 'N/A';
 
     return (
         <td key={dbKey}>
