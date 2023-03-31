@@ -53,6 +53,7 @@ export const TableEntry = forwardRef((props, ref) => {
 
     const onCancelClickedHandler = () => {
         setEntryUIState('viewing');
+        setEntryData(entrySnapshot.data());
     };
 
     useEffect(() => {
@@ -114,13 +115,6 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
             setDisplayText(entrySnapshot.data()[dbKey]);
         }
     }, []);
-
-    useEffect(() => {
-        console.log(entryUIState);
-        if (entryUIState === 'editing') {
-            setEntryData(entrySnapshot.data()[dbKey]);
-        }
-    }, [entryUIState]);
 
     const onChangeHandler = (e) => {
         if (BINARY_KEYS.includes(dbKey)) {
