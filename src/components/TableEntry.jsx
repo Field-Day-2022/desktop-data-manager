@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
-import { startEntryOperation } from '../utils/firestore';
+import { updateEntry, deleteEntry } from '../utils/firestore';
+import InputField from './InputField';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
@@ -24,7 +25,6 @@ export const TableEntry = forwardRef((props, ref) => {
 
 
     const onEditClickedHandler = () => {
-        console.log('Edit clicked');
         setEntryUIState('editing');
     };
 
@@ -33,31 +33,17 @@ export const TableEntry = forwardRef((props, ref) => {
     };
 
     const onSaveClickedHandler = () => {
-        entryUIState === 'editing' && 
-            startEntryOperation(
-                'uploadEntryEdits', 
-                { 
-                    entrySnapshot, 
-                    entryData, 
-                    setEntryUIState 
-                }
-            );
-        entryUIState === 'deleting' && 
-            startEntryOperation(
-                tableName.includes('Session') ? 
-                    'deleteSession' 
-                    : 
-                    'deleteEntry', 
-                {
-                    entrySnapshot,
-                    removeEntryFromUI,
-                    setEntryUIState
-                }
-            )
+        if (entryUIState === 'editing') {
+            updateEntry(entrySnapshot, entryData);
+            setEntryUIState('viewing');
+        } else if (entryUIState === 'deleting') {
+            deleteEntry(entrySnapshot);
+            removeEntryFromUI(entrySnapshot);
+        }
+        setEntryUIState('viewing');
     };
 
     const onCancelClickedHandler = () => {
-        console.log('Cancel clicked');
         setEntryUIState('viewing');
     };
 
@@ -83,14 +69,14 @@ export const TableEntry = forwardRef((props, ref) => {
             />
             {keys && keys.map((key) => (
                 shownColumns.includes(getLabel(key)) && (
-                <EntryItem
-                    entrySnapshot={entrySnapshot}
-                    entryUIState={entryUIState}
-                    dbKey={key}
-                    entryData={entryData}
-                    setEntryData={setEntryData}
-                    key={key}
-                />)
+                    <EntryItem
+                        entrySnapshot={entrySnapshot}
+                        entryUIState={entryUIState}
+                        dbKey={key}
+                        entryData={entryData}
+                        setEntryData={setEntryData}
+                        key={key}
+                    />)
             ))}
         </motion.tr>
     );

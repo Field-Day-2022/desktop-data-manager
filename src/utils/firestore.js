@@ -1,5 +1,4 @@
 import {
-    addDoc,
     collection,
     deleteDoc,
     doc,
@@ -8,11 +7,21 @@ import {
     updateDoc,
     orderBy,
     arrayUnion,
-    setDoc,
     where,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { notify, Type } from '../components/Notifier';
+
+const getDocCollectionName = (doc) => {
+    return doc.ref.parent.id;
+};
+
+const getEntryCollectionName = (sessionDoc) => {
+    const sessionCollection = getDocCollectionName(sessionDoc);
+    return `${sessionCollection.substr(
+        0,
+        sessionCollection.length - 7
+    )}Data`;
+};
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
     if (!Array.isArray(constraints)) {
@@ -40,130 +49,76 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
     }
 };
 
-const addDocToCollection = async (collectionName, data) => {
-    try {
-        const docRef = await addDoc(collection(db, collectionName), data);
-        console.log(`Document written to collection: ${collectionName} with ID: ${docRef.id}`);
-    } catch (error) {
-        console.error('Error adding document:', error);
-    }
-};
-
-const updateDocInCollection = async (collectionName, docId, data) => {
-    try {
-        await updateDoc(doc(db, collectionName, docId), data);
-        console.log('Document successfully updated!');
-    } catch (error) {
-        console.error('Error updating document:', error);
-    }
-};
-
-const deleteDocFromCollection = async (collectionName, docId) => {
-    try {
-        await deleteDoc(doc(db, collectionName, docId));
-        console.log('Document successfully deleted!');
-    } catch (error) {
-        console.error('Error removing document:', error);
-    }
-};
-
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${
-        tableName === 'Session' ? 'Session' : 'Data'
-    }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
+        }`;
 };
 
-const deleteDocumentFromFirestore = async (entrySnapshot, successMessage) => {
-    await deleteDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id))
+const updateEntry = async (entry, data) => {
+    const collectionName = getDocCollectionName(entry);
+    console.log('Updating entry:', entry.id, 'in collection:', collectionName)
+    await updateDoc(doc(db, collectionName, entry.id), data)
         .then(() => {
-            notify(Type.success, successMessage || 'Document successfully deleted!');
+            console.log('Updated entry');
         })
         .catch((e) => {
-            notify(Type.error, `Error deleting document: ${e}`);
+            console.log(`Error updating entry: ${e}`);
         });
-    if (entrySnapshot.data().taxa === 'Lizard') updateLizardMetadata('delete', { entrySnapshot });
-};
-
-const updateLizardMetadata = async (operation, operationDataObject) => {
-    if (operation === 'create') {
-    } else if (operation === 'update') {
-        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
-            lastEditTime: operationDataObject.lastEditTime,
-        })
-            .then(() => {
-                notify(Type.success, 'Sent update to the PWA');
-            })
-            .catch((e) => {
-                notify(Type.error, `Error sending deletion to PWA: ${e}`);
-            });
-    } else if (operation === 'delete') {
-        const { entrySnapshot } = operationDataObject;
-        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
-            deletedEntries: arrayUnion({
-                entryId: entrySnapshot.id,
-                collectionId: entrySnapshot.ref.parent.id,
-            }),
-        })
-            .then(() => {
-                notify(Type.success, 'Sent deletion to the PWA');
-            })
-            .catch((e) => {
-                notify(Type.error, `Error sending deletion to PWA: ${e}`);
-            });
+    if (entry.data().taxa === 'Lizard') {
+        setLastLizardEditTime(new Date().getTime())
     }
 };
 
-const pushEntryChangesToFirestore = async (entrySnapshot, entryData) => {
-    if (entryData.taxa === 'Lizard') {
-        const lastEditTime = new Date().getTime();
-        entryData.lastEdit = lastEditTime;
-        updateLizardMetadata('update', { lastEditTime });
-    }
-    await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
+const deleteEntry = async (entry) => {
+    const collectionName = getDocCollectionName(entry);
+    const isSession = collectionName.includes('Session');
+    console.log('Deleting entry:', entry.id, 'in collection:', collectionName)
+    await deleteDoc(doc(db, collectionName, entry.id))
         .then(() => {
-            notify(Type.success, 'Changes successfully written to database!');
+            console.log('Deleted entry');
         })
         .catch((e) => {
-            notify(Type.error, `Error writing changes to database: ${e}`);
+            console.log(`Error deleting entry: ${e}`);
         });
+    if (entry.data().taxa === 'Lizard') {
+        addDeletedLizardRecord(entry);
+    } else if (isSession) {
+        deleteSessionEntries(entry);
+    }
 };
 
-const deleteSessionAndItsEntries = async (sessionSnapshot) => {
+const setLastLizardEditTime = async (lastEditTime) => {
+    await updateDoc(doc(db, 'Metadata', 'LizardData'), {
+        lastEditTime,
+    })
+}
+
+const addDeletedLizardRecord = async (deletedEntry) => {
+    await updateDoc(doc(db, 'Metadata', 'LizardData'), {
+        deletedEntries: arrayUnion({
+            entryId: deletedEntry.id,
+            collectionId: deletedEntry.ref.parent.id,
+        }),
+    })
+}
+
+const deleteSessionEntries = async (sessionDoc) => {
+    const entryCollection = getEntryCollectionName(sessionDoc);
     const entries = await getDocs(
         query(
-            collection(
-                db,
-                `${sessionSnapshot.ref.parent.id.substr(
-                    0,
-                    sessionSnapshot.ref.parent.id.length - 7
-                )}Data`
-            ),
-            where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
+            collection(db, entryCollection),
+            where('sessionDateTime', '==', sessionDoc.data().dateTime)
         )
     );
+    console.log('Deleting session entries:', entries.docs.length, 'in collection:', entryCollection)
     entries.docs.forEach((entry) => {
-        deleteDocumentFromFirestore(entry, 'Session entry successfully deleted');
+        deleteEntry(entry);
     });
-    deleteDocumentFromFirestore(sessionSnapshot, 'Session successfully deleted');
-};
-
-const startEntryOperation = (operationName, operationData) => {
-    operationData.setEntryUIState('viewing');
-    if (operationName.includes('delete')) operationData.removeEntryFromUI();
-    if (operationName === 'uploadEntryEdits') {
-        pushEntryChangesToFirestore(operationData.entrySnapshot, operationData.entryData);
-    } else if (operationName === 'deleteEntry') {
-        deleteDocumentFromFirestore(operationData.entrySnapshot);
-    } else if (operationName === 'deleteSession') {
-        deleteSessionAndItsEntries(operationData.entrySnapshot);
-    }
 };
 
 export {
     getDocsFromCollection,
-    addDocToCollection,
-    updateDocInCollection,
-    deleteDocFromCollection,
     getCollectionName,
-    startEntryOperation,
+    updateEntry,
+    deleteEntry,
 };
