@@ -12,7 +12,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { notify, Type } from '../components/Notifier';
+import { Type } from '../components/Notifier';
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
     if (!Array.isArray(constraints)) {
@@ -43,7 +43,8 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 const addDocToCollection = async (collectionName, data) => {
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
-        console.log(`Document written to collection: ${collectionName} with ID: ${docRef.id}`);
+        console.log(`Document written to collection: ${
+            collectionName} with ID: ${docRef.id}`);
     } catch (error) {
         console.error('Error adding document:', error);
     }
@@ -73,15 +74,19 @@ const getCollectionName = (environment, projectName, tableName) => {
     }`;
 };
 
-const deleteDocumentFromFirestore = async (entrySnapshot, successMessage) => {
+const deleteDocumentFromFirestore = async (entrySnapshot, deleteMsg) => {
+    let response = [];
     await deleteDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id))
         .then(() => {
-            notify(Type.success, successMessage || 'Document successfully deleted!');
+            response = [Type.success, 
+                deleteMsg || 'Document successfully deleted!'];
         })
         .catch((e) => {
-            notify(Type.error, `Error deleting document: ${e}`);
+            response =  [Type.error, `Error deleting document: ${e}`];
         });
-    if (entrySnapshot.data().taxa === 'Lizard') updateLizardMetadata('delete', { entrySnapshot });
+    if (entrySnapshot.data().taxa === 'Lizard') 
+        updateLizardMetadata('delete', { entrySnapshot });
+    return response;
 };
 
 const updateLizardMetadata = async (operation, operationDataObject) => {
@@ -91,10 +96,10 @@ const updateLizardMetadata = async (operation, operationDataObject) => {
             lastEditTime: operationDataObject.lastEditTime,
         })
             .then(() => {
-                notify(Type.success, 'Sent update to the PWA');
+                console.log('Sent update to the PWA');
             })
             .catch((e) => {
-                notify(Type.error, `Error sending deletion to PWA: ${e}`);
+                console.error(`Error sending deletion to PWA: ${e}`);
             });
     } else if (operation === 'delete') {
         const { entrySnapshot } = operationDataObject;
@@ -105,10 +110,10 @@ const updateLizardMetadata = async (operation, operationDataObject) => {
             }),
         })
             .then(() => {
-                notify(Type.success, 'Sent deletion to the PWA');
+                console.log('Sent deletion to the PWA');
             })
             .catch((e) => {
-                notify(Type.error, `Error sending deletion to PWA: ${e}`);
+                console.error(`Error sending deletion to PWA: ${e}`);
             });
     }
 };
@@ -119,13 +124,22 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData) => {
         entryData.lastEdit = lastEditTime;
         updateLizardMetadata('update', { lastEditTime });
     }
-    await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
+    let response = [];
+    await setDoc(
+        doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
         .then(() => {
-            notify(Type.success, 'Changes successfully written to database!');
+            response = [
+                Type.success, 
+                'Changes successfully written to database!'
+            ];
         })
         .catch((e) => {
-            notify(Type.error, `Error writing changes to database: ${e}`);
+            response = [
+                Type.error, 
+                `Error writing changes to database: ${e}`
+            ];
         });
+    return response;
 };
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
@@ -141,22 +155,34 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
             where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
         )
     );
+    let entryCount = 0;
     entries.docs.forEach((entry) => {
-        deleteDocumentFromFirestore(entry, 'Session entry successfully deleted');
+        entryCount++;
+        deleteDocumentFromFirestore(
+            entry, 
+        );
     });
-    deleteDocumentFromFirestore(sessionSnapshot, 'Session successfully deleted');
+    return deleteDocumentFromFirestore(
+        sessionSnapshot, 
+        `Session ${
+            (entryCount > 0) ? `and its ${entryCount} entries`
+         : ''} successfully deleted`
+    );
 };
 
-const startEntryOperation = (operationName, operationData) => {
+const startEntryOperation = async (operationName, operationData) => {
     operationData.setEntryUIState('viewing');
     if (operationName.includes('delete')) operationData.removeEntryFromUI();
     if (operationName === 'uploadEntryEdits') {
-        pushEntryChangesToFirestore(operationData.entrySnapshot, operationData.entryData);
+        return pushEntryChangesToFirestore(
+            operationData.entrySnapshot, 
+            operationData.entryData
+        )
     } else if (operationName === 'deleteEntry') {
-        deleteDocumentFromFirestore(operationData.entrySnapshot);
+        return deleteDocumentFromFirestore(operationData.entrySnapshot);
     } else if (operationName === 'deleteSession') {
-        deleteSessionAndItsEntries(operationData.entrySnapshot);
-    }
+        return deleteSessionAndItsEntries(operationData.entrySnapshot);
+    } else return [Type.error, 'Unknown error occurred'];
 };
 
 export {

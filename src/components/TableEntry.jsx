@@ -6,16 +6,24 @@ import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
 import { startEntryOperation } from '../utils/firestore';
+import { notify } from './Notifier';
+import InputField from './InputField';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
         return 'N/A';
     }
-    return entry._document.data.value.mapValue.fields[getKey(column, name)].stringValue;
+    return entry._document.data.value.mapValue.fields
+        [getKey(column, name)].stringValue;
 }
 
 export const TableEntry = forwardRef((props, ref) => {
-    const { entrySnapshot, shownColumns, removeEntry: removeEntryFromUI, index } = props;
+    const { 
+        entrySnapshot, 
+        shownColumns, 
+        removeEntry: removeEntryFromUI, 
+        index 
+    } = props;
 
     const [entryUIState, setEntryUIState] = useState('viewing');
     const [entryData, setEntryData] = useState(entrySnapshot.data());
@@ -33,7 +41,7 @@ export const TableEntry = forwardRef((props, ref) => {
     };
 
     const onSaveClickedHandler = () => {
-        entryUIState === 'editing' && 
+        entryUIState === 'editing' &&
             startEntryOperation(
                 'uploadEntryEdits', 
                 { 
@@ -41,8 +49,8 @@ export const TableEntry = forwardRef((props, ref) => {
                     entryData, 
                     setEntryUIState 
                 }
-            );
-        entryUIState === 'deleting' && 
+            ).then(response => notify(...response));
+        entryUIState === 'deleting' &&
             startEntryOperation(
                 tableName.includes('Session') ? 
                     'deleteSession' 
@@ -53,7 +61,7 @@ export const TableEntry = forwardRef((props, ref) => {
                     removeEntryFromUI,
                     setEntryUIState
                 }
-            )
+            ).then(response => notify(...response));
     };
 
     const onCancelClickedHandler = () => {
@@ -153,7 +161,8 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
             <InputField
                 disabled={disabled}
                 className="text-center"
-                value={dbKey === 'dateTime' ? displayText : entryData[dbKey] ?? 'N/A'}
+                value={dbKey === 'dateTime' ? 
+                    displayText : entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 size={size}
             />
