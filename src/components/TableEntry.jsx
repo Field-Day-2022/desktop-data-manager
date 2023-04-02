@@ -65,7 +65,7 @@ export const TableEntry = forwardRef((props, ref) => {
     };
 
     const onCancelClickedHandler = () => {
-        console.log('Cancel clicked');
+        setEntryData(entrySnapshot.data());
         setEntryUIState('viewing');
     };
 
