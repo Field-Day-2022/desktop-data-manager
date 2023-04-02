@@ -43,8 +43,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
 const addDocToCollection = async (collectionName, data) => {
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
-        console.log(`Document written to collection: ${
-            collectionName} with ID: ${docRef.id}`);
+        console.log(`Document written to collection: ${collectionName} with ID: ${docRef.id}`);
     } catch (error) {
         console.error('Error adding document:', error);
     }
@@ -78,14 +77,12 @@ const deleteDocumentFromFirestore = async (entrySnapshot, deleteMsg) => {
     let response = [];
     await deleteDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id))
         .then(() => {
-            response = [Type.success, 
-                deleteMsg || 'Document successfully deleted!'];
+            response = [Type.success, deleteMsg || 'Document successfully deleted!'];
         })
         .catch((e) => {
-            response =  [Type.error, `Error deleting document: ${e}`];
+            response = [Type.error, `Error deleting document: ${e}`];
         });
-    if (entrySnapshot.data().taxa === 'Lizard') 
-        updateLizardMetadata('delete', { entrySnapshot });
+    if (entrySnapshot.data().taxa === 'Lizard') updateLizardMetadata('delete', { entrySnapshot });
     return response;
 };
 
@@ -125,19 +122,12 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData) => {
         updateLizardMetadata('update', { lastEditTime });
     }
     let response = [];
-    await setDoc(
-        doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
+    await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
         .then(() => {
-            response = [
-                Type.success, 
-                'Changes successfully written to database!'
-            ];
+            response = [Type.success, 'Changes successfully written to database!'];
         })
         .catch((e) => {
-            response = [
-                Type.error, 
-                `Error writing changes to database: ${e}`
-            ];
+            response = [Type.error, `Error writing changes to database: ${e}`];
         });
     return response;
 };
@@ -158,15 +148,11 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     let entryCount = 0;
     entries.docs.forEach((entry) => {
         entryCount++;
-        deleteDocumentFromFirestore(
-            entry, 
-        );
+        deleteDocumentFromFirestore(entry);
     });
     return deleteDocumentFromFirestore(
-        sessionSnapshot, 
-        `Session ${
-            (entryCount > 0) ? `and its ${entryCount} entries`
-         : ''} successfully deleted`
+        sessionSnapshot,
+        `Session ${entryCount > 0 ? `and its ${entryCount} entries` : ''} successfully deleted`
     );
 };
 
@@ -174,10 +160,7 @@ const startEntryOperation = async (operationName, operationData) => {
     operationData.setEntryUIState('viewing');
     if (operationName.includes('delete')) operationData.removeEntryFromUI();
     if (operationName === 'uploadEntryEdits') {
-        return pushEntryChangesToFirestore(
-            operationData.entrySnapshot, 
-            operationData.entryData
-        )
+        return pushEntryChangesToFirestore(operationData.entrySnapshot, operationData.entryData);
     } else if (operationName === 'deleteEntry') {
         return deleteDocumentFromFirestore(operationData.entrySnapshot);
     } else if (operationName === 'deleteSession') {
