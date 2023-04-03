@@ -5,27 +5,46 @@ import { CSVLink } from "react-csv";
 import Button from "./Button";
 
 export default function DataTable({ name, labels, entries }) {
-    const csvData = [
-        ["val1", "val2", "val3"],
-    ];
+    let csvData = [];
+	//check for labels
+	if(labels) {
+		let labelNum;
+		let labelArray = [];
+		for(labelNum = 0; labelNum < labels.length; labelNum++) {
+			labelArray.push(labels[labelNum]);
+		}
+		csvData.push(labelArray);
+		//check if table filled in
+		const tableData = document.getElementById('data_table')
+		if(tableData) {
+			for(let row = 0; row < tableData.rows.length; row++) {
+				let newRow = [];
+				for(let cell = 0; cell < tableData.rows[row].cells.length; cell++) {
+					newRow.push(tableData.rows[row].cells[cell].innerHTML);
+				}
+				csvData.push(newRow);
+			}
+		}
+	}
+	
     return (
         <div className='bg-white'>
             <div className='flex justify-between px-5 space-x-5 items-center'>
                 <h1 className='heading pt-4'>{name} - Entries</h1>
-                <CSVLink data={csvData}>
                 <div className='flex px-5 space-x-5 items-center'>
                     <input className='border-b border-neutral-800 p-2' type="text" name="search" />
                     <MdViewColumn className='text-2xl' />
+					<CSVLink data={csvData} filename={name}>
                     <Button
                         enabled={true}
                         icon={<BiExport className='export' />}
                     />
+					</CSVLink>
                 </div>
-                </CSVLink>
             </div>
 
             <div className='overflow-auto w-full h-full-table'>
-                <table className='w-full table-auto border-separate border-spacing-0' data={csvData}>
+                <table className='w-full table-auto border-separate border-spacing-0' id='data_table'>
                     <thead>
                         <tr>
                             <TableHeading label="Actions" />
