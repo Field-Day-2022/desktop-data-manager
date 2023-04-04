@@ -54,13 +54,9 @@ export default function TablePage() {
                 showModal={activeTool === 'export'}
                 onCancel={() => setActiveTool('none')}
             />
-            <NewSessionModal
-                showModal={activeTool === 'newSession'}
-                onCancel={() => setActiveTool('none')}
-            />
             <NewDataModal
                 showModal={activeTool === 'newData'}
-                onCancel={() => setActiveTool('none')}
+                closeModal={() => setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar 
@@ -104,12 +100,6 @@ export default function TablePage() {
                             text="Export to CSV"
                             icon={<ExportIcon />}
                             onClick={() => setActiveTool('export')}
-                        />
-                        <Button
-                            flexible={true}
-                            text="New Session"
-                            icon={<NewSessionIcon />}
-                            onClick={() => setActiveTool('newSession')}
                         />
                         <Button
                             flexible={true}

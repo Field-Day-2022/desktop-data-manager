@@ -11,7 +11,7 @@ export default function Dropdown({
     const containerClass = classNames(
         "relative min-w-max",
         {
-            "flex-col": layout === "vertical",
+            "flex flex-col": layout === "vertical",
             "flex": layout === "horizontal",
         }
     )

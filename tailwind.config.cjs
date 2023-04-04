@@ -16,7 +16,7 @@ module.exports = {
         'full-column-selector-height': 'calc(100vh - 16em)',
         'full-minus-nav': 'calc(100vh - 64px)',
         'full-minus-sideBar': 'calc(100vw - 18rem)',
-        'full-table': 'calc(100vh - 261px)'
+        'full-table': 'calc(100vh - 262px)'
       }
     },
   },
