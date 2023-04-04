@@ -14,7 +14,6 @@ export default function InputField({
     label,
     layout = "horizontal",
     className,
-    key,
 }) {
     const containerClass = classNames("relative", {
         "flex flex-col": layout === "vertical",
@@ -42,7 +41,7 @@ export default function InputField({
         <div className={containerClass}>
             {label && <div className={labelClass}>{`${label}:`}</div>}
             <input
-                key={key}
+                key={label}
                 className={inputClass}
                 type={type}
                 value={value}

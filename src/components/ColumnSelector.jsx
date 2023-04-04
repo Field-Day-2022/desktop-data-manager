@@ -35,9 +35,8 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                     <div className='flex-col space-y-2 whitespace-nowrap max-h-full-column-selector-height'>
                         <h1 className='text-xl pt-2 px-4'>Column Selector</h1>
                         {labels && labels.map((label) =>
-                            <div className='hover:bg-neutral-100 px-6'>
+                            <div key={label} className='hover:bg-neutral-100 px-6'>
                                     <InputField
-                                        key={label}
                                         label={label}
                                         type='checkbox'
                                         checked={columns[label]?.show}
