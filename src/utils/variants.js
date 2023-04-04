@@ -40,3 +40,16 @@ export const modalVariant = {
         },
     },
 };
+
+export const slideInVariant = {
+    hidden: {
+        visibility: 'hidden',
+        opacity: 0,
+        x: '-25%',
+    },
+    visible: {
+        visibility: 'visible',
+        opacity: 1,
+        x: 0,
+    },
+};

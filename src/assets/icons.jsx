@@ -4,6 +4,8 @@ import { FaClipboard } from 'react-icons/fa'
 import { TbTable } from 'react-icons/tb';
 import { HiDocumentPlus, HiFolderPlus } from 'react-icons/hi2';
 import { MdViewColumn } from 'react-icons/md';
+import { CgSortAz, CgSortZa } from 'react-icons/cg';
+import { AiOutlineSearch } from 'react-icons/ai';
 
 export function TurtleIcon() { return (<GiTurtle />) }
 export function AmphibianIcon() { return (<GiFrog />) }
@@ -16,6 +18,9 @@ export function SessionIcon() { return (<FaClipboard />) }
 export function NewSessionIcon() { return (<HiFolderPlus />) }
 export function NewDataIcon() { return (<HiDocumentPlus />) }
 export function ColumnToggleIcon() { return (<MdViewColumn />) }
+export function SortDescIcon() { return (<CgSortAz />) }
+export function SortAscIcon() { return (<CgSortZa />) }
+export function SearchIcon() { return (<AiOutlineSearch />) }
 
 export function LizardIcon({ className }) {
     return (
@@ -116,25 +121,28 @@ export function XIcon() {
     )
 }
 
-export function LeftArrowIcon() {
+export function ArrowIcon({ direction }) {
+
+    const directionMap = {
+        'up': 'rotate-180',
+        'down': 'rotate-0',
+        'left': 'rotate-90',
+        'right': '-rotate-90'
+    }
+
+    let rotation = directionMap[direction] || directionMap['down'];
+
+
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            strokeWidth={1.5}
+            strokeWidth="1.5"
             stroke="currentColor"
+            className={`m-auto w-4 h-4 transform ${rotation}`}
         >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
     )
-}
-
-export function RightArrowIcon() {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-        >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-        </svg>
-    );
 }
