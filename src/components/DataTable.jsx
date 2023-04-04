@@ -4,29 +4,35 @@ import { TableEntry } from '../components/TableEntry';
 import { CSVLink } from "react-csv";
 import Button from "./Button";
 
-export default function DataTable({ name, labels, entries }) {
+const generateCSV = (labels, entries) => {
+    // Check that labels and entries exist first
+    if (!labels || !entries) {
+        return [];
+    }
+    let headings = labels.slice(1);
     let csvData = [];
-	//check for labels
-	if(labels) {
-		let labelNum;
-		let labelArray = [];
-		for(labelNum = 0; labelNum < labels.length; labelNum++) {
-			labelArray.push(labels[labelNum]);
-		}
-		csvData.push(labelArray);
-		//check if table filled in
-		const tableData = document.getElementById('data_table')
-		if(tableData) {
-			for(let row = 0; row < tableData.rows.length; row++) {
-				let newRow = [];
-				for(let cell = 0; cell < tableData.rows[row].cells.length; cell++) {
-					newRow.push(tableData.rows[row].cells[cell].innerHTML);
-				}
-				csvData.push(newRow);
-			}
-		}
-	}
-	
+    // push row of labels, excluding the actions column
+    csvData.push(headings);
+    // push each row of data 
+    entries.forEach((entry) => {
+        let row = [];
+        headings.forEach((label) => {
+            if (label !== 'Actions') {
+                // convert each label to camelcase and remove spaces
+                label = label.replace(/\s+/g, '');
+                label = label.charAt(0).toLowerCase() + label.slice(1);
+                console.log(entry.data())
+                row.push(entry.data()[label]);
+            }
+        });
+        csvData.push(row);
+    });
+    return csvData;
+};
+
+export default function DataTable({ name, labels, entries }) {
+    let csvData = generateCSV(labels, entries);
+
     return (
         <div className='bg-white'>
             <div className='flex justify-between px-5 space-x-5 items-center'>
@@ -34,12 +40,18 @@ export default function DataTable({ name, labels, entries }) {
                 <div className='flex px-5 space-x-5 items-center'>
                     <input className='border-b border-neutral-800 p-2' type="text" name="search" />
                     <MdViewColumn className='text-2xl' />
-					<CSVLink data={csvData} filename={name}>
-                    <Button
-                        enabled={true}
-                        icon={<BiExport className='export' />}
-                    />
-					</CSVLink>
+                    <CSVLink
+                        data={csvData}
+                        filename={name}
+                        onClick={() => {
+                            console.log(csvData);
+                        }}
+                    >
+                        <Button
+                            enabled={true}
+                            icon={<BiExport className='export' />}
+                        />
+                    </CSVLink>
                 </div>
             </div>
 
