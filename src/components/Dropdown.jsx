@@ -1,12 +1,34 @@
-export default function Dropdown({ options, onClickHandler }) {
+import classNames from "classnames";
+
+export default function Dropdown({
+    label,
+    layout,
+    options,
+    onClickHandler,
+    value
+}) {
+
+    const containerClass = classNames(
+        "relative min-w-max",
+        {
+            "flex-col": layout === "vertical",
+            "flex": layout === "horizontal",
+        }
+    )
+
+    const labelClass = classNames(
+        "text-sm w-full text-left p-2",
+    );
+
     return (
-        <div className="relative text-neutral-800 min-w-max">
-            <select 
-                className="w-full p-1.5 bg-neutral-200 rounded-md border-solid border-2 border- focus:border-asu-gold"
-                onChange={(e) => onClickHandler(e.target.value)}
-            >
-                {options.map((option, index) => <option key={index}>{option}</option>)}
-            </select>
+        <div className={containerClass}>
+                {label && (<label className={labelClass}>{`${label}:`}</label>)}
+                <select
+                    onChange={(e) => onClickHandler(e.target.value)}
+                    value={value}
+                >
+                    {options.map((option, index) => <option key={index}>{option}</option>)}
+                </select>
         </div>
     )
 }
