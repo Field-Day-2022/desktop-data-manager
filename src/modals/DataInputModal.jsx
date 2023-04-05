@@ -4,13 +4,14 @@ import Modal from "../components/Modal";
 import { notify, Type } from "../components/Notifier";
 import TabBar from "../components/TabBar";
 import NewSessionTool from "../tools/NewSessionTool";
+import NewEntryForm from "../components/NewEntryForm";
 
 export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');
     const [modalData, setModalData] = useState({});
 
     const tools = {
-        'New Data': <div />,
+        'New Data': <NewEntryForm />,
         'New Session': <NewSessionTool setData={setModalData} />,
     };
 
