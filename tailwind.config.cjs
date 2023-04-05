@@ -17,7 +17,12 @@ module.exports = {
         'full-minus-nav': 'calc(100vh - 64px)',
         'full-minus-sideBar': 'calc(100vw - 18rem)',
         'full-table': 'calc(100vh - 262px)'
-      }
+      },
+      zIndex: {
+        '50': '50',
+        '60': '60',
+        '70': '70',
+      },
     },
   },
   plugins: [],

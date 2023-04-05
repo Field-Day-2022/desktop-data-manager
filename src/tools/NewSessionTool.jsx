@@ -5,16 +5,16 @@ import NewSessionForm from "../components/NewSessionForm";
 export default function NewSessionTool({ setData }) {
 
     const [project, setProject] = useState('Gateway');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
 
     const [sessionData, setSessionData] = useState({
-        date: '',
-        time: '',
         dateTime: '',
         recorder: '',
         handler: '',
         site: 'GWA1',
         array: '',
-        noCaptures: '',
+        noCaptures: 'true',
         trapStatus: 'OPEN',
         commentsAboutTheArray: '',
         year: '',
@@ -23,9 +23,11 @@ export default function NewSessionTool({ setData }) {
     const setField = (field, value) => {
         if (field === 'time') {
             setTime(value);
+            setDateTime(date, value)
             return;
         } else if (field === 'date') {
             setDate(value);
+            setDateTime(value, time);
             return;
         }
         setSessionData({
@@ -34,19 +36,10 @@ export default function NewSessionTool({ setData }) {
         });
     }
 
-    const setTime = (time) => {
+    const setDateTime = (date, time) => {
         setSessionData({
             ...sessionData,
-            time: time,
-            dateTime: sessionData.date + ' ' + time
-        })
-    }
-
-    const setDate = (date) => {
-        setSessionData({
-            ...sessionData,
-            date: date,
-            dateTime: date + ' ' + sessionData.time,
+            dateTime: `${date} ${time}`,
             year: date.split('-')[0]
         })
     }

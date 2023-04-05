@@ -39,7 +39,7 @@ export default function InputField({
 
     return (
         <div className={containerClass}>
-            {label && <div className={labelClass}>{`${label}:`}</div>}
+            {label && <label className={labelClass}>{`${label}:`}</label>}
             <input
                 key={label}
                 className={inputClass}

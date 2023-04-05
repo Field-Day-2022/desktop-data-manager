@@ -68,9 +68,8 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${
-        tableName === 'Session' ? 'Session' : 'Data'
-    }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
+        }`;
 };
 
 const getCollectionNameFromDoc = (snapshot) => {
@@ -172,6 +171,48 @@ const startEntryOperation = async (operationName, operationData) => {
     } else return [Type.error, 'Unknown error occurred'];
 };
 
+const getSitesForProject = async (projectName) => {
+    const answerSet = await getDocs(query(
+        collection(db, 'AnswerSet'),
+        where('set_name', '==', `${projectName}Sites`)
+    ));
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getArraysForSite = async (projectName, siteName) => {
+    const answerSet = await getDocs(query(
+        collection(db, 'AnswerSet'),
+        where('set_name', '==', `${projectName}${siteName}Array`)
+    ));
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getTrapStatuses = async () => {
+    const answerSet = await getDocs(query(
+        collection(db, 'AnswerSet'),
+        where('set_name', '==', 'trap statuses')
+    ));
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
 export {
     getDocsFromCollection,
     addDocToCollection,
@@ -180,4 +221,7 @@ export {
     getCollectionName,
     getCollectionNameFromDoc,
     startEntryOperation,
+    getSitesForProject,
+    getArraysForSite,
+    getTrapStatuses,
 };

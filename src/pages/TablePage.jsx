@@ -11,8 +11,7 @@ import TableTools from '../components/TableTools';
 import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
-import NewSessionModal from '../modals/NewSessionModal';
-import NewDataModal from '../modals/NewDataModal';
+import DataInputModal from '../modals/DataInputModal';
 
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
@@ -54,7 +53,7 @@ export default function TablePage() {
                 showModal={activeTool === 'export'}
                 onCancel={() => setActiveTool('none')}
             />
-            <NewDataModal
+            <DataInputModal
                 showModal={activeTool === 'newData'}
                 closeModal={() => setActiveTool('none')}
             />
@@ -68,6 +67,7 @@ export default function TablePage() {
                 />
                 <div className="flex items-center px-5 space-x-5">
                     <Dropdown
+                    className={'w-32'}
                         label="Project"
                         layout="horizontal"
                         onClickHandler={(selectedOption) => {

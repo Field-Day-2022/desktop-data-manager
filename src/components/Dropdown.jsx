@@ -5,10 +5,12 @@ export default function Dropdown({
     layout,
     options,
     onClickHandler,
-    value
+    value,
+    className
 }) {
 
     const containerClass = classNames(
+        className,
         "relative min-w-max",
         {
             "flex flex-col": layout === "vertical",
@@ -21,7 +23,7 @@ export default function Dropdown({
     );
 
     return (
-        <div className={containerClass}>
+        <div className={containerClass}> 
                 {label && (<label className={labelClass}>{`${label}:`}</label>)}
                 <select
                     onChange={(e) => onClickHandler(e.target.value)}

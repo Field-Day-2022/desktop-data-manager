@@ -68,8 +68,6 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
         if(name === 'Session') {
             return collectionName +  ' ' + dateTime;
         } else {
-            // Format current date and time to string
-            
             return collectionName.slice(0, -4) + name + ' ' + dateTime;
         }
     };
