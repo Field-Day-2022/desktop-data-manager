@@ -9,8 +9,6 @@ export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');
     const [modalData, setModalData] = useState({});
 
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
     const tools = {
         'New Data': <div />,
         'New Session': <NewSessionTool setData={setModalData} />,
@@ -40,7 +38,6 @@ export default function DataInputModal({ showModal, closeModal }) {
                 notify(Type.error, 'Please fill in all fields before submitting.')
                 return false;
             } else {
-                setShowConfirmationModal(true);
                 notify(Type.success, 'Session data saved.')
                 return true;
             }
@@ -54,34 +51,13 @@ export default function DataInputModal({ showModal, closeModal }) {
     return (
         <div>
             <Modal
-            className='z-50'
-                showModal={showConfirmationModal}
-                title='Is this data correct?'
-                text='Please check the data before submitting.'
-                onCancel={() => setShowConfirmationModal(false)}
-                onOkay={() => {() => closeModal(), setShowConfirmationModal(false)}}
-            >
-                <div className="p-4">
-                    {modalData && Object.keys(modalData).map((key, index) => {
-                    return (
-                        <div key={index}>
-                            <span className='font-bold'>{key}:</span>
-                            <span className='ml-2'>{modalData[key]}</span>
-                        </div>
-                    );
-                }
-                )}
-                </div>
-                
-            </Modal>
-            <Modal
                 showModal={showModal}
                 title='Data Input Tool'
                 text='Select a tab to create a new data entry or session.'
                 onCancel={() => closeModal()}
                 onOkay={() => onOkay()}
             >
-                <div className='flex-col'>
+                <div className='flex-col w-full-modal-width h-full-modal-content-height'>
                     <div className='bg-neutral-100 flex-shrink-0'>
                         <TabBar
                             tabs={[
