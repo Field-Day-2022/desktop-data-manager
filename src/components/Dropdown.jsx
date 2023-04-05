@@ -1,6 +1,7 @@
 import classNames from "classnames";
 
 export default function Dropdown({
+    disabled,
     label,
     layout,
     options,
@@ -23,14 +24,15 @@ export default function Dropdown({
     );
 
     return (
-        <div className={containerClass}> 
-                {label && (<label className={labelClass}>{`${label}:`}</label>)}
-                <select
-                    onChange={(e) => onClickHandler(e.target.value)}
-                    value={value}
-                >
-                    {options.map((option, index) => <option key={index}>{option}</option>)}
-                </select>
+        <div className={containerClass}>
+            {label && (<label className={labelClass}>{`${label}:`}</label>)}
+            <select
+                disabled={disabled}
+                onChange={(e) => onClickHandler(e.target.value)}
+                value={value}
+            >
+                {options.map((option, index) => <option key={index}>{option}</option>)}
+            </select>
         </div>
     )
 }

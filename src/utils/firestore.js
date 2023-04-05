@@ -214,6 +214,19 @@ const getTrapStatuses = async () => {
     return options;
 };
 
+const getSessionsByProjectAndYear = async (environment, projectName, year) => {
+    environment = environment === 'test' ? 'Test' : '';
+    const sessions = await getDocs(
+        query(
+            collection(db, `${environment}${projectName}Session`),
+            where('dateTime', '>=', `${year}-01-01`),
+            where('dateTime', '<=', `${year}-12-31`)
+        )
+    );
+    console.log('sessions', sessions.docs);
+    return sessions.docs;
+};
+
 export {
     getDocsFromCollection,
     addDocToCollection,
@@ -225,4 +238,5 @@ export {
     getSitesForProject,
     getArraysForSite,
     getTrapStatuses,
+    getSessionsByProjectAndYear,
 };
