@@ -1,6 +1,6 @@
 import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, getDoc, addDoc, where, query } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
@@ -73,7 +73,43 @@ export default function FormBuilder() {
     };
 
     const andUpdateAllDocuments = async () => {
+        const BATCH_WRITE_LIMIT = 500;
+        const targetCollections = [];
+        const setName = documents[activeDocumentIndex].set_name;
+        let speciesName = '';
 
+        if (!setName.includes('Species')) {
+            notify(Type.error, 'This functionality is only supported when changing species');
+            return;
+        }
+
+        if (setName.includes('Gateway')) { 
+            targetCollections[0] = 'TestGatewayData'
+            speciesName = setName.replace('Gateway', '').slice(0, -7);
+        }
+        else if (setName.includes('San Pedro')) {
+            targetCollections[0] = 'SanPedroData'
+            speciesName = setName.replace('San Pedro', '').slice(0, -7);
+        }
+        else if (setName.includes('Virgin River')) {
+            targetCollections[0] = 'VirginRiverData';
+            speciesName = setName.replace('Virgin River', '').slice(0, -7);
+        } else {
+            targetCollections.push(
+                'GatewayData', 'SanPedroData', 'VirginRiverData');
+            speciesName = setName.slice(0, -7);
+        }
+
+        const documentsToUpdate = [];
+        for (const targetCollection of targetCollections) {
+            const querySnapshot = await getDocs(query(
+                collection(db, targetCollection),
+                where('taxa', '==', speciesName),
+                where('speciesCode', '==', activeDocumentDataPrimary)
+            ))
+            documentsToUpdate.push(...querySnapshot.docs)
+        }   
+        documentsToUpdate.forEach((document) => console.log(document.data()))
     }
 
     const addDocToFirestore = async () => {
@@ -112,7 +148,7 @@ export default function FormBuilder() {
     ) => {
         if (changeBoxTitle === 'Edit Data') {
             updateUI();
-            pushChangesToFirestore();
+            // pushChangesToFirestore();
             options === 'andUpdateAllDocuments' && andUpdateAllDocuments();
         } else if (changeBoxTitle === 'Add New Data') {
             activeDocument.answers.push(formData);
@@ -210,7 +246,7 @@ export default function FormBuilder() {
                                 duration: .25
                             }
                         }}
-                        className='absolute inset-0 m-40 flex flex-col items-center justify-around p-4 bg-white border-2 border-black rounded-sm'
+                        className='absolute inset-0 m-40 flex flex-col items-center justify-around p-4 bg-white border-2 border-black rounded'
                     >
                         <p className='text-4xl'>Where would you like to update this data?</p>
                         <button
