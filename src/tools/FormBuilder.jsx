@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
-import { LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 
 export default function FormBuilder() {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
@@ -15,6 +15,8 @@ export default function FormBuilder() {
     const [activeDocumentDataPrimary, setActiveDocumentDataPrimary] = useState(); // currently selected primary key
     const [formData, setFormData] = useState(); // form data
     const [changeBoxTitle, setChangeBoxTitle] = useState('Edit Data');
+    const [editAllEntriesModal, setEditAllEntriesModal] = useState(true);
+
 
     useEffect(() => {
         const getAllDocs = async () => {
@@ -70,6 +72,10 @@ export default function FormBuilder() {
             });
     };
 
+    const andUpdateAllDocuments = async () => {
+
+    }
+
     const addDocToFirestore = async () => {
         if (activeCollection === 'AnswerSet') {
             const d = new Date();
@@ -101,10 +107,13 @@ export default function FormBuilder() {
         setActiveDocumentDataPrimary(formData.primary);
     };
 
-    const submitChanges = () => {
+    const submitChanges = (
+        options
+    ) => {
         if (changeBoxTitle === 'Edit Data') {
             updateUI();
             pushChangesToFirestore();
+            options === 'andUpdateAllDocuments' && andUpdateAllDocuments();
         } else if (changeBoxTitle === 'Add New Data') {
             activeDocument.answers.push(formData);
             documents[activeDocumentIndex] = activeDocument;
@@ -174,12 +183,61 @@ export default function FormBuilder() {
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        submitChanges();
+                        setEditAllEntriesModal(true)
                     }}
                     className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                 >
                     Submit
                 </button>
+                <AnimatePresence>{
+                    editAllEntriesModal && 
+                    <motion.div
+                        initial={{
+                            opacity: 0,
+                            y: '10%'
+                        }}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                                duration: .25
+                            }
+                        }}
+                        exit={{
+                            opacity: 0,
+                            y: '-10%',
+                            transition: {
+                                duration: .25
+                            }
+                        }}
+                        className='absolute inset-0 m-40 flex flex-col items-center justify-around p-4 bg-white border-2 border-black rounded-sm'
+                    >
+                        <p className='text-4xl'>Where would you like to update this data?</p>
+                        <button
+                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                submitChanges()
+                            }}
+                        >Change just this collection</button>
+                        <button
+                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                submitChanges('andUpdateAllDocuments')
+                            }}
+                        >Change this collection and everywhere this data is used (expensive operation)</button>
+                        <button
+                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setEditAllEntriesModal(false)
+                            }}    
+                        >
+                            Cancel
+                        </button>
+                    </motion.div>
+                }</AnimatePresence>
             </form>
         );
     };
@@ -215,7 +273,7 @@ export default function FormBuilder() {
                 <div className="border-gray-800 border-2 rounded">
                     <h2 className="text-2xl">Collection</h2>
                     <ReusableUnorderedList
-                        listItemArray={['AnswerSet', 'DynamicForms']}
+                        listItemArray={['AnswerSet']}
                         clickHandler={(listItem) => {
                             if (listItem === activeCollection) setActiveCollection('');
                             else setActiveCollection(listItem);
