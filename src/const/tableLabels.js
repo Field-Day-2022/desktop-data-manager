@@ -1,4 +1,54 @@
-export const sessionLabels = [
+const keyLabelMap = {
+    dateTime: 'Date & Time',
+    recorder: 'Recorder',
+    handler: 'Handler',
+    site: 'Site',
+    hdBody: 'HD-Body',
+    array: 'Array',
+    noCaptures: 'No Captures',
+    trapStatus: 'Trap Status',
+    comments: 'Comments',
+    commentsAboutTheArray: 'Comments',
+    fenceTrap: 'Fence Trap',
+    taxa: 'Taxa',
+    speciesCode: 'Species Code',
+    genus: 'Genus',
+    species: 'Species',
+    massG: 'Mass(g)',
+    dead: 'Dead?',
+    toeClipCode: 'Toe-clip Code',
+    recapture: 'Recapture',
+    svlMm: 'SVL(mm)',
+    vtlMm: 'VTL(mm)',
+    regenTail: 'Regen Tail?',
+    otlMm: 'OTL(mm)',
+    hatchling: 'Hatchling?',
+    predator: 'Predator?',
+    sex: 'Sex',
+    aran: 'ARAN',
+    auch: 'AUCH',
+    blat: 'BLAT',
+    chil: 'CHIL',
+    cole: 'COLE',
+    crus: 'CRUS',
+    derm: 'DERM',
+    diel: 'DIEL',
+    dipt: 'DIPT',
+    hete: 'HETE',
+    hyma: 'HYMA',
+    hymb: 'HYMB',
+    lepi: 'LEPI',
+    mant: 'MANT',
+    orth: 'ORTH',
+    pseu: 'PSEU',
+    scor: 'SCOR',
+    soli: 'SOLI',
+    thys: 'THYS',
+    unki: 'UNKI',
+    micro: 'MICRO',
+};
+
+const sessionLabels = [
     'Date & Time',
     'Recorder',
     'Handler',
@@ -9,7 +59,7 @@ export const sessionLabels = [
     'Comments',
 ];
 
-export const turtleLabels = [
+const turtleLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -24,7 +74,7 @@ export const turtleLabels = [
     'Comments',
 ];
 
-export const lizardLabels = [
+const lizardLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -46,7 +96,7 @@ export const lizardLabels = [
     'Comments',
 ];
 
-export const mammalLabels = [
+const mammalLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -61,7 +111,7 @@ export const mammalLabels = [
     'Comments',
 ];
 
-export const snakeLabels = [
+const snakeLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -71,14 +121,14 @@ export const snakeLabels = [
     'Genus',
     'Species',
     'SVL(mm)',
-    'VTM(mm)',
+    'VTL(mm)',
     'Mass(g)',
     'Sex',
     'Dead?',
     'Comments',
 ];
 
-export const arthropodLabels = [
+const arthropodLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -108,7 +158,7 @@ export const arthropodLabels = [
     'Comments',
 ];
 
-export const amphibianLabels = [
+const amphibianLabels = [
     'Date & Time',
     'Site',
     'Array',
@@ -120,6 +170,30 @@ export const amphibianLabels = [
     'HD-Body',
     'Mass(g)',
     'Sex',
-    'Dead',
+    'Dead?',
     'Comments',
 ];
+
+export const getLabel = (key) => keyLabelMap[key];
+
+export const getKey = (label, tableName) => {
+    if (label === 'Comments' && tableName === 'Session') {
+        return 'commentsAboutTheArray';
+    }
+    return Object.keys(keyLabelMap).find((key) => keyLabelMap[key] === label);
+};
+
+export const getKeys = (tableName) => {
+    const labels = TABLE_LABELS[tableName];
+    return labels.map((label) => getKey(label, tableName));
+};
+
+export const TABLE_LABELS = {
+    Session: sessionLabels,
+    Turtle: turtleLabels,
+    Lizard: lizardLabels,
+    Mammal: mammalLabels,
+    Snake: snakeLabels,
+    Arthropod: arthropodLabels,
+    Amphibian: amphibianLabels,
+};

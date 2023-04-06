@@ -1,9 +1,8 @@
-import Logo from './Logo';
+import {LizardIcon} from '../assets/icons';
 import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
-
 import { useAtom } from 'jotai';
-import { currentPageName, currentProjectName } from '../utils/jotai';
+import { currentPageName } from '../utils/jotai';
 
 /**
  *
@@ -19,7 +18,7 @@ export default function TopNav({ title, auth }) {
             <nav className="py-2 flex justify-between">
                 <ul className="flex items-center space-x-5">
                     <li onClick={() => setCurrentPage('Home')}>
-                        <Logo className="text-asu-maroon fill-current h-12 cursor-pointer" />
+                        <LizardIcon className="text-asu-maroon fill-current h-12 cursor-pointer" />
                     </li>
                     <li>
                         <p className="text-lg font-bold">{title}</p>
@@ -32,11 +31,13 @@ export default function TopNav({ title, auth }) {
 }
 
 function UserController({ user, auth }) {
-    return user
-        ? <div className='flex items-center space-x-5'>
+    return (
+        user
+        &&
+        <div className='flex items-center space-x-5'>
             <div key="email">{user.email}</div>
             <UserImage key="profilePicture" className="h-12" user={user} />
             <LogoutButton key="logoutBtn" auth={auth} />
         </div>
-        : null;
+    );
 }

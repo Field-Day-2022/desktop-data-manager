@@ -1,10 +1,7 @@
 import Button from "../components/Button";
 import Card from "../components/Card";
-import GoogleIcon from "../components/GoogleIcon";
-import Logo from "../components/Logo";
+import {GoogleIcon, LizardIcon} from "../assets/icons";
 import PageWrapper from "./PageWrapper";
-
-import { notify, Type } from "../components/Notifier";
 
 export default function LoginPage({ auth }) {
 
@@ -23,7 +20,7 @@ export default function LoginPage({ auth }) {
                         {(auth.loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
                     </p>
                     <Button
-                        enabled={!auth.loading}
+                        disabled={auth.loading}
                         text={(!auth.loading ? 'Login' : 'Please wait.')}
                         onClick={() =>
                             auth.login()
@@ -32,7 +29,7 @@ export default function LoginPage({ auth }) {
                     />
                 </div>
             </Card>
-            <Logo className="text-asu-maroon h-48 mx-auto rotate-45" />
+            <LizardIcon className="text-asu-maroon h-48 mx-auto rotate-45" />
         </PageWrapper>
     );
 }
