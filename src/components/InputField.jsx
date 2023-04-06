@@ -6,6 +6,7 @@ export default function InputField({
     value,
     onChange,
     checked,
+    defaultValue,
     disabled,
     readonly,
     size,
@@ -20,7 +21,7 @@ export default function InputField({
         "flex justify-center": layout === "horizontal",
     });
 
-    const inputClass = classNames(className, {
+    const inputClass = classNames(className, 'max-h-10', {
         "pl-10": type === "search",
         "pl-4": type !== "search",
     });
@@ -45,6 +46,7 @@ export default function InputField({
                 className={inputClass}
                 type={type}
                 value={value}
+                defaultValue={defaultValue}
                 onChange={onChange}
                 checked={checked}
                 disabled={disabled}

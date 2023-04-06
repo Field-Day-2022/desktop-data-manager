@@ -40,6 +40,7 @@ export default function DataInputModal({ showModal, closeModal }) {
                 return false;
             } else {
                 notify(Type.success, 'Session data saved.')
+                console.log(data);
                 return true;
             }
         }
@@ -58,8 +59,8 @@ export default function DataInputModal({ showModal, closeModal }) {
                 onCancel={() => closeModal()}
                 onOkay={() => onOkay()}
             >
-                <div className='flex-col w-full-modal-width h-full-modal-content-height'>
-                    <div className='bg-neutral-100 flex-shrink-0'>
+                <div className='flex-col w-full-modal-width h-full-modal-content-height max-w-5xl'>
+                    <div className='bg-neutral-100 flex-shrink-0 h-tab-bar'>
                         <TabBar
                             tabs={[
                                 {
@@ -77,7 +78,7 @@ export default function DataInputModal({ showModal, closeModal }) {
                             ]}
                         />
                     </div>
-                    <div className='flex-grow h-data-input overflow-auto'>
+                    <div className='flex-grow overflow-auto'>
                         {tools[activeTab]}
                     </div>
                 </div>

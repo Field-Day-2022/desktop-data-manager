@@ -24,9 +24,10 @@ export default function Dropdown({
     );
 
     return (
-        <div className={containerClass}>
+        <div key={label} className={containerClass}>
             {label && (<label className={labelClass}>{`${label}:`}</label>)}
             <select
+                className="max-h-10 max-w-fit"
                 disabled={disabled}
                 onChange={(e) => onClickHandler(e.target.value)}
                 value={value}

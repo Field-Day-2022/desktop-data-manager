@@ -68,9 +68,8 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${
-        tableName === 'Session' ? 'Session' : 'Data'
-    }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
+        }`;
 };
 
 const getCollectionNameFromDoc = (snapshot) => {
@@ -214,6 +213,38 @@ const getTrapStatuses = async () => {
     return options;
 };
 
+const getFenceTraps = async () => {
+    const answerSet = await getDocs(
+        query(
+            collection(db, 'AnswerSet'),
+            where('set_name', '==', 'Fence Traps')
+        )
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getSexes = async () => {
+    const answerSet = await getDocs(
+        query(
+            collection(db, 'AnswerSet'),
+            where('set_name', '==', 'Sexes')
+        )
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
 const getSessionsByProjectAndYear = async (environment, projectName, year) => {
     environment = environment === 'test' ? 'Test' : '';
     const sessions = await getDocs(
@@ -238,5 +269,7 @@ export {
     getSitesForProject,
     getArraysForSite,
     getTrapStatuses,
+    getFenceTraps,
+    getSexes,
     getSessionsByProjectAndYear,
 };

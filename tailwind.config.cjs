@@ -6,6 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      height: {
+        'data-input': 'calc(100vh - 22em)',
+        'tab-modal-content': 'calc(100vh - 334px)',
+        'tab-bar': '54px'
+      },
       colors: {
         'asu-maroon': '#8c1d40',
         'asu-gold': '#ffc627'
