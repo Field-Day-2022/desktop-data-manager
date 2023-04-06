@@ -13,9 +13,10 @@ import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
 import NewDataModal from '../modals/NewDataModal';
-
+import { loadLabels } from '../const/tableLabels';
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
+import { useRef } from 'react';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -28,9 +29,20 @@ export default function TablePage() {
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
+
+    const doInitialSetup = async () => {
+        const labels = await loadLabels()
+        console.log(labels);
+        setLabels(labels[tableName]);
+        hasInitialSetupBeenCalled.current = true;
+    }
+
     useEffect(() => {
-        setLabels(TABLE_LABELS[tableName]);
-        loadBatch();
+        doInitialSetup()
+    }, [])
+
+    useEffect(() => {
+        loadBatch()
     }, [tableName, batchSize, currentProject]);
 
     const tabsData = [
