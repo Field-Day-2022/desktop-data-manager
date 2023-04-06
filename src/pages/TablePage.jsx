@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
-import { TABLE_LABELS } from '../const/tableLabels';
+import { TABLE_LABELS, dynamicArthropodLabels } from '../const/tableLabels';
 import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
@@ -13,10 +13,8 @@ import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
 import NewDataModal from '../modals/NewDataModal';
-import { loadLabels } from '../const/tableLabels';
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
-import { useRef } from 'react';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -30,22 +28,19 @@ export default function TablePage() {
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
-    entries[0] && console.log(entries[0].data());
+    // entries[0] && console.log(entries[0].data());
 
-    const loadTableLabels = async () => {
-        const labels = await loadLabels()
-        console.log(labels);
-        setLabels(labels[tableName]);
-        setLabelsLoaded(true);
+    const loadDynamicArthropodLabels = async () => {
+        setLabels(await dynamicArthropodLabels())
     }
 
     useEffect(() => {
-        if (!labelsLoaded) {
-            loadTableLabels()
+        if (tableName === 'Arthropod') {
+            loadDynamicArthropodLabels();
+        } else {
+            setLabels(TABLE_LABELS[tableName])
         }
-    }, [labelsLoaded])
-
-    useEffect(() => {
+        setLabelsLoaded(true);
         loadBatch()
     }, [tableName, batchSize, currentProject, labelsLoaded]);
 
