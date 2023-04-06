@@ -68,8 +68,9 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
-        }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${
+        tableName === 'Session' ? 'Session' : 'Data'
+    }`;
 };
 
 const getCollectionNameFromDoc = (snapshot) => {
@@ -215,10 +216,7 @@ const getTrapStatuses = async () => {
 
 const getFenceTraps = async () => {
     const answerSet = await getDocs(
-        query(
-            collection(db, 'AnswerSet'),
-            where('set_name', '==', 'Fence Traps')
-        )
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Fence Traps'))
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
@@ -231,10 +229,7 @@ const getFenceTraps = async () => {
 
 const getSexes = async () => {
     const answerSet = await getDocs(
-        query(
-            collection(db, 'AnswerSet'),
-            where('set_name', '==', 'Sexes')
-        )
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Sexes'))
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
