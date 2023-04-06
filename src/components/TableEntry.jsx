@@ -153,7 +153,7 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
 
     let size = 1;
     if (entrySnapshot.data()[dbKey] !== undefined) {
-        size = entrySnapshot.data()[dbKey].length;
+        size = String(entrySnapshot.data()[dbKey]).length;
     }
 
     return (
