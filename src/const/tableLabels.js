@@ -1,4 +1,4 @@
-import { getArthropodLabels } from "../utils/firestore";
+import { getArthropodLabels } from '../utils/firestore';
 
 const keyLabelMap = {
     dateTime: 'Date & Time',
@@ -137,10 +137,10 @@ export const dynamicArthropodLabels = async () => {
         'Array',
         'Fence Trap',
         'Predator?',
-        ...await getArthropodLabels(),
-        'Comments'
-    ]
-}
+        ...(await getArthropodLabels()),
+        'Comments',
+    ];
+};
 
 const arthropodLabels = [
     'Date & Time',
