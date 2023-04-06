@@ -22,6 +22,7 @@ export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
+    const [labelsLoaded, setLabelsLoaded] = useState(false);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
@@ -29,21 +30,24 @@ export default function TablePage() {
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
+    entries[0] && console.log(entries[0].data());
 
-    const doInitialSetup = async () => {
+    const loadTableLabels = async () => {
         const labels = await loadLabels()
         console.log(labels);
         setLabels(labels[tableName]);
-        hasInitialSetupBeenCalled.current = true;
+        setLabelsLoaded(true);
     }
 
     useEffect(() => {
-        doInitialSetup()
-    }, [])
+        if (!labelsLoaded) {
+            loadTableLabels()
+        }
+    }, [labelsLoaded])
 
     useEffect(() => {
         loadBatch()
-    }, [tableName, batchSize, currentProject]);
+    }, [tableName, batchSize, currentProject, labelsLoaded]);
 
     const tabsData = [
         { text: 'Turtle', icon: <TurtleIcon /> },
@@ -60,7 +64,8 @@ export default function TablePage() {
             <FormBuilderModal
                 showModal={activeTool === 'formBuilder'}
                 onCancel={() => setActiveTool('none')}
-                onOkay={() => console.log('okay then...')}
+                onOkay={() => setActiveTool('none')}
+                setLabelsLoaded={setLabelsLoaded}
             />
             <ExportModal
                 showModal={activeTool === 'export'}
