@@ -1,11 +1,11 @@
 import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, where, query } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, getDoc, addDoc, where, query, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 
-export default function FormBuilder() {
+export default function FormBuilder({ setLabelsLoaded }) {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
     const [documents, setDocuments] = useState([]); // array of all documents with just their data
     const [documentSnapshots, setDocumentSnapshots] = useState([]); // array of all documents, as Firestore document objects
@@ -15,12 +15,22 @@ export default function FormBuilder() {
     const [activeDocumentDataPrimary, setActiveDocumentDataPrimary] = useState(); // currently selected primary key
     const [formData, setFormData] = useState(); // form data
     const [changeBoxTitle, setChangeBoxTitle] = useState('Edit Data');
-    const [editAllEntriesModal, setEditAllEntriesModal] = useState(true);
+    const [editAllEntriesModal, setEditAllEntriesModal] = useState(false);
 
 
     useEffect(() => {
         const getAllDocs = async () => {
-            const querySnapshot = await getDocs(collection(db, activeCollection));
+            let querySnapshot = null;
+            if (activeCollection === 'AnswerSet') {
+                querySnapshot = await getDocs(query(
+                    collection(db, activeCollection),
+                    orderBy('set_name', 'asc')
+                ));
+            } else {
+                querySnapshot = await getDocs(query(
+                    collection(db, activeCollection),
+                ));
+            }
             let tempDocArray = [];
             let tempDocSnapshotArray = [];
             querySnapshot.forEach((doc) => {
@@ -88,28 +98,82 @@ export default function FormBuilder() {
             speciesName = setName.replace('Gateway', '').slice(0, -7);
         }
         else if (setName.includes('San Pedro')) {
-            targetCollections[0] = 'SanPedroData'
+            targetCollections[0] = 'TestSanPedroData'
             speciesName = setName.replace('San Pedro', '').slice(0, -7);
         }
         else if (setName.includes('Virgin River')) {
-            targetCollections[0] = 'VirginRiverData';
+            targetCollections[0] = 'TestVirginRiverData';
             speciesName = setName.replace('Virgin River', '').slice(0, -7);
         } else {
             targetCollections.push(
-                'GatewayData', 'SanPedroData', 'VirginRiverData');
+                'TestGatewayData', 'TestSanPedroData', 'TestVirginRiverData');
             speciesName = setName.slice(0, -7);
         }
 
+        let dataToUpdate = null;
+        if (speciesName !== 'Arthropod') {
+            dataToUpdate = {
+                speciesCode: formData.primary,
+                species: formData.secondary.Species,
+                genus: formData.secondary.Genus
+            }
+        } 
+
         const documentsToUpdate = [];
         for (const targetCollection of targetCollections) {
-            const querySnapshot = await getDocs(query(
-                collection(db, targetCollection),
-                where('taxa', '==', speciesName),
-                where('speciesCode', '==', activeDocumentDataPrimary)
-            ))
-            documentsToUpdate.push(...querySnapshot.docs)
-        }   
-        documentsToUpdate.forEach((document) => console.log(document.data()))
+            if (speciesName === 'Arthropod') {
+                const querySnapshot = await getDocs(query(
+                    collection(db, targetCollection),
+                    where('taxa', '==', 'N/A'),
+                    where('speciesCode', '==', 'N/A')
+                ))
+                documentsToUpdate.push(...querySnapshot.docs)
+            } else {
+                const querySnapshot = await getDocs(query(
+                    collection(db, targetCollection),
+                    where('taxa', '==', speciesName),
+                    where('speciesCode', '==', activeDocumentDataPrimary)
+                ))
+                documentsToUpdate.push(...querySnapshot.docs)
+            }
+        }
+
+        while (documentsToUpdate.length > 0) {
+            const batch = new writeBatch(db);
+            for (let i = 0; i < BATCH_WRITE_LIMIT; i++) {
+                const documentToUpdate = documentsToUpdate.pop();
+                if (documentToUpdate === undefined) break;
+                if (speciesName !== 'Arthropod') {
+                    batch.update(
+                        doc(
+                            db, 
+                            documentToUpdate.ref.parent.id, 
+                            documentToUpdate.id
+                        ), dataToUpdate
+                    )
+                } else {
+                    const speciesData = documentToUpdate.data()[activeDocumentDataPrimary.toLowerCase()];
+                    let newDocumentDataToUpdate = structuredClone(documentToUpdate.data());
+                    delete newDocumentDataToUpdate[activeDocumentDataPrimary.toLowerCase()]
+                    newDocumentDataToUpdate[formData.primary.toLowerCase()] = speciesData;
+                    console.log('old data:')
+                    console.log(documentToUpdate.data())
+                    console.log('new data:')
+                    console.log(newDocumentDataToUpdate)
+                    batch.set(
+                        doc(
+                            db, 
+                            documentToUpdate.ref.parent.id, 
+                            documentToUpdate.id
+                        ), newDocumentDataToUpdate
+                    )
+                }
+            }
+            await batch.commit();
+        }
+        notify(Type.success, 'Successfully changed data!')
+        setLabelsLoaded(false);
+        setEditAllEntriesModal(false);
     }
 
     const addDocToFirestore = async () => {
@@ -148,7 +212,7 @@ export default function FormBuilder() {
     ) => {
         if (changeBoxTitle === 'Edit Data') {
             updateUI();
-            // pushChangesToFirestore();
+            pushChangesToFirestore();
             options === 'andUpdateAllDocuments' && andUpdateAllDocuments();
         } else if (changeBoxTitle === 'Add New Data') {
             activeDocument.answers.push(formData);
