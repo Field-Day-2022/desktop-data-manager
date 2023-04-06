@@ -130,7 +130,7 @@ const snakeLabels = [
     'Comments',
 ];
 
-const dynamicArthropodLabels = async () => {
+export const dynamicArthropodLabels = async () => {
     return [
         'Date & Time',
         'Site',
@@ -211,16 +211,3 @@ export const TABLE_LABELS = {
     Arthropod: arthropodLabels,
     Amphibian: amphibianLabels,
 };
-
-export const loadLabels = async () => {
-    const dynamicArthropod = await dynamicArthropodLabels()
-    return {
-        Session: sessionLabels,
-        Turtle: turtleLabels,
-        Lizard: lizardLabels,
-        Mammal: mammalLabels,
-        Snake: snakeLabels,
-        Arthropod: dynamicArthropod,
-        Amphibian: amphibianLabels,
-    }
-}
