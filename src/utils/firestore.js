@@ -73,6 +73,10 @@ const getCollectionName = (environment, projectName, tableName) => {
     }`;
 };
 
+const getCollectionNameFromDoc = (snapshot) => {
+    return snapshot?.ref.parent.id;
+};
+
 const deleteDocumentFromFirestore = async (entrySnapshot, deleteMsg) => {
     let response = [];
     await deleteDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id))
@@ -174,5 +178,6 @@ export {
     updateDocInCollection,
     deleteDocFromCollection,
     getCollectionName,
+    getCollectionNameFromDoc,
     startEntryOperation,
 };
