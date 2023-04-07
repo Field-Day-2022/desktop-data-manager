@@ -1,11 +1,11 @@
 import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, where } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, getDoc, addDoc, where, query, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
-import { LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 
-export default function FormBuilder() {
+export default function FormBuilder({ triggerRerender }) {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
     const [documents, setDocuments] = useState([]); // array of all documents with just their data
     const [documentSnapshots, setDocumentSnapshots] = useState([]); // array of all documents, as Firestore document objects
@@ -15,10 +15,22 @@ export default function FormBuilder() {
     const [activeDocumentDataPrimary, setActiveDocumentDataPrimary] = useState(); // currently selected primary key
     const [formData, setFormData] = useState(); // form data
     const [changeBoxTitle, setChangeBoxTitle] = useState('Edit Data');
+    const [editAllEntriesModal, setEditAllEntriesModal] = useState(false);
+
 
     useEffect(() => {
         const getAllDocs = async () => {
-            const querySnapshot = await getDocs(collection(db, activeCollection));
+            let querySnapshot = null;
+            if (activeCollection === 'AnswerSet') {
+                querySnapshot = await getDocs(query(
+                    collection(db, activeCollection),
+                    orderBy('set_name', 'asc')
+                ));
+            } else {
+                querySnapshot = await getDocs(query(
+                    collection(db, activeCollection),
+                ));
+            }
             let tempDocArray = [];
             let tempDocSnapshotArray = [];
             querySnapshot.forEach((doc) => {
@@ -70,6 +82,96 @@ export default function FormBuilder() {
             });
     };
 
+    const andUpdateAllDocuments = async () => {
+        const BATCH_WRITE_LIMIT = 500;
+        const targetCollections = [];
+        const setName = documents[activeDocumentIndex].set_name;
+        let speciesName = '';
+
+        if (!setName.includes('Species')) {
+            notify(Type.error, 'This functionality is only supported when changing species');
+            return;
+        }
+
+        if (setName.includes('Gateway')) { 
+            targetCollections[0] = 'TestGatewayData'
+            speciesName = setName.replace('Gateway', '').slice(0, -7);
+        }
+        else if (setName.includes('San Pedro')) {
+            targetCollections[0] = 'TestSanPedroData'
+            speciesName = setName.replace('San Pedro', '').slice(0, -7);
+        }
+        else if (setName.includes('Virgin River')) {
+            targetCollections[0] = 'TestVirginRiverData';
+            speciesName = setName.replace('Virgin River', '').slice(0, -7);
+        } else {
+            targetCollections.push(
+                'TestGatewayData', 'TestSanPedroData', 'TestVirginRiverData');
+            speciesName = setName.slice(0, -7);
+        }
+
+        let dataToUpdate = null;
+        if (speciesName !== 'Arthropod') {
+            dataToUpdate = {
+                speciesCode: formData.primary,
+                species: formData.secondary.Species,
+                genus: formData.secondary.Genus
+            }
+        } 
+
+        const documentsToUpdate = [];
+        for (const targetCollection of targetCollections) {
+            if (speciesName === 'Arthropod') {
+                const querySnapshot = await getDocs(query(
+                    collection(db, targetCollection),
+                    where('taxa', '==', 'N/A'),
+                    where('speciesCode', '==', 'N/A')
+                ))
+                documentsToUpdate.push(...querySnapshot.docs)
+            } else {
+                const querySnapshot = await getDocs(query(
+                    collection(db, targetCollection),
+                    where('taxa', '==', speciesName),
+                    where('speciesCode', '==', activeDocumentDataPrimary)
+                ))
+                documentsToUpdate.push(...querySnapshot.docs)
+            }
+        }
+
+        while (documentsToUpdate.length > 0) {
+            const batch = new writeBatch(db);
+            for (let i = 0; i < BATCH_WRITE_LIMIT; i++) {
+                const documentToUpdate = documentsToUpdate.pop();
+                if (documentToUpdate === undefined) break;
+                if (speciesName !== 'Arthropod') {
+                    batch.update(
+                        doc(
+                            db, 
+                            documentToUpdate.ref.parent.id, 
+                            documentToUpdate.id
+                        ), dataToUpdate
+                    )
+                } else {
+                    const speciesData = documentToUpdate.data()[activeDocumentDataPrimary.toLowerCase()];
+                    let newDocumentDataToUpdate = structuredClone(documentToUpdate.data());
+                    delete newDocumentDataToUpdate[activeDocumentDataPrimary.toLowerCase()]
+                    newDocumentDataToUpdate[formData.primary.toLowerCase()] = speciesData;
+                    batch.set(
+                        doc(
+                            db, 
+                            documentToUpdate.ref.parent.id, 
+                            documentToUpdate.id
+                        ), newDocumentDataToUpdate
+                    )
+                }
+            }
+            await batch.commit();
+        }
+        notify(Type.success, 'Successfully changed corresponding entries!')
+        triggerRerender()
+        setEditAllEntriesModal(false);
+    }
+
     const addDocToFirestore = async () => {
         if (activeCollection === 'AnswerSet') {
             const d = new Date();
@@ -101,10 +203,13 @@ export default function FormBuilder() {
         setActiveDocumentDataPrimary(formData.primary);
     };
 
-    const submitChanges = () => {
+    const submitChanges = (
+        options
+    ) => {
         if (changeBoxTitle === 'Edit Data') {
             updateUI();
             pushChangesToFirestore();
+            options === 'andUpdateAllDocuments' && andUpdateAllDocuments();
         } else if (changeBoxTitle === 'Add New Data') {
             activeDocument.answers.push(formData);
             documents[activeDocumentIndex] = activeDocument;
@@ -174,12 +279,61 @@ export default function FormBuilder() {
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        submitChanges();
+                        setEditAllEntriesModal(true)
                     }}
                     className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                 >
                     Submit
                 </button>
+                <AnimatePresence>{
+                    editAllEntriesModal && 
+                    <motion.div
+                        initial={{
+                            opacity: 0,
+                            y: '10%'
+                        }}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                                duration: .25
+                            }
+                        }}
+                        exit={{
+                            opacity: 0,
+                            y: '-10%',
+                            transition: {
+                                duration: .25
+                            }
+                        }}
+                        className='absolute inset-0 m-40 flex flex-col items-center justify-around p-4 bg-white border-2 border-black rounded'
+                    >
+                        <p className='text-4xl'>Where would you like to update this data?</p>
+                        <button
+                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                submitChanges()
+                            }}
+                        >Change just this collection</button>
+                        <button
+                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                submitChanges('andUpdateAllDocuments')
+                            }}
+                        >Change this collection and everywhere this data is used (expensive operation)</button>
+                        <button
+                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setEditAllEntriesModal(false)
+                            }}    
+                        >
+                            Cancel
+                        </button>
+                    </motion.div>
+                }</AnimatePresence>
             </form>
         );
     };
@@ -215,7 +369,7 @@ export default function FormBuilder() {
                 <div className="border-gray-800 border-2 rounded">
                     <h2 className="text-2xl">Collection</h2>
                     <ReusableUnorderedList
-                        listItemArray={['AnswerSet', 'DynamicForms']}
+                        listItemArray={['AnswerSet']}
                         clickHandler={(listItem) => {
                             if (listItem === activeCollection) setActiveCollection('');
                             else setActiveCollection(listItem);

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
-import { TABLE_LABELS } from '../const/tableLabels';
+import { TABLE_LABELS, dynamicArthropodLabels } from '../const/tableLabels';
 import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
@@ -13,7 +13,6 @@ import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import NewSessionModal from '../modals/NewSessionModal';
 import NewDataModal from '../modals/NewDataModal';
-
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
 
@@ -21,6 +20,7 @@ export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
+    const [rerender, setRerender] = useState(false);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
@@ -28,10 +28,22 @@ export default function TablePage() {
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
+    // entries[0] && console.log(entries[0].data());
+
+    const loadDynamicArthropodLabels = async () => {
+        setLabels(await dynamicArthropodLabels())
+    }
+
+    const triggerRerender = () => setRerender(!rerender);
+
     useEffect(() => {
-        setLabels(TABLE_LABELS[tableName]);
-        loadBatch();
-    }, [tableName, batchSize, currentProject]);
+        if (tableName === 'Arthropod') {
+            loadDynamicArthropodLabels();
+        } else {
+            setLabels(TABLE_LABELS[tableName])
+        }
+        loadBatch()
+    }, [tableName, batchSize, currentProject, rerender]);
 
     const tabsData = [
         { text: 'Turtle', icon: <TurtleIcon /> },
@@ -48,7 +60,8 @@ export default function TablePage() {
             <FormBuilderModal
                 showModal={activeTool === 'formBuilder'}
                 onCancel={() => setActiveTool('none')}
-                onOkay={() => console.log('okay then...')}
+                onOkay={() => setActiveTool('none')}
+                triggerRerender={triggerRerender}
             />
             <ExportModal
                 showModal={activeTool === 'export'}
