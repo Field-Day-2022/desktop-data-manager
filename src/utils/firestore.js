@@ -16,16 +16,15 @@ import { Type } from '../components/Notifier';
 
 export const getArthropodLabels = async () => {
     let labelArray = [];
-    await getDocs(query(
-        collection(db, 'AnswerSet'),
-        where('set_name', '==', 'ArthropodSpecies')
-    )).then(snapshot => {
-        snapshot.docs[0].data().answers.forEach(ans => {
-            labelArray.push(ans.primary)
-        })
-    })
+    await getDocs(
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'ArthropodSpecies'))
+    ).then((snapshot) => {
+        snapshot.docs[0].data().answers.forEach((ans) => {
+            labelArray.push(ans.primary);
+        });
+    });
     return labelArray;
-}
+};
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
     if (!Array.isArray(constraints)) {
