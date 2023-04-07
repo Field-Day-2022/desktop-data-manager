@@ -5,7 +5,7 @@ import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 
-export default function FormBuilder({ setLabelsLoaded }) {
+export default function FormBuilder({ triggerRerender }) {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
     const [documents, setDocuments] = useState([]); // array of all documents with just their data
     const [documentSnapshots, setDocumentSnapshots] = useState([]); // array of all documents, as Firestore document objects
@@ -171,8 +171,8 @@ export default function FormBuilder({ setLabelsLoaded }) {
             }
             await batch.commit();
         }
-        notify(Type.success, 'Successfully changed data!')
-        setLabelsLoaded(false);
+        notify(Type.success, 'Successfully changed corresponding entries!')
+        triggerRerender()
         setEditAllEntriesModal(false);
     }
 

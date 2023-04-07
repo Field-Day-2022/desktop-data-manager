@@ -20,7 +20,7 @@ export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
-    const [labelsLoaded, setLabelsLoaded] = useState(false);
+    const [rerender, setRerender] = useState(false);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
@@ -34,15 +34,16 @@ export default function TablePage() {
         setLabels(await dynamicArthropodLabels())
     }
 
+    const triggerRerender = () => setRerender(!rerender);
+
     useEffect(() => {
         if (tableName === 'Arthropod') {
             loadDynamicArthropodLabels();
         } else {
             setLabels(TABLE_LABELS[tableName])
         }
-        setLabelsLoaded(true);
         loadBatch()
-    }, [tableName, batchSize, currentProject, labelsLoaded]);
+    }, [tableName, batchSize, currentProject, rerender]);
 
     const tabsData = [
         { text: 'Turtle', icon: <TurtleIcon /> },
@@ -60,7 +61,7 @@ export default function TablePage() {
                 showModal={activeTool === 'formBuilder'}
                 onCancel={() => setActiveTool('none')}
                 onOkay={() => setActiveTool('none')}
-                setLabelsLoaded={setLabelsLoaded}
+                triggerRerender={triggerRerender}
             />
             <ExportModal
                 showModal={activeTool === 'export'}
