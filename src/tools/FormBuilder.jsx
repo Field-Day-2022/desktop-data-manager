@@ -156,10 +156,6 @@ export default function FormBuilder({ triggerRerender }) {
                     let newDocumentDataToUpdate = structuredClone(documentToUpdate.data());
                     delete newDocumentDataToUpdate[activeDocumentDataPrimary.toLowerCase()]
                     newDocumentDataToUpdate[formData.primary.toLowerCase()] = speciesData;
-                    console.log('old data:')
-                    console.log(documentToUpdate.data())
-                    console.log('new data:')
-                    console.log(newDocumentDataToUpdate)
                     batch.set(
                         doc(
                             db, 
