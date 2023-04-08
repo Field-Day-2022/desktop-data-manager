@@ -117,9 +117,28 @@ export default function NewEntryForm() {
 }
 
 const CritterForm = ({ critter, project, session }) => {
+    const [entry, setEntry] = useState({});
+
     useEffect(() => {
-        console.log(session)
-    }, [session])
+        setEntry({
+            ...TABLE_KEYS[critter].reduce((acc, key) => {
+                acc[key] = session[key] || '';
+                return acc;
+            }, {})
+        })
+    }, [session, critter])
+    
+    useEffect(() => {
+        console.log(entry);
+    }, [entry])
+
+    const setField = (key, value) => {
+        setEntry({
+            ...entry,
+            [key]: value,
+        })
+    }
+
     return (
         <div className='flex-col space-y-1'>
             <div className='grid grid-cols-3'>
@@ -130,8 +149,10 @@ const CritterForm = ({ critter, project, session }) => {
                             disabled={disabled}
                             fieldName={key}
                             layout='vertical'
-                            value={session[key]}
-                            setValue={() => { }}
+                            value={entry[key]}
+                            setValue={(e) => { 
+                                setField(key, e)
+                            }}
                             project={project}
                             site={session.site}
                             taxa={critter}

@@ -65,7 +65,6 @@ const DateField = ({ date, setDate, layout, disabled }) => {
                 <input
                     disabled={disabled}
                     type='date'
-                    defaultValue={(disabled) && date}
                     value={date}
                     onChange={(e) => {
                         setDate(e.target.value);
@@ -78,9 +77,6 @@ const DateField = ({ date, setDate, layout, disabled }) => {
 }
 
 const TimeField = ({ time, setTime, layout, disabled }) => {
-    useEffect(() => {
-        console.log(time);
-    }, [time]);
     return (
         <InputLabel
             label='Time'
@@ -89,7 +85,6 @@ const TimeField = ({ time, setTime, layout, disabled }) => {
                 <input
                     disabled={disabled}
                     type='time'
-                    defaultValue={(disabled) && time}
                     value={time}
                     onChange={(e) => {
                         setTime(e.target.value);
@@ -102,7 +97,6 @@ const TimeField = ({ time, setTime, layout, disabled }) => {
 }
 
 const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
-    console.log(dateTime);
     const [date, setDate] = useState(dateTime?.split('T')[0] || '');
     const [time, setTime] = useState(dateTime?.split('T')[1]?.split('.')[0] || '');
 
@@ -457,7 +451,7 @@ const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled
     }, [taxa, project])
     return (
         <InputLabel
-            label='Species'
+            label='Species Code'
             layout={layout}
             input={
                 <select
