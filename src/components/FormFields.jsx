@@ -1,38 +1,77 @@
-import InputField from "./InputField"
-import Dropdown from "./Dropdown"
 import { useEffect } from "react";
 import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getTrapStatuses } from "../utils/firestore";
 import { useState } from "react";
 import classNames from "classnames";
 import { SearchIcon } from "../assets/icons";
+import InputLabel from "./InputLabel";
 
-const ProjectField = ({ project, setProject, layout }) => {
+export const YearField = ({ year, setYear, layout }) => {
+    const currentYear = new Date().getFullYear();
+    const getYearOptions = () => {
+        const years = [];
+        for (let i = 1969; i <= currentYear; i++) {
+            years.push(i.toString());
+        }
+        return years;
+    }
+
     return (
-        <Dropdown
+        <InputLabel
+            label='Year'
             layout={layout}
+            input={
+                <select
+                    value={year}
+                    onChange={(e) => {
+                        setYear(e.target.value);
+                    }}
+                >
+                    {getYearOptions().map((year) => (
+                        <option key={year} value={year}>{year}</option>
+                    ))}
+                </select>
+            }
+        />
+    );
+}
+
+export const ProjectField = ({ project, setProject, layout }) => {
+    return (
+        <InputLabel
             label='Project'
-            value={project}
-            onClickHandler={setProject}
-            options={['Gateway', 'San Pedro', 'Virgin River']}
+            layout={layout}
+            input={
+                <select
+                    value={project}
+                    onChange={(e) => {
+                        setProject(e.target.value);
+                    }}
+                >
+                    <option value='Gateway'>Gateway</option>
+                    <option value='San Pedro'>San Pedro</option>
+                    <option value='Virgin River'>Virgin River</option>
+                </select>
+            }
         />
     );
 }
 
 const DateField = ({ date, setDate, layout, disabled }) => {
-    useEffect(() => {
-        console.log(date);
-    }, [date]);
     return (
-        <InputField
-            disabled={disabled}
-            type='date'
-            layout={layout}
-            defaultValue={(disabled) && date}
-            value={date}
+        <InputLabel
             label='Date'
-            onChange={(e) => {
-                setDate(e.target.value);
-            }
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='date'
+                    defaultValue={(disabled) && date}
+                    value={date}
+                    onChange={(e) => {
+                        setDate(e.target.value);
+                    }
+                    }
+                />
             }
         />
     )
@@ -43,16 +82,20 @@ const TimeField = ({ time, setTime, layout, disabled }) => {
         console.log(time);
     }, [time]);
     return (
-        <InputField
-            disabled={disabled}
-            type='time'
-            layout={layout}
-            value={time}
-            defaultValue={(disabled) && time}
+        <InputLabel
             label='Time'
-            onChange={(e) => {
-                setTime(e.target.value);
-            }
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='time'
+                    defaultValue={(disabled) && time}
+                    value={time}
+                    onChange={(e) => {
+                        setTime(e.target.value);
+                    }
+                    }
+                />
             }
         />
     )
@@ -79,33 +122,43 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
 
 const RecorderField = ({ recorder, setRecorder, layout, disabled }) => {
     return (
-        <InputField
-            disabled={disabled}
-            type='text'
-            maxLength={3}
+        <InputLabel
             label='Recorder'
-            value={recorder}
-            onChange={(e) => {
-                if (e.target.value.match(/^[a-zA-Z]*$/))
-                    setRecorder(e.target.value.toUpperCase())
-            }}
-            layout={layout} />
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='text'
+                    maxLength={3}
+                    value={recorder}
+                    onChange={(e) => {
+                        if (e.target.value.match(/^[a-zA-Z]*$/))
+                            setRecorder(e.target.value.toUpperCase())
+                    }}
+                />
+            }
+        />
     );
 }
 
 const HandlerField = ({ handler, setHandler, layout, disabled }) => {
     return (
-        <InputField
-            disabled={disabled}
-            type='text'
-            maxLength={3}
+        <InputLabel
             label='Handler'
-            value={handler}
-            onChange={(e) => {
-                if (e.target.value.match(/^[a-zA-Z]*$/))
-                    setHandler(e.target.value.toUpperCase())
-            }}
-            layout={layout} />
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='text'
+                    maxLength={3}
+                    value={handler}
+                    onChange={(e) => {
+                        if (e.target.value.match(/^[a-zA-Z]*$/))
+                            setHandler(e.target.value.toUpperCase())
+                    }}
+                />
+            }
+        />
     );
 }
 
@@ -120,15 +173,25 @@ const SiteField = ({ site, setSite, project, layout, disabled }) => {
     }, [project])
 
     return (
-        <Dropdown
-            disabled={disabled}
+        <InputLabel
             label='Site'
             layout={layout}
-            value={site}
-            onClickHandler={(e) => {
-                setSite(e);
-            }}
-            options={siteOptions} />
+            input={
+                <select
+                    disabled={disabled}
+                    value={site}
+                    onChange={(e) => {
+                        setSite(e.target.value);
+                    }}
+                >
+                    {siteOptions.map((site) => {
+                        return (
+                            <option key={site} value={site}>{site}</option>
+                        );
+                    })}
+                </select>
+            }
+        />
     );
 }
 
@@ -143,31 +206,56 @@ const ArrayField = ({ array, setArray, project, site, layout, disabled }) => {
     }, [site])
 
     return (
-        <Dropdown
-            disabled={disabled}
+        <InputLabel
             label='Array'
             layout={layout}
-            value={array}
-            onClickHandler={(e) => {
-                setArray(e);
-            }}
-            options={arrayOptions} />
+            input={
+                <select
+                    disabled={disabled}
+                    value={array}
+                    onChange={(e) => {
+                        setArray(e.target.value);
+                    }}
+                >
+                    {arrayOptions.map((array) => {
+                        return (
+                            <option key={array} value={array}>{array}</option>
+                        );
+                    })}
+                </select>
+            }
+        />
     );
 }
 
 const NoCapturesField = ({ noCaptures, setNoCaptures, layout, disabled }) => {
     return (
-        <div className='flex flex-col'>
-            <label className='text-sm w-full text-left p-2'>No Captures:</label>
+        <InputLabel
+            label='No Captures'
+            layout={layout}
+            input={
+                <TrueFalseToggle
+                    disabled={disabled}
+                    value={noCaptures}
+                    setValue={(e) => {
+                        setNoCaptures(e.target.value);
+                    }}
+                />
+            }
+        />
+    );
+}
+
+const TrueFalseToggle = ({ disabled, value, setValue }) => {
+    return (
+        <div className='flex'>
             <div className='flex'>
-                <div className='flex'>
-                    <label className='text-sm w-full text-left p-2'>True</label>
-                    <input disabled={disabled} type='radio' name='noCaptures' value='true' checked={noCaptures === 'true'} onChange={(e) => setNoCaptures(e.target.value)} />
-                </div>
-                <div className='flex'>
-                    <label className='text-sm w-full text-left p-2'>False</label>
-                    <input disabled={disabled} type='radio' name='noCaptures' value='false' checked={noCaptures === 'false'} onChange={(e) => setNoCaptures(e.target.value)} />
-                </div>
+                <label className='text-sm w-full text-left p-2'>True</label>
+                <input disabled={disabled} type='radio' name={`${value}`} value='true' checked={value === 'true'} onChange={setValue} />
+            </div>
+            <div className='flex'>
+                <label className='text-sm w-full text-left p-2'>False</label>
+                <input disabled={disabled} type='radio' name={`${value}`} value='false' checked={value === 'false'} onChange={setValue} />
             </div>
         </div>
     )
@@ -175,19 +263,19 @@ const NoCapturesField = ({ noCaptures, setNoCaptures, layout, disabled }) => {
 
 const DeadField = ({ dead, setDead, layout, disabled }) => {
     return (
-        <div className='flex flex-col'>
-            <label className='text-sm w-full text-left p-2'>Dead:</label>
-            <div className='flex'>
-                <div className='flex'>
-                    <label className='text-sm w-full text-left p-2'>True</label>
-                    <input disabled={disabled} type='radio' name='dead' value='true' checked={dead === 'true'} onChange={(e) => setDead(e.target.value)} />
-                </div>
-                <div className='flex'>
-                    <label className='text-sm w-full text-left p-2'>False</label>
-                    <input disabled={disabled} type='radio' name='dead' value='false' checked={dead === 'false'} onChange={(e) => setDead(e.target.value)} />
-                </div>
-            </div>
-        </div>
+        <InputLabel
+            label='Dead'
+            layout={layout}
+            input={
+                <TrueFalseToggle
+                    disabled={disabled}
+                    value={dead}
+                    setValue={(e) => {
+                        setDead(e.target.value);
+                    }}
+                />
+            }
+        />
     )
 }
 
@@ -200,15 +288,25 @@ const SexField = ({ sex, setSex, layout, disabled }) => {
         })
     }, [])
     return (
-        <Dropdown
-            disabled={disabled}
-            label='Sex'
+        <InputLabel
+            label={'Sex'}
             layout={layout}
-            value={sex}
-            onClickHandler={(e) => {
-                setSex(e);
-            }}
-            options={sexOptions} />
+            input={
+                <select
+                    disabled={disabled}
+                    value={sex}
+                    onChange={(e) => {
+                        setSex(e);
+                    }}
+                >
+                    {sexOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
     );
 }
 
@@ -221,15 +319,25 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
         })
     }, [])
     return (
-        <Dropdown
-            disabled={disabled}
-            label='Trap Status'
+        <InputLabel
+            label={'Trap Status'}
             layout={layout}
-            value={trapStatus}
-            onClickHandler={(e) => {
-                setTrapStatus(e);
-            }}
-            options={trapStatusOptions} />
+            input={
+                <select
+                    disabled={disabled}
+                    value={trapStatus}
+                    onChange={(e) => {
+                        setTrapStatus(e);
+                    }}
+                >
+                    {trapStatusOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
     );
 }
 
@@ -263,10 +371,17 @@ export function SearchField({ search, setSearch }) {
 
 const CommentsField = ({ setComments, layout, disabled }) => {
     return (
-        <div className='flex flex-col col-span-2'>
-            <label className='text-sm w-full text-left p-2'>Comments:</label>
-            <textarea disabled={disabled} className='resize-none border border-gray-300 rounded-md p-2 col-span-2 max-w-full' placeholder='Comments' onChange={(e) => setComments(e.target.value)} />
-        </div>
+        <InputLabel
+            label='Comments'
+            layout={layout}
+            input={
+                <textarea
+                    disabled={disabled}
+                    className='resize-none border border-gray-300 rounded-md p-2 col-span-2 max-w-full'
+                    placeholder='Comments'
+                    onChange={(e) => setComments(e.target.value)} />
+            }
+        />
     )
 }
 
@@ -279,22 +394,30 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
         })
     }, [])
     return (
-        <Dropdown
-            disabled={disabled}
+        <InputLabel
             label='Fence Trap'
             layout={layout}
-            value={fenceTrap}
-            onClickHandler={(e) => {
-                setFenceTrap(e);
-            }}
-            options={fenceTrapOptions} />
+            input={
+                <select
+                    disabled={disabled}
+                    value={fenceTrap}
+                    onChange={(e) => {
+                        setFenceTrap(e);
+                    }}
+                >
+                    {fenceTrapOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
     );
 }
 
 export const FormField = ({ fieldName, value, setValue, site, project, layout, disabled }) => {
     switch (fieldName) {
-        case 'project':
-            return <ProjectField project={value} setProject={setValue} layout={layout} disabled={disabled} />
         case 'dateTime':
             return <DateTimeField dateTime={value} setDateTime={setValue} layout={layout} disabled={disabled} />
         case 'recorder':

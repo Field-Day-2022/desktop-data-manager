@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import InputField from './InputField';
 import InputLabel from './InputLabel';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
@@ -40,16 +39,17 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                                 <InputLabel
                                     label={label}
                                     orientation='horizontal'
-                                >
-                                    <input
-                                        type='checkbox'
-                                        checked={columns[label]?.show}
-                                        disabled={getShownColumnCount() === 1 && columns[label].show}
-                                        onChange={() => {
-                                            toggleColumn(label);
-                                        }}
-                                    />
-                                </InputLabel>
+                                    input={
+                                        <input
+                                            type='checkbox'
+                                            checked={columns[label]?.show}
+                                            disabled={getShownColumnCount() === 1 && columns[label].show}
+                                            onChange={() => {
+                                                toggleColumn(label);
+                                            }}
+                                        />
+                                    }
+                                />
                             </div>
                         )}
                     </div>

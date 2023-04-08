@@ -1,10 +1,9 @@
-import { SearchIcon } from "../assets/icons";
 import classNames from "classnames";
 
 export default function InputLabel({
     label,
     layout = "horizontal",
-    children,
+    input,
 }) {
     const containerClass = classNames("relative", {
         "flex flex-col": layout === "vertical",
@@ -16,7 +15,7 @@ export default function InputLabel({
     return (
         <div className={containerClass}>
             {label && <label className={labelClass}>{`${label}:`}</label>}
-            {children}
+            {input}
         </div>
     );
 }

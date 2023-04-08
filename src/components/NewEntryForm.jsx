@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Dropdown from "./Dropdown";
 import { getSessionsByProjectAndYear } from "../utils/firestore";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
@@ -7,24 +6,16 @@ import { appMode } from "../utils/jotai";
 import TabBar from "./TabBar";
 import { AmphibianIcon, ArthropodIcon, LizardIcon, MammalIcon, SnakeIcon, TurtleIcon } from "../assets/icons";
 import { TABLE_KEYS } from "../const/tableLabels";
-import { FormField } from "./FormFields";
+import { FormField, ProjectField, YearField } from "./FormFields";
+import InputLabel from "./InputLabel";
 
 export default function NewEntryForm() {
-    const currentYear = new Date().getFullYear();
     const environment = useAtomValue(appMode);
     const [sessions, setSessions] = useState([]);
     const [selectedSessionIndex, setSelectedSessionIndex] = useState(0);
     const [project, setProject] = useState('Gateway');
-    const [year, setYear] = useState(currentYear);
+    const [year, setYear] = useState();
     const [selectedCritter, setSelectedCritter] = useState('Turtle');
-
-    const getYearOptions = () => {
-        const years = [];
-        for (let i = 1969; i <= currentYear; i++) {
-            years.push(i.toString());
-        }
-        return years;
-    }
 
     const sessionIndexMap = sessions.map((session, index) => index);
 
@@ -73,30 +64,33 @@ export default function NewEntryForm() {
             <div className="p-4">
                 <div className='flex justify-between'>
                     <h1 className='heading'>Add New Critter Entry</h1>
-                    <Dropdown
-                        label='Project'
-                        value={project}
-                        onClickHandler={setProject}
-                        options={['Gateway', 'San Pedro', 'Virgin River']}
+                    <ProjectField
+                        project={project}
+                        setProject={setProject}
                     />
                 </div>
                 <div className='grid grid-cols-2'>
-                    <Dropdown
-                        label='Year'
+                    <YearField
+                        year={year}
+                        setYear={setYear}
                         layout='vertical'
-                        value={year}
-                        onClickHandler={setYear}
-                        options={getYearOptions()}
                     />
-                    <Dropdown
+                    <InputLabel
                         label='Session'
                         layout='vertical'
-                        disabled={sessions.length === 0}
-                        value={activeSessions[selectedSessionIndex] || ''}
-                        onClickHandler={(e) => {
-                            setSelectedSessionIndex(sessionIndexMap[activeSessions.indexOf(e)])
-                        }}
-                        options={activeSessions}
+                        input={
+                            <select
+                                disabled={sessions.length === 0}
+                                value={activeSessions[selectedSessionIndex] || 'No sessions found.'}
+                                onChange={(e) => {
+                                    setSelectedSessionIndex(sessionIndexMap[activeSessions.indexOf(e.target.value)])
+                                }}
+                            >
+                                {activeSessions.map((session) => (
+                                    <option value={session}>{session}</option>
+                                ))}
+                            </select>
+                        }
                     />
                 </div>
                 <SessionSummary session={selectedSession} />
