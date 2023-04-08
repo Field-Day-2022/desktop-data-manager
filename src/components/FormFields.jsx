@@ -3,6 +3,8 @@ import Dropdown from "./Dropdown"
 import { useEffect } from "react";
 import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getTrapStatuses } from "../utils/firestore";
 import { useState } from "react";
+import classNames from "classnames";
+import { SearchIcon } from "../assets/icons";
 
 const ProjectField = ({ project, setProject, layout }) => {
     return (
@@ -25,7 +27,7 @@ const DateField = ({ date, setDate, layout, disabled }) => {
             disabled={disabled}
             type='date'
             layout={layout}
-            defaultValue={(disabled)&&date}
+            defaultValue={(disabled) && date}
             value={date}
             label='Date'
             onChange={(e) => {
@@ -46,7 +48,7 @@ const TimeField = ({ time, setTime, layout, disabled }) => {
             type='time'
             layout={layout}
             value={time}
-            defaultValue={(disabled)&&time}
+            defaultValue={(disabled) && time}
             label='Time'
             onChange={(e) => {
                 setTime(e.target.value);
@@ -228,6 +230,34 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
                 setTrapStatus(e);
             }}
             options={trapStatusOptions} />
+    );
+}
+
+export function SearchField({ search, setSearch }) {
+    const inputClass = classNames({
+        "pl-10": true,
+        "pl-4": false,
+    });
+
+    const iconContainerClass = classNames(
+        "absolute inset-y-0 left-0 pl-3 flex items-center",
+        "pointer-events-none",
+        "text-neutral-400 text-xl",
+    );
+
+    return (
+        <div className="relative">
+            <input
+                className={inputClass}
+                type="search"
+                value={search}
+                onChange={setSearch}
+                placeholder={'Search'}
+            />
+            <div className={iconContainerClass}>
+                <SearchIcon />
+            </div>
+        </div>
     );
 }
 

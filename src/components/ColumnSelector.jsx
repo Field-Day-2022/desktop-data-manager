@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import InputField from './InputField';
+import InputLabel from './InputLabel';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     const ref = useRef();
@@ -36,8 +37,11 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                         <h1 className='text-xl pt-2 px-4'>Column Selector</h1>
                         {labels && labels.map((label) =>
                             <div key={label} className='hover:bg-neutral-100 px-6'>
-                                    <InputField
-                                        label={label}
+                                <InputLabel
+                                    label={label}
+                                    orientation='horizontal'
+                                >
+                                    <input
                                         type='checkbox'
                                         checked={columns[label]?.show}
                                         disabled={getShownColumnCount() === 1 && columns[label].show}
@@ -45,6 +49,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                                             toggleColumn(label);
                                         }}
                                     />
+                                </InputLabel>
                             </div>
                         )}
                     </div>

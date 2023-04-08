@@ -158,7 +158,7 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
 
     return (
         <td key={dbKey} className="text-center border-b border-gray-400 p-1">
-            <InputField
+            <input
                 disabled={disabled}
                 className="text-center"
                 value={dbKey === 'dateTime' ? 
