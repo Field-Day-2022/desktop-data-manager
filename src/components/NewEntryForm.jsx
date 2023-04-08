@@ -134,6 +134,7 @@ const CritterForm = ({ critter, project, session }) => {
                             setValue={() => { }}
                             project={project}
                             site={session.site}
+                            taxa={critter}
                         />
                     )
                 })

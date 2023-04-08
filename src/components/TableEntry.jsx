@@ -4,9 +4,10 @@ import { currentTableName } from '../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
-import { getKey, getKeys, getLabel } from '../const/tableLabels';
+import { getKey, getKeys, getLabel, TABLE_LABELS } from '../const/tableLabels';
 import { startEntryOperation } from '../utils/firestore';
 import { notify } from './Notifier';
+import { FormField } from './FormFields';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {

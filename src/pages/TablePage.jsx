@@ -28,8 +28,6 @@ export default function TablePage() {
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
-    // entries[0] && console.log(entries[0].data());
-
     const loadDynamicArthropodLabels = async () => {
         setLabels(await dynamicArthropodLabels())
     }

@@ -80,9 +80,8 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${
-        tableName === 'Session' ? 'Session' : 'Data'
-    }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
+        }`;
 };
 
 const getCollectionNameFromDoc = (snapshot) => {
@@ -265,6 +264,28 @@ const getSessionsByProjectAndYear = async (environment, projectName, year) => {
     return sessions.docs;
 };
 
+const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
+    console.log(`${project}${taxa}Species`)
+    const answerSet = await getDocs(
+        query(
+            collection(db, 'AnswerSet'),
+            where('set_name', '==', `${project}${taxa}Species`)
+        )
+    );
+    const options = [
+    ];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push({
+                code: answer.primary,
+                genus: answer.secondary.Genus,
+                species: answer.secondary.Species,
+            });
+        });
+    });
+    return options;
+};
+
 export {
     getDocsFromCollection,
     addDocToCollection,
@@ -279,4 +300,5 @@ export {
     getFenceTraps,
     getSexes,
     getSessionsByProjectAndYear,
+    getSpeciesCodesForProjectByTaxa,
 };

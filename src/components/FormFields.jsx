@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getTrapStatuses } from "../utils/firestore";
+import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getSpeciesCodesForProjectByTaxa, getTrapStatuses } from "../utils/firestore";
 import { useState } from "react";
 import classNames from "classnames";
 import { SearchIcon } from "../assets/icons";
@@ -416,7 +416,256 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
     );
 }
 
-export const FormField = ({ fieldName, value, setValue, site, project, layout, disabled }) => {
+const TaxaField = ({ taxa, setTaxa, layout, disabled }) => {
+    const [taxaOptions, setTaxaOptions] = useState([
+        'Turtle',
+        'Lizard',
+        'Mammal',
+        'Snake',
+        'Amphibian',
+    ]);
+    return (
+        <InputLabel
+            label='Taxa'
+            layout={layout}
+            input={
+                <select
+                    disabled={disabled}
+                    value={taxa}
+                    onChange={(e) => {
+                        setTaxa(e);
+                    }}
+                >
+                    {taxaOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
+    );
+}
+
+const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled }) => {
+    const [speciesOptions, setSpeciesOptions] = useState([]);
+    useEffect(() => {
+        getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
+            setSpeciesOptions(species.map((s) => s.code));
+            setSpecies(species[0].code);
+        })
+    }, [taxa, project])
+    return (
+        <InputLabel
+            label='Species'
+            layout={layout}
+            input={
+                <select
+                    disabled={disabled}
+                    value={species}
+                    onChange={(e) => {
+                        setSpecies(e);
+                    }}
+                >
+                    {speciesOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
+    );
+}
+
+const SpeciesField = ({ species, setSpecies, project, taxa, layout, disabled }) => {
+    const [speciesOptions, setSpeciesOptions] = useState([]);
+    useEffect(() => {
+        getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
+            setSpeciesOptions(species.map((s) => s.species));
+            setSpecies(species[0].species);
+            console.log(species);
+        })
+    }, [taxa, project])
+    return (
+        <InputLabel
+            label='Species'
+            layout={layout}
+            input={
+                <select
+                    disabled={disabled}
+                    value={species}
+                    onChange={(e) => {
+                        setSpecies(e);
+                    }}
+                >
+                    {speciesOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
+    );
+}
+
+const GenusField = ({ genus, setGenus, project, taxa, layout, disabled }) => {
+    const [genusOptions, setGenusOptions] = useState([]);
+    useEffect(() => {
+        getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
+            setGenusOptions(species.map((s) => s.genus));
+            setGenus(species[0].genus);
+        })
+    }, [taxa, project])
+    return (
+        <InputLabel
+            label='Genus'
+            layout={layout}
+            input={
+                <select
+                    disabled={disabled}
+                    value={genus}
+                    onChange={(e) => {
+                        setGenus(e);
+                    }}
+                >
+                    {genusOptions.map((option) => {
+                        return (
+                            <option key={option} value={option}>{option}</option>
+                        )
+                    })}
+                </select>
+            }
+        />
+    );
+}
+
+const VTLField = ({ vtl, setVTL, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='VTL (mm)'
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='number'
+                    value={vtl}
+                    onChange={(e) => {
+                        setVTL(e.target.value);
+                    }}
+                />
+            }
+        />
+    );
+}
+
+const SVLField = ({ svl, setSVL, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='SVL (mm)'
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='number'
+                    value={svl}
+                    onChange={(e) => {
+                        setSVL(e.target.value);
+                    }}
+                />
+            }
+        />
+    );
+}
+
+const HatchlingField = ({ hatchling, setHatchling, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='Hatchling'
+            layout={layout}
+            input={
+                <TrueFalseToggle
+                    disabled={disabled}
+                    value={hatchling}
+                    setValue={setHatchling}
+                />
+            }
+        />
+    );
+}
+
+const OTLField = ({ otl, setOTL, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='OTL (mm)'
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='number'
+                    value={otl}
+                    onChange={(e) => {
+                        setOTL(e.target.value);
+                    }}
+                />
+            }
+        />
+    );
+}
+
+const MassField = ({ mass, setMass, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='Mass (g)'
+            layout={layout}
+            input={
+                <input
+                    disabled={disabled}
+                    type='number'
+                    value={mass}
+                    onChange={(e) => {
+                        setMass(e.target.value);
+                    }}
+                />
+            }
+        />
+    );
+}
+
+const RecaptureField = ({ recapture, setRecapture, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='Recapture'
+            layout={layout}
+            input={
+                <TrueFalseToggle
+                    disabled={disabled}
+                    value={recapture}
+                    setValue={setRecapture}
+                />
+            }
+        />
+    );
+}
+
+const RegenTailField = ({ regenTail, setRegenTail, layout, disabled }) => {
+    return (
+        <InputLabel
+            label='Regen Tail'
+            layout={layout}
+            input={
+                <TrueFalseToggle
+                    disabled={disabled}
+                    value={regenTail}
+                    setValue={setRegenTail}
+                />
+            }
+        />
+    );
+}
+
+export const FormField = ({ fieldName, value, setValue, site, project, taxa, layout, disabled }) => {
     switch (fieldName) {
         case 'dateTime':
             return <DateTimeField dateTime={value} setDateTime={setValue} layout={layout} disabled={disabled} />
@@ -441,6 +690,28 @@ export const FormField = ({ fieldName, value, setValue, site, project, layout, d
             return <DeadField dead={value} setDead={setValue} layout={layout} disabled={disabled} />
         case 'sex':
             return <SexField sex={value} setSex={setValue} layout={layout} disabled={disabled} />
+        case 'taxa':
+            return <TaxaField taxa={value} setTaxa={setValue} layout={layout} disabled={disabled} />
+        case 'speciesCode':
+            return <SpeciesCodeField project={project} species={value} setSpecies={setValue} taxa={taxa} layout={layout} disabled={disabled} />
+        case 'species':
+            return <SpeciesField project={project} species={value} setSpecies={setValue} taxa={taxa} layout={layout} disabled={disabled} />
+        case 'genus':
+            return <GenusField project={project} genus={value} setGenus={setValue} taxa={taxa} layout={layout} disabled={disabled} />
+        case 'svlMm':
+            return <SVLField svl={value} setSVL={setValue} layout={layout} disabled={disabled} />
+        case 'vtlMm':
+            return <VTLField vtl={value} setVTL={setValue} layout={layout} disabled={disabled} />
+        case 'recapture':
+            return <RecaptureField recapture={value} setRecapture={setValue} layout={layout} disabled={disabled} />
+        case 'otlMm':
+            return <OTLField otl={value} setOTL={setValue} layout={layout} disabled={disabled} />
+        case 'hatchling':
+            return <HatchlingField hatchling={value} setHatchling={setValue} layout={layout} disabled={disabled} />
+        case 'massG':
+            return <MassField mass={value} setMass={setValue} layout={layout} disabled={disabled} />
+        case 'regenTail':
+            return <RegenTailField regenTail={value} setRegenTail={setValue} layout={layout} disabled={disabled} />
         default:
             return <div>{`Field not found: ${fieldName}`}</div>
     }
