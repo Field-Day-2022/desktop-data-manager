@@ -80,8 +80,9 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'
-        }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${
+        tableName === 'Session' ? 'Session' : 'Data'
+    }`;
 };
 
 const getCollectionNameFromDoc = (snapshot) => {
@@ -265,15 +266,11 @@ const getSessionsByProjectAndYear = async (environment, projectName, year) => {
 };
 
 const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
-    console.log(`${project}${taxa}Species`)
+    console.log(`${project}${taxa}Species`);
     const answerSet = await getDocs(
-        query(
-            collection(db, 'AnswerSet'),
-            where('set_name', '==', `${project}${taxa}Species`)
-        )
+        query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`))
     );
-    const options = [
-    ];
+    const options = [];
     answerSet.docs.forEach((doc) => {
         doc.data().answers.forEach((answer) => {
             options.push({
