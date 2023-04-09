@@ -129,7 +129,7 @@ const CritterForm = ({ critter, project, session }) => {
     }, [session, critter])
     
     useEffect(() => {
-        console.log(entry);
+        // console.log(entry);
     }, [entry])
 
     const setField = (key, value) => {
@@ -139,6 +139,12 @@ const CritterForm = ({ critter, project, session }) => {
         })
     }
 
+    // console.log(`session:`)
+    // console.log(session)
+
+    // console.log('entry')
+    // console.log(entry)
+
     return (
         <div className='flex-col space-y-1'>
             <div className='grid grid-cols-3'>
@@ -146,6 +152,7 @@ const CritterForm = ({ critter, project, session }) => {
                     const disabled = session[key]
                     return (
                         <FormField
+                            key={key}
                             disabled={disabled}
                             fieldName={key}
                             layout='vertical'
@@ -153,9 +160,11 @@ const CritterForm = ({ critter, project, session }) => {
                             setValue={(e) => { 
                                 setField(key, e)
                             }}
-                            project={project}
                             site={session.site}
+                            array={session.array}
+                            project={project}
                             taxa={critter}
+                            entry={entry}
                         />
                     )
                 })

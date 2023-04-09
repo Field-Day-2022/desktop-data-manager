@@ -261,12 +261,12 @@ const getSessionsByProjectAndYear = async (environment, projectName, year) => {
             where('dateTime', '<=', `${year}-12-31`)
         )
     );
-    console.log('sessions', sessions.docs);
+    // console.log('sessions', sessions.docs);
     return sessions.docs;
 };
 
 const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
-    console.log(`${project}${taxa}Species`);
+    // console.log(`${project}${taxa}Species`);
     const answerSet = await getDocs(
         query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`))
     );
