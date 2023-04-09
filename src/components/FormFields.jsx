@@ -4,6 +4,13 @@ import { useState } from "react";
 import classNames from "classnames";
 import { SearchIcon } from "../assets/icons";
 import InputLabel from "./InputLabel";
+import { Type, notify } from "./Notifier";
+import { useAtom, useAtomValue } from "jotai";
+import { appMode } from "../utils/jotai";
+import { AnimatePresence, useCycle } from "framer-motion";
+import { getDocs, query, collection, where } from "firebase/firestore";
+import { motion } from "framer-motion";
+import { db } from "../utils/firebase";
 
 export const YearField = ({ year, setYear, layout }) => {
     const currentYear = new Date().getFullYear();
@@ -101,7 +108,7 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
     const [time, setTime] = useState(dateTime?.split('T')[1]?.split('.')[0] || '');
 
     useEffect(() => {
-        console.log(date, time);
+        // console.log(date, time);
         setDateTime(`${date}T${time}`);
     }, [date, time]);
 
@@ -245,11 +252,11 @@ const TrueFalseToggle = ({ disabled, value, setValue }) => {
         <div className='flex'>
             <div className='flex'>
                 <label className='text-sm w-full text-left p-2'>True</label>
-                <input disabled={disabled} type='radio' name={`${value}`} value='true' checked={value === 'true'} onChange={setValue} />
+                <input disabled={disabled} type='radio' name={`${value}`} value='true' checked={value === 'true'} onChange={() => setValue('true')} />
             </div>
             <div className='flex'>
                 <label className='text-sm w-full text-left p-2'>False</label>
-                <input disabled={disabled} type='radio' name={`${value}`} value='false' checked={value === 'false'} onChange={setValue} />
+                <input disabled={disabled} type='radio' name={`${value}`} value='false' checked={value === 'false'} onChange={() => setValue('false')} />
             </div>
         </div>
     )
@@ -445,8 +452,10 @@ const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled
     const [speciesOptions, setSpeciesOptions] = useState([]);
     useEffect(() => {
         getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
-            setSpeciesOptions(species.map((s) => s.code));
-            setSpecies(species[0].code);
+            if (species.length) {
+                setSpeciesOptions(species.map((s) => s.code));
+                setSpecies(species[0].code);
+            }
         })
     }, [taxa, project])
     return (
@@ -458,7 +467,7 @@ const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled
                     disabled={disabled}
                     value={species}
                     onChange={(e) => {
-                        setSpecies(e);
+                        setSpecies(e.target.value);
                     }}
                 >
                     {speciesOptions.map((option) => {
@@ -639,7 +648,7 @@ const RecaptureField = ({ recapture, setRecapture, layout, disabled }) => {
                     setValue={setRecapture}
                 />
             }
-        />
+        / >
     );
 }
 
@@ -652,14 +661,327 @@ const RegenTailField = ({ regenTail, setRegenTail, layout, disabled }) => {
                 <TrueFalseToggle
                     disabled={disabled}
                     value={regenTail}
-                    setValue={setRegenTail}
+                    setValue={(value) => setRegenTail(value)}
                 />
             }
         />
     );
 }
+const ToeClipCodeField = ({
+    toeCode,
+    setToeCode,
+    project,
+    site,
+    array,
+    speciesCode,
+    recapture
+}) => {
 
-export const FormField = ({ fieldName, value, setValue, site, project, taxa, layout, disabled }) => {
+    const environment = useAtomValue(appMode);
+
+    console.log({
+        toeCode,
+        setToeCode,
+        environment,
+        project,
+        site,
+        array,
+        speciesCode,
+        recapture
+    })
+
+    const [buttonText, setButtonText] = useState('Generate');
+    const [recaptureHistoryIsOpen, setRecaptureHistoryIsOpen] = useState(false);
+    const [previousLizardEntries, setPreviousLizardEntries] = useState([]);
+    const [toeCodeIsValid, setToeCodeIsValid] = useState(undefined);
+
+    useEffect(() => {
+        if (recapture === 'true') setButtonText('History');
+        else setButtonText('Generate');
+        setToeCode('')
+        setToeCodeIsValid(undefined)
+    }, [recapture])
+
+    const generateNewToeCode = async () => {
+        if (toeCode === undefined) toeCode = '';
+        if (toeCode.includes('C4') || toeCode.includes('D4')) {
+            notify(Type.error, 'App does not generate toe clip codes with C4 or D4');
+        }
+        console.log(`Environment: ${environment}`)
+        const collectionName = environment === 'live' ? 
+            `${project.replace(/\s/g, '')}Data` 
+            : 
+            `Test${project.replace(/\s/g, '')}Data`;
+        const lizardSnapshot = await getDocs(query(
+            collection(db, collectionName),
+            where('site', '==', site),
+            where('array', '==', array),
+            where('speciesCode', '==', speciesCode)
+        ));
+        console.log(`${collectionName} from site ${site} and array ${array} with species code ${speciesCode}`)
+        const toeCodesArray = [];
+        lizardSnapshot.docs.forEach(document => {
+            toeCodesArray.push(document.data().toeClipCode)
+        })
+        console.log(toeCodesArray)
+        const toeCodesTemplateSnapshot = await getDocs(query(
+            collection(db, 'AnswerSet'),
+            where('set_name', '==', 'toe clip codes')
+        ));
+        for (const templateToeCode of toeCodesTemplateSnapshot.docs[0].data().answers) {
+            if (
+                !toeCodesArray.includes(templateToeCode.primary) && 
+                !templateToeCode.primary.includes('C4') &&
+                !templateToeCode.primary.includes('D4')
+            ) {
+                setToeCode(templateToeCode.primary);
+                setToeCodeIsValid(true);
+                return;
+            }
+        }
+    };
+
+    const checkToeCodeValidity = async () => {
+        if (toeCode === undefined) toeCode = ''
+        if (toeCode.length < 2) {
+            notify(Type.error, 'Toe Clip Code needs to be at least 2 characters long');
+            return false;
+        } else if (toeCode.length % 2) {
+            notify(Type.error, 'Toe Clip Code must have an even number of characters');
+            return false;
+        } else {
+            const collectionName = environment === 'live' ? 
+                `${project.replace(/\s/g, '')}Data` 
+                : 
+                `Test${project.replace(/\s/g, '')}Data`;
+            const lizardSnapshot = await getDocs(query(
+                collection(db, collectionName),
+                where('toeClipCode', '==', toeCode),
+                where('site', '==', site),
+                where('array', '==', array),
+                where('speciesCode', '==', speciesCode)
+            ));
+            if (recapture === 'true') {
+                if (lizardSnapshot.size > 0) {
+                    return true;
+                } else {
+                    notify(
+                        Type.error,
+                        'Toe Clip Code is not previously recorded, please uncheck the recapture box to record a new entry'
+                    );
+                    return false;
+                }
+            } else {
+                if (lizardSnapshot.size > 0) {
+                    notify(
+                        Type.error,
+                        'Toe Clip Code is already taken, choose another or check recapture box'
+                    );
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    };
+
+    const findPreviousLizardEntries = async () => {
+        setButtonText('Querying...');
+        const collectionName = environment === 'live' ? 
+            `${project.replace(/\s/g, '')}Data` 
+            : 
+            `Test${project.replace(/\s/g, '')}Data`;
+        const lizardDataRef = collection(db, collectionName);
+        const q = query(
+            lizardDataRef,
+            where('toeClipCode', '==', toeCode),
+            where('site', '==', site),
+            where('array', '==', array),
+            where('speciesCode', '==', speciesCode)
+        );
+        const lizardEntriesSnapshot = await getDocs(q);
+        let tempArray = [];
+        for (const doc of lizardEntriesSnapshot.docs) {
+            console.log(doc.data());
+            tempArray.push(doc.data());
+        }
+        setPreviousLizardEntries(tempArray);
+        setRecaptureHistoryIsOpen(true);
+        setButtonText('History');
+    };
+
+    console.log(`toe code is valid ${toeCodeIsValid}`)
+
+    return (
+        <div className='flex flex-col'>
+            <label>Toe Clip Code</label>
+            <input
+                className={toeCodeIsValid === true ? 'border-green-500 border-2'
+                : toeCodeIsValid === false ? 'border-red-500 border-2'
+                : 'border-gray-500 border-2'}
+                type='text'
+                value={toeCode || ''}
+                onChange={e => setToeCode(e.target.value)}
+                onBlur={async () => {
+                    setToeCodeIsValid(await checkToeCodeValidity())
+                }}
+            />
+            <button
+                className="w-min mt-1"
+                onClick={() => {
+                    if (buttonText === 'Generate') generateNewToeCode();
+                    else if (buttonText === 'History') {
+                        findPreviousLizardEntries();  
+                    };
+                }}
+            >{buttonText}</button>
+            <AnimatePresence>
+            {recaptureHistoryIsOpen && 
+                <LandscapeTable 
+                    site={site}
+                    speciesCode={speciesCode}
+                    toeCode={toeCode}
+                    previousLizardEntries={previousLizardEntries}
+                    setRecaptureHistoryIsOpen={setRecaptureHistoryIsOpen}
+                />
+            }
+            </AnimatePresence>
+        </div>
+    )
+}
+
+const LandscapeTable = ({
+    site,
+    speciesCode,
+    toeCode,
+    previousLizardEntries,
+    setRecaptureHistoryIsOpen
+}) => {
+
+    const lizardHistoryLabelArray = [
+        'Date',
+        'Array',
+        'Recapture',
+        'SVL',
+        'VTL',
+        'OTL',
+        'Mass',
+        'Sex',
+        'Dead',
+        'Comments',
+    ];
+
+    const lizardHistoryLabelKeys = [
+        'dateTime',
+        'array',
+        'recapture',
+        'svlMm',
+        'vtlMm',
+        'otlMm',
+        'massG',
+        'sex',
+        'dead',
+        'comments'
+    ]
+
+
+    return (
+        <motion.div 
+            className="absolute h-[calc(100%-2.5rem)] w-[calc(100%-2.5rem)] shadow-2xl top-0 left-0 bg-white border-2 border-asu-maroon rounded-2xl m-5 p-1 flex flex-col items-center portrait:hidden z-50"
+            initial={{opacity: 0, y: '50%'}}
+            animate={{opacity: 1, y: '0', transition: { duration: .15 }}}
+            exit={{opacity: 0, y: '25%', transition: { duration: .05 }}}
+        >
+            <h1 className="text-3xl">Recapture History</h1>
+
+            <motion.div className="flex items-center space-x-2 justify-center w-full border-black border-0 justify-items-center max-w-md">
+                <motion.div className="flex w-16 flex-col items-center">
+                    <p className="text-sm text-black/75 italic leading-none">
+                        Site
+                    </p>
+                    <motion.div className="w-full bg-black h-[1px]" />
+                    <p className="text-md text-black font-semibold leading-tight">
+                        {site}
+                    </p>
+                </motion.div>
+                <motion.div className="flex w-20 flex-col items-center">
+                    <p className="text-sm text-black/75 italic leading-none">
+                        Species
+                    </p>
+                    <motion.div className="w-full bg-black h-[1px]" />
+                    <p className="text-md text-black font-semibold leading-tight">
+                        {speciesCode ?? 'N/A'}
+                    </p>
+                </motion.div>
+                <motion.div className="flex w-28 flex-col items-center">
+                    <p className="text-sm text-black/75 italic leading-none">
+                        Toe Clip Code
+                    </p>
+                    <motion.div className="w-full bg-black h-[1px]" />
+                    <p className="text-md text-black font-semibold leading-tight">
+                        {toeCode}
+                    </p>
+                </motion.div>
+            </motion.div>
+
+            <motion.div className="border-2 border-black w-full h-full mb-2 rounded-xl shadow-lg overflow-y-auto">
+                <table className="text-center text-sm w-full table-auto border-collapse">
+                    <thead>
+                        <tr>
+                            {lizardHistoryLabelArray.map(((label, index, array) => (
+                                <td key={label} className={index < array.length - 1 ? 
+                                                            'border-r-[1px] border-b-2 border-black'
+                                                            :
+                                                            'border-r-0 border-b-2 border-black'
+                                    }>{label}</td>
+                            )))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {previousLizardEntries.map((entry, index, array) => {
+                            return (
+                                <tr key={index}>
+                                    {lizardHistoryLabelKeys.map((key, index, array) => {
+                                        let itemToDisplay = entry[key] ?? 'N/A';
+                                        if (key === 'dateTime') {
+                                            const date = new Date(entry[key]).toLocaleDateString();
+                                            itemToDisplay = date;
+                                        } 
+                                        if (itemToDisplay  === 'false') {
+                                            itemToDisplay = 'No';
+                                        }
+                                        if (itemToDisplay === 'true') {
+                                            itemToDisplay = 'Yes';
+                                        }
+                                        return (
+                                            <td 
+                                                key={`${itemToDisplay}${index}`} 
+                                                className={
+                                                    index < array.length - 1 ? 
+                                                    'border-r-[1px] border-b-[1px] border-black'
+                                                    :
+                                                    'border-b-[1px] border-black'
+                                                }
+                                            >{itemToDisplay}</td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </motion.div>
+            <button
+                className="border-2 text-xl border-asu-maroon rounded-xl w-1/2 px-4 py-1 mb-2 mt-auto"
+                onClick={() => setRecaptureHistoryIsOpen(false)}
+            >
+                Close
+            </button>
+        </motion.div>
+    )
+}
+
+export const FormField = ({ fieldName, value, setValue, site, project, taxa, layout, disabled, entry, array }) => {
     switch (fieldName) {
         case 'dateTime':
             return <DateTimeField dateTime={value} setDateTime={setValue} layout={layout} disabled={disabled} />
@@ -706,6 +1028,16 @@ export const FormField = ({ fieldName, value, setValue, site, project, taxa, lay
             return <MassField mass={value} setMass={setValue} layout={layout} disabled={disabled} />
         case 'regenTail':
             return <RegenTailField regenTail={value} setRegenTail={setValue} layout={layout} disabled={disabled} />
+        case 'toeClipCode':
+            return <ToeClipCodeField 
+                toeCode={value}
+                setToeCode={setValue}
+                site={site}
+                project={project}
+                array={array}
+                speciesCode={entry.speciesCode}
+                recapture={entry.recapture}
+            />
         default:
             return <div>{`Field not found: ${fieldName}`}</div>
     }
