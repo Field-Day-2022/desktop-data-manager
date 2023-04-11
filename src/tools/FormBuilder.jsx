@@ -281,7 +281,7 @@ export default function FormBuilder({ triggerRerender }) {
                         e.preventDefault();
                         setEditAllEntriesModal(true)
                     }}
-                    className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                    className="button border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                 >
                     Submit
                 </button>
@@ -310,21 +310,21 @@ export default function FormBuilder({ triggerRerender }) {
                     >
                         <p className='text-4xl'>Where would you like to update this data?</p>
                         <button
-                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            className='button text-xl p-4 hover:scale-105 transition hover:brightness-110'
                             onClick={(e) => {
                                 e.preventDefault();
                                 submitChanges()
                             }}
                         >Change just this collection</button>
                         <button
-                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            className='button text-xl p-4 hover:scale-105 transition hover:brightness-110'
                             onClick={(e) => {
                                 e.preventDefault();
                                 submitChanges('andUpdateAllDocuments')
                             }}
                         >Change this collection and everywhere this data is used (expensive operation)</button>
                         <button
-                            className='text-xl p-4 hover:scale-105 transition hover:brightness-110'
+                            className='button text-xl p-4 hover:scale-105 transition hover:brightness-110'
                             onClick={(e) => {
                                 e.preventDefault();
                                 setEditAllEntriesModal(false)
@@ -523,7 +523,7 @@ const NewDocumentForm = ({
                     </div>
                 ))}
                 <button
-                    className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-max cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                    className="button border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-max cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                     onClick={e => {
                         e.preventDefault();
                         let tempKeysArray = [...formData.secondary_keys];
@@ -536,7 +536,7 @@ const NewDocumentForm = ({
                         e.preventDefault();
                         submitChanges();
                     }}
-                    className="border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                    className="button border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                 >Submit</button>
             </form>
         )

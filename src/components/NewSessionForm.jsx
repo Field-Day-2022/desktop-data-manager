@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 export default function NewSessionForm({ session, setField, project, setProject }) {
     useEffect(() => {
-        console.log(session)
+        // console.log(session)
     }, [session])
     return (
         <div className='flex-col p-4 space-y-1'>
@@ -20,7 +20,7 @@ export default function NewSessionForm({ session, setField, project, setProject 
                 {TABLE_KEYS['Session'].map((key) => {
                     const colSpan = (key === 'dateTime' || key === 'commentsAboutTheArray') ? 'col-span-2' : 'col-span-1';
                     return (
-                        <div className={colSpan}>
+                        <div key={key} className={colSpan}>
                             <FormField
                                 fieldName={key}
                                 value={session[key]}

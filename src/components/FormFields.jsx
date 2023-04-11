@@ -17,10 +17,11 @@ export const YearField = ({ year, setYear, layout }) => {
     const getYearOptions = () => {
         const years = [];
         for (let i = 1969; i <= currentYear; i++) {
-            years.push(i.toString());
+            years.unshift(i.toString());
         }
         return years;
     }
+
 
     return (
         <InputLabel
@@ -28,13 +29,17 @@ export const YearField = ({ year, setYear, layout }) => {
             layout={layout}
             input={
                 <select
-                    value={year}
+                    defaultValue='Select an option'
                     onChange={(e) => {
                         setYear(e.target.value);
                     }}
                 >
+                    <option value="Select an option" disabled hidden>Select an option</option>
                     {getYearOptions().map((year) => (
-                        <option key={year} value={year}>{year}</option>
+                        <option 
+                            key={year} 
+                            value={year}
+                        >{year}</option>
                     ))}
                 </select>
             }
@@ -104,12 +109,16 @@ const TimeField = ({ time, setTime, layout, disabled }) => {
 }
 
 const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
-    const [date, setDate] = useState(dateTime?.split('T')[0] || '');
-    const [time, setTime] = useState(dateTime?.split('T')[1]?.split('.')[0] || '');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
 
     useEffect(() => {
-        // console.log(date, time);
-        setDateTime(`${date}T${time}`);
+
+        console.log(`date: ${date}, time: ${time}`)
+        if (date !== '' && time !== '') {
+            const newDate = new Date(`${date} ${time}`);
+            setDateTime(newDate.toISOString());
+        }
     }, [date, time]);
 
     return (
@@ -262,30 +271,43 @@ const TrueFalseToggle = ({ disabled, value, setValue }) => {
     )
 }
 
-const DeadField = ({ dead, setDead, layout, disabled }) => {
+const Checkbox = ({ value, setValue, label}) => {
     return (
-        <InputLabel
-            label='Dead'
-            layout={layout}
-            input={
-                <TrueFalseToggle
-                    disabled={disabled}
-                    value={dead}
-                    setValue={(e) => {
-                        setDead(e.target.value);
-                    }}
-                />
-            }
-        />
+        <div 
+            className='flex items-center ml-2'
+            onClick={() => {
+                if (value === 'true') setValue('false')
+                else if (
+                    value === '' || 
+                    value === undefined || 
+                    value === 'false'
+                ) setValue('true');
+            }}
+        >
+            <label className="cursor-pointer">{label}</label>
+            <input
+                readOnly 
+                className='ml-2 w-4 cursor-pointer'
+                type='checkbox'
+                checked={value === 'true'} 
+            />
+        </div>
     )
 }
+
+const DeadField = ({ dead, setDead, layout, disabled }) => (
+    <Checkbox 
+        label={'Dead?'}
+        setValue={setDead}
+        value={dead}
+    /> 
+)
 
 const SexField = ({ sex, setSex, layout, disabled }) => {
     const [sexOptions, setSexOptions] = useState([]);
     useEffect(() => {
         getSexes().then((sexes) => {
             setSexOptions(sexes)
-            setSex(sexes[0])
         })
     }, [])
     return (
@@ -295,11 +317,12 @@ const SexField = ({ sex, setSex, layout, disabled }) => {
             input={
                 <select
                     disabled={disabled}
-                    value={sex}
+                    defaultValue={'Select an option'}
                     onChange={(e) => {
-                        setSex(e);
+                        setSex(e.target.value);
                     }}
                 >
+                    <option value="Select an option" disabled hidden>Select an option</option>
                     {sexOptions.map((option) => {
                         return (
                             <option key={option} value={option}>{option}</option>
@@ -401,11 +424,12 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
             input={
                 <select
                     disabled={disabled}
-                    value={fenceTrap}
+                    defaultValue={'Select an option'}
                     onChange={(e) => {
-                        setFenceTrap(e);
+                        setFenceTrap(e.target.value);
                     }}
                 >
+                    <option value="Select an option" disabled hidden>Select an option</option>
                     {fenceTrapOptions.map((option) => {
                         return (
                             <option key={option} value={option}>{option}</option>
@@ -464,12 +488,13 @@ const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled
             layout={layout}
             input={
                 <select
+                    defaultValue={'Select an option'}
                     disabled={disabled}
-                    value={species}
                     onChange={(e) => {
                         setSpecies(e.target.value);
                     }}
                 >
+                    <option value="Select an option" disabled hidden>Select an option</option>
                     {speciesOptions.map((option) => {
                         return (
                             <option key={option} value={option}>{option}</option>
@@ -582,21 +607,13 @@ const SVLField = ({ svl, setSVL, layout, disabled }) => {
     );
 }
 
-const HatchlingField = ({ hatchling, setHatchling, layout, disabled }) => {
-    return (
-        <InputLabel
-            label='Hatchling'
-            layout={layout}
-            input={
-                <TrueFalseToggle
-                    disabled={disabled}
-                    value={hatchling}
-                    setValue={setHatchling}
-                />
-            }
-        />
-    );
-}
+const HatchlingField = ({ hatchling, setHatchling, layout, disabled }) => (
+    <Checkbox 
+        label='Hatchling?'
+        value={hatchling}
+        setValue={setHatchling}
+    />
+)
 
 const OTLField = ({ otl, setOTL, layout, disabled }) => {
     return (
@@ -626,7 +643,7 @@ const MassField = ({ mass, setMass, layout, disabled }) => {
                 <input
                     disabled={disabled}
                     type='number'
-                    value={mass}
+                    value={mass || ''}
                     onChange={(e) => {
                         setMass(e.target.value);
                     }}
@@ -636,37 +653,23 @@ const MassField = ({ mass, setMass, layout, disabled }) => {
     );
 }
 
-const RecaptureField = ({ recapture, setRecapture, layout, disabled }) => {
-    return (
-        <InputLabel
-            label='Recapture'
-            layout={layout}
-            input={
-                <TrueFalseToggle
-                    disabled={disabled}
-                    value={recapture}
-                    setValue={setRecapture}
-                />
-            }
-        / >
-    );
-}
+const RecaptureField = ({ recapture, setRecapture, layout, disabled }) => (
+    <Checkbox 
+        label='Recapture?'
+        value={recapture}
+        setValue={setRecapture}
+    />
+);
 
-const RegenTailField = ({ regenTail, setRegenTail, layout, disabled }) => {
-    return (
-        <InputLabel
-            label='Regen Tail'
-            layout={layout}
-            input={
-                <TrueFalseToggle
-                    disabled={disabled}
-                    value={regenTail}
-                    setValue={(value) => setRegenTail(value)}
-                />
-            }
-        />
-    );
-}
+const RegenTailField = ({ regenTail, setRegenTail, layout, disabled }) => (
+    <Checkbox 
+        label="Regen tail?"
+        value={regenTail}
+        setValue={setRegenTail}
+    />
+)
+
+
 const ToeClipCodeField = ({
     toeCode,
     setToeCode,
@@ -679,7 +682,7 @@ const ToeClipCodeField = ({
 
     const environment = useAtomValue(appMode);
 
-    console.log({
+    {/* console.log({
         toeCode,
         setToeCode,
         environment,
@@ -688,7 +691,7 @@ const ToeClipCodeField = ({
         array,
         speciesCode,
         recapture
-    })
+    }) */}
 
     const [buttonText, setButtonText] = useState('Generate');
     const [recaptureHistoryIsOpen, setRecaptureHistoryIsOpen] = useState(false);
@@ -810,8 +813,6 @@ const ToeClipCodeField = ({
         setButtonText('History');
     };
 
-    console.log(`toe code is valid ${toeCodeIsValid}`)
-
     return (
         <div className='flex flex-col'>
             <label>Toe Clip Code</label>
@@ -827,7 +828,7 @@ const ToeClipCodeField = ({
                 }}
             />
             <button
-                className="w-min mt-1"
+                className="w-min mt-1 button"
                 onClick={() => {
                     if (buttonText === 'Generate') generateNewToeCode();
                     else if (buttonText === 'History') {
@@ -972,7 +973,7 @@ const LandscapeTable = ({
                 </table>
             </motion.div>
             <button
-                className="border-2 text-xl border-asu-maroon rounded-xl w-1/2 px-4 py-1 mb-2 mt-auto"
+                className="button border-2 text-xl border-asu-maroon rounded-xl w-1/2 px-4 py-1 mb-2 mt-auto"
                 onClick={() => setRecaptureHistoryIsOpen(false)}
             >
                 Close

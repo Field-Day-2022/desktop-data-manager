@@ -9,13 +9,13 @@ import { TABLE_KEYS } from "../const/tableLabels";
 import { FormField, ProjectField, YearField } from "./FormFields";
 import InputLabel from "./InputLabel";
 
-export default function NewEntryForm() {
+export default function NewEntryForm({ setData }) {
     const environment = useAtomValue(appMode);
     const [sessions, setSessions] = useState([]);
     const [selectedSessionIndex, setSelectedSessionIndex] = useState(0);
     const [project, setProject] = useState('Gateway');
-    const [year, setYear] = useState();
-    const [selectedCritter, setSelectedCritter] = useState('Turtle');
+    const [year, setYear] = useState('');
+    const [selectedCritter, setSelectedCritter] = useState('');
 
     const sessionIndexMap = sessions.map((session, index) => index);
 
@@ -30,6 +30,8 @@ export default function NewEntryForm() {
             }
         })
     }, [project, year])
+
+  
 
     const activeSessions = sessions.map((session) => {
         const date = new Date(session.data().dateTime);
@@ -49,6 +51,10 @@ export default function NewEntryForm() {
         commentsAboutTheArray: '',
     };
 
+    useEffect(() => {
+        setSelectedCritter('')
+    }, [selectedSession.dateTime])
+
     const critterTabs = [
         { text: 'Turtle', icon: <TurtleIcon /> },
         { text: 'Lizard', icon: <LizardIcon className={'h-6'} /> },
@@ -57,7 +63,6 @@ export default function NewEntryForm() {
         { text: 'Mammal', icon: <MammalIcon /> },
         { text: 'Snake', icon: <SnakeIcon /> },
     ]
-
 
     return (
         <div className='flex-col space-y-1 h-tab-modal-content'>
@@ -87,7 +92,7 @@ export default function NewEntryForm() {
                                 }}
                             >
                                 {activeSessions.map((session) => (
-                                    <option value={session}>{session}</option>
+                                    <option key={session} value={session}>{session}</option>
                                 ))}
                             </select>
                         }
@@ -109,7 +114,7 @@ export default function NewEntryForm() {
 
             </div>
             <div className='p-4'>
-                <CritterForm critter={selectedCritter} project={project} session={selectedSession} />
+                {selectedCritter && <CritterForm critter={selectedCritter} project={project} session={selectedSession} />}
             </div>
 
         </div>
@@ -119,57 +124,127 @@ export default function NewEntryForm() {
 const CritterForm = ({ critter, project, session }) => {
     const [entry, setEntry] = useState({});
 
-    useEffect(() => {
-        setEntry({
-            ...TABLE_KEYS[critter].reduce((acc, key) => {
-                acc[key] = session[key] || '';
-                return acc;
-            }, {})
-        })
-    }, [session, critter])
-    
-    useEffect(() => {
-        // console.log(entry);
-    }, [entry])
+   useEffect(() => {
+        console.log(entry)
+   }, [entry])
 
+   const dataObjTemplate = {
+        aran: '',
+        array: '',
+        auch: '',
+        blat: '',
+        cclMm: '',
+        chil: '',
+        cole: '',
+        comments: '',
+        crus: '',
+        dateTime: '',
+        dead: '',
+        derm: '',
+        diel: '',
+        dipt: '',
+        fenceTrap: '',
+        genus: '',
+        hatchling: '',
+        hdBody: '',
+        hete: '',
+        hyma: '',
+        lepi: '',
+        mant: '',
+        massG: '',
+        micro: '',
+        orth: '',
+        otlMm: '',
+        plMm: '',
+        predator: '',
+        pseu: '',
+        recapture: '',
+        regenTail: '',
+        scor: '',
+        sessionDateTime: '',
+        sex: '',
+        site: '',
+        soli: '',
+        species: '',
+        speciesCode: '',
+        svlMm: '',
+        taxa: '',
+        thys: '',
+        toeClipCode: '',
+        unki: '',
+        vtlMm: '',
+        year: '',
+        noCapture: '',
+        lastEdit: '',
+    };
+
+
+    useEffect(() => {
+        // console.log(session.site)
+        console.log(`iterating over ${critter}`)
+        let tempEntry = structuredClone(dataObjTemplate)
+        tempEntry.sessionDateTime = session.dateTime;
+        tempEntry.site = session.site;
+        // console.log({tempEntry})
+        setEntry(tempEntry);
+        // console.log('tempEntry:')
+        // console.log(tempEntry);
+        // setEntry(
+        //     // TABLE_KEYS[critter].reduce((acc, key) => {
+        //     //     acc[key] = '';
+        //     //     return acc;
+        //     // }, {
+        //     //     sessionDateTime: session.dateTime,
+        //     //     site: 'test',
+        //     // })
+        // )
+        // setEntry(TABLE_KEYS[critter])
+        // console.log(`switching to ${critter}`)
+        // console.log(TABLE_KEYS[critter])
+        // console.log(session)
+    }, [critter])
+    
     const setField = (key, value) => {
-        setEntry({
+        setEntry(entry => ({
             ...entry,
-            [key]: value,
-        })
+            [key]: value
+        }))
     }
 
-    // console.log(`session:`)
-    // console.log(session)
-
-    // console.log('entry')
-    // console.log(entry)
+    const addEntry = () => {
+        console.log(entry);
+    }
 
     return (
-        <div className='flex-col space-y-1'>
+        <div className='flex flex-col space-y-1 items-center'>
             <div className='grid grid-cols-3'>
                 {TABLE_KEYS[critter].map((key) => {
-                    const disabled = session[key]
+                    {/* const disabled = session[key] */}
                     return (
                         <FormField
                             key={key}
-                            disabled={disabled}
+                            disabled={false}
                             fieldName={key}
                             layout='vertical'
                             value={entry[key]}
-                            setValue={(e) => { 
-                                setField(key, e)
+                            setValue={(value) => { 
+                                setField(key, value)
                             }}
                             site={session.site}
                             array={session.array}
                             project={project}
                             taxa={critter}
                             entry={entry}
+                            addEntry={addEntry}
                         />
                     )
                 })
                 }
             </div>
+            <button 
+                className='button flex-col items-center w-1/2 text-xl p-2'
+                onClick={() => addEntry()}
+            >Add entry?</button>
         </div>
     )
 }
