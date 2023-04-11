@@ -271,7 +271,32 @@ const TrueFalseToggle = ({ disabled, value, setValue }) => {
     )
 }
 
+const PredatorField = ({pred, setPred }) => (
+    <Checkbox 
+        label={'Predator?'}
+        setValue={setPred}
+        value={pred}
+    />
+)
+
+const HdBodyField = ({ value, setValue }) => (
+    <InputLabel 
+        label='Hd Body'
+        layout='vertical'
+        input={
+            <input 
+                type='number'
+                value={value}
+                onChange={e => setValue(e.target.value)}
+            />
+        }
+    />
+)
+
 const Checkbox = ({ value, setValue, label}) => {
+    useEffect(() => {
+        if (value === undefined || value === '') setValue('false')
+    }, [value])
     return (
         <div 
             className='flex items-center ml-2'
@@ -1058,6 +1083,10 @@ export const FormField = ({ fieldName, value, setValue, site, project, taxa, lay
             return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
         case 'micro':
             return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'predator':
+            return <PredatorField pred={value} setPred={setValue} />
+        case 'hdBody': 
+            return <HdBodyField value={value} setValue={setValue} />
         default:
             return <div>{`Field not found: ${fieldName}`}</div>
     }
