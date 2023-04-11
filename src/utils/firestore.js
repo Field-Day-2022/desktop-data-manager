@@ -289,17 +289,16 @@ export const uploadNewEntry = async (entryData, project, environment) => {
     if (entryData.dateTime === '') entryData.dateTime = now.toISOString();
     entryData.lastEdit = now.getTime();
     for (const key in entryData) {
-        if (entryData[key] === '') entryData[key] = 'N/A'
+        if (entryData[key] === '') entryData[key] = 'N/A';
     }
     const entryId = `${entryData.site}${entryData.taxa}${now.getTime()}`;
     let collectionName = `Test${project.replace(/\s/g, '')}Data`;
     if (environment === 'live') {
-        collectionName = `${project.replace(/\s/g, '')}Data`
+        collectionName = `${project.replace(/\s/g, '')}Data`;
     }
-    await setDoc(doc(db, collectionName, entryId), entryData)
-    .then(() => success = true)
+    await setDoc(doc(db, collectionName, entryId), entryData).then(() => (success = true));
     return success;
-}
+};
 
 export {
     getDocsFromCollection,
