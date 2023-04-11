@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getSessionsByProjectAndYear, getSpeciesCodesForProjectByTaxa } from "../utils/firestore";
+import { getSessionsByProjectAndYear, getSpeciesCodesForProjectByTaxa, uploadNewEntry } from "../utils/firestore";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { appMode } from "../utils/jotai";
@@ -125,6 +125,7 @@ export default function NewEntryForm({ setData }) {
 const CritterForm = ({ critter, project, session }) => {
     const [entry, setEntry] = useState({});
     const [speciesArrayPromise, setSpeciesArrayPromise] = useState();
+    const environment = useAtomValue(appMode);
 
    useEffect(() => {
         // console.log(entry)
@@ -254,15 +255,18 @@ const CritterForm = ({ critter, project, session }) => {
             default:
                 break;
         }
-        if (success === true) {
-            notify(Type.success, 'Successfully added entry to session');
-        } else if (success === false) {
+        if (success === false) {
             notify(Type.error, 'Fill out required fields')
         }
+        return success;
     }
 
-    const addEntry = () => {
-        verifyForm(critter, entry)
+    const addEntry = async () => {
+        if(verifyForm(critter, entry)) {
+            if (await uploadNewEntry(entry, project, environment)) {
+                notify(Type.success, 'Successfully uploaded entry to session')
+            }
+        }
     }
 
     return (
