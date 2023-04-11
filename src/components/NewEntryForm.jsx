@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getSessionsByProjectAndYear } from "../utils/firestore";
+import { getSessionsByProjectAndYear, getSpeciesCodesForProjectByTaxa } from "../utils/firestore";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { appMode } from "../utils/jotai";
@@ -124,6 +124,7 @@ export default function NewEntryForm({ setData }) {
 
 const CritterForm = ({ critter, project, session }) => {
     const [entry, setEntry] = useState({});
+    const [speciesArrayPromise, setSpeciesArrayPromise] = useState();
 
    useEffect(() => {
         console.log(entry)
@@ -204,6 +205,7 @@ const CritterForm = ({ critter, project, session }) => {
         // console.log(`switching to ${critter}`)
         // console.log(TABLE_KEYS[critter])
         // console.log(session)
+        hydrateSpeciesArrays(project, critter)
     }, [critter])
     
     const setField = (key, value) => {
@@ -213,34 +215,49 @@ const CritterForm = ({ critter, project, session }) => {
         }))
     }
 
+    const hydrateSpeciesArrays = async (project, taxa) => {
+        setSpeciesArrayPromise(getSpeciesCodesForProjectByTaxa(project, taxa));
+    }
+
+    const checkRequiredFields = (requiredFields, data) => {
+        for (const field of requiredFields) {
+            if (data[field] === '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
     const verifyForm = (species, data) => {
         console.log({
             species,
             data,
             keys: TABLE_KEYS[species]
         })
+        let success = false;
         switch(species) {
             case 'Turtle':
-                for (const turtleKey of TABLE_KEYS.Turtle) {
-                    if (data[turtleKey] === '' &&
-                        turtleKey !== 'dead' &&
-                        turtleKey !== 'comments') {
-                        notify(Type.error, 'All required fields must be filled out')
-                        break;
-                    } 
-                }
-                notify(Type.success, 'Entry added to session!')
+                success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap'], data);
                 break;
             case 'Lizard':
+                success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap', 'svlMm', 'vtlMm'], data);
                 break;
             case 'Arthropod':
+                success = checkRequiredFields(['fenceTrap'], data);
                 break;
             case 'Mammal':
+                success = checkRequiredFields(['speciesCode', 'fenceTrap', 'massG', 'sex'], data);
                 break;
-            case 'Snake': 
+            case 'Snake':
+                success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap', 'svlMm', 'vtlMm'], data)
                 break;
             default:
                 break;
+        }
+        if (success === true) {
+            notify(Type.success, 'Successfully added entry to session');
+        } else if (success === false) {
+            notify(Type.error, 'Fill out required fields')
         }
     }
 
@@ -269,6 +286,7 @@ const CritterForm = ({ critter, project, session }) => {
                             taxa={critter}
                             entry={entry}
                             addEntry={addEntry}
+                            speciesArray={speciesArrayPromise}
                         />
                     )
                 })

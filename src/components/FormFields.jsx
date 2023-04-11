@@ -425,6 +425,7 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
                 <select
                     disabled={disabled}
                     defaultValue={'Select an option'}
+                    value={fenceTrap || 'Select an option'}
                     onChange={(e) => {
                         setFenceTrap(e.target.value);
                     }}
@@ -441,35 +442,12 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
     );
 }
 
-const TaxaField = ({ taxa, setTaxa, layout, disabled }) => {
-    const [taxaOptions, setTaxaOptions] = useState([
-        'Turtle',
-        'Lizard',
-        'Mammal',
-        'Snake',
-        'Amphibian',
-    ]);
+const TaxaField = ({ taxa }) => {
     return (
-        <InputLabel
-            label='Taxa'
-            layout={layout}
-            input={
-                <select
-                    disabled={disabled}
-                    value={taxa}
-                    onChange={(e) => {
-                        setTaxa(e.target.value);
-                    }}
-                >
-                    {taxaOptions.map((option) => {
-                        return (
-                            <option key={option} value={option}>{option}</option>
-                        )
-                    })}
-                </select>
-            }
-        />
-    );
+        <div className='flex items-center m-2'>
+            <p className="text-black">Taxa: {taxa}</p>
+        </div>
+    )
 }
 
 const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled }) => {
@@ -478,7 +456,7 @@ const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled
         getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
             if (species.length) {
                 setSpeciesOptions(species.map((s) => s.code));
-                setSpecies(species[0].code);
+                setSpecies('');
             }
         })
     }, [taxa, project])
@@ -506,67 +484,38 @@ const SpeciesCodeField = ({ species, setSpecies, project, taxa, layout, disabled
     );
 }
 
-const SpeciesField = ({ species, setSpecies, project, taxa, layout, disabled }) => {
-    const [speciesOptions, setSpeciesOptions] = useState([]);
+const SpeciesField = ({ species, setSpecies, project, taxa, layout, disabled, entry, speciesArray }) => {
+    const [speciesText, setSpeciesText] = useState('Select species code')
     useEffect(() => {
-        getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
-            setSpeciesOptions(species.map((s) => s.species));
-            setSpecies(species[0].species);
-            console.log(species);
+        if (species !== '' && species !== undefined) setSpeciesText(species);
+    }, [species])
+    useEffect(() => {
+        speciesArray && speciesArray.then((speciesArray) => {
+            speciesArray && setSpecies(speciesArray.filter(species => species.code === entry.speciesCode)[0]?.species || '')
         })
-    }, [taxa, project])
+    }, [entry.speciesCode, speciesArray])
     return (
-        <InputLabel
-            label='Species'
-            layout={layout}
-            input={
-                <select
-                    disabled={disabled}
-                    value={species}
-                    onChange={(e) => {
-                        setSpecies(e);
-                    }}
-                >
-                    {speciesOptions.map((option) => {
-                        return (
-                            <option key={option} value={option}>{option}</option>
-                        )
-                    })}
-                </select>
-            }
-        />
-    );
+        <div className='flex items-center m-2'>
+            <p className="text-black">Species: {speciesText}</p>
+        </div>
+    )
 }
 
-const GenusField = ({ genus, setGenus, project, taxa, layout, disabled }) => {
-    const [genusOptions, setGenusOptions] = useState([]);
+const GenusField = ({ genus, setGenus, project, taxa, layout, disabled, entry, speciesArray }) => {
+    const [genusText, setGenusText] = useState('Select species code')
     useEffect(() => {
-        getSpeciesCodesForProjectByTaxa(project, taxa).then((species) => {
-            setGenusOptions(species.map((s) => s.genus));
-            setGenus(species[0].genus);
+        if (genus !== '' && genus !== undefined) setGenusText(genus);
+    }, [genus])
+    useEffect(() => {
+        speciesArray && speciesArray.then((speciesArray) => {
+            speciesArray && setGenus(speciesArray.filter(species => species.code === entry.speciesCode)[0]?.genus || '')
         })
-    }, [taxa, project])
+    }, [entry.speciesCode, speciesArray])
     return (
-        <InputLabel
-            label='Genus'
-            layout={layout}
-            input={
-                <select
-                    disabled={disabled}
-                    value={genus}
-                    onChange={(e) => {
-                        setGenus(e);
-                    }}
-                >
-                    {genusOptions.map((option) => {
-                        return (
-                            <option key={option} value={option}>{option}</option>
-                        )
-                    })}
-                </select>
-            }
-        />
-    );
+        <div className='flex items-center m-2'>
+            <p className="text-black">Genus: {genusText}</p>
+        </div>
+    )
 }
 
 const VTLField = ({ vtl, setVTL, layout, disabled }) => {
@@ -1010,7 +959,7 @@ const ArthropodDataField = ({
     )
 }
 
-export const FormField = ({ fieldName, value, setValue, site, project, taxa, layout, disabled, entry, array }) => {
+export const FormField = ({ fieldName, value, setValue, site, project, taxa, layout, disabled, entry, array, speciesArray }) => {
     switch (fieldName) {
         case 'dateTime':
             return <DateTimeField dateTime={value} setDateTime={setValue} layout={layout} disabled={disabled} />
@@ -1036,13 +985,13 @@ export const FormField = ({ fieldName, value, setValue, site, project, taxa, lay
         case 'sex':
             return <SexField sex={value} setSex={setValue} layout={layout} disabled={disabled} />
         case 'taxa':
-            return <TaxaField taxa={value} setTaxa={setValue} layout={layout} disabled={disabled} />
+            return <TaxaField taxa={value} />
         case 'speciesCode':
             return <SpeciesCodeField project={project} species={value} setSpecies={setValue} taxa={taxa} layout={layout} disabled={disabled} />
         case 'species':
-            return <SpeciesField project={project} species={value} setSpecies={setValue} taxa={taxa} layout={layout} disabled={disabled} />
+            return <SpeciesField project={project} species={value} setSpecies={setValue} taxa={taxa} layout={layout} disabled={disabled} entry={entry} speciesArray={speciesArray} />
         case 'genus':
-            return <GenusField project={project} genus={value} setGenus={setValue} taxa={taxa} layout={layout} disabled={disabled} />
+            return <GenusField project={project} genus={value} setGenus={setValue} taxa={taxa} layout={layout} disabled={disabled} entry={entry} speciesArray={speciesArray} />
         case 'svlMm':
             return <SVLField svl={value} setSVL={setValue} layout={layout} disabled={disabled} />
         case 'vtlMm':
