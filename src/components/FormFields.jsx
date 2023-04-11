@@ -188,7 +188,7 @@ const SiteField = ({ site, setSite, project, layout, disabled }) => {
             layout={layout}
             input={
                 <select
-                    disabled={disabled}
+                    disabled={true}
                     value={site}
                     onChange={(e) => {
                         setSite(e.target.value);
@@ -221,7 +221,7 @@ const ArrayField = ({ array, setArray, project, site, layout, disabled }) => {
             layout={layout}
             input={
                 <select
-                    disabled={disabled}
+                    disabled={true}
                     value={array}
                     onChange={(e) => {
                         setArray(e.target.value);
@@ -982,6 +982,26 @@ const LandscapeTable = ({
     )
 }
 
+const ArthropodDataField = ({
+    label, 
+    value,
+    setValue
+}) => {
+    return (
+        <InputLabel 
+            layout="vertical"
+            label={label.toUpperCase()}
+            input={
+                <input 
+                    type='number'
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                />
+            }
+        />
+    )
+}
+
 export const FormField = ({ fieldName, value, setValue, site, project, taxa, layout, disabled, entry, array }) => {
     switch (fieldName) {
         case 'dateTime':
@@ -1039,6 +1059,48 @@ export const FormField = ({ fieldName, value, setValue, site, project, taxa, lay
                 speciesCode={entry.speciesCode}
                 recapture={entry.recapture}
             />
+        case 'aran':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'auch':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'blat':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'chil':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'cole':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'crus':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'derm':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'diel':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'dipt':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'hete':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'hyma':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'hymb':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'lepi':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'mant':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'orth':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'pseu':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'scor':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'soli':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'thys':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'unki':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
+        case 'micro':
+            return <ArthropodDataField label={fieldName} value={value} setValue={setValue} />
         default:
             return <div>{`Field not found: ${fieldName}`}</div>
     }
