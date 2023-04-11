@@ -320,7 +320,7 @@ export const uploadNewEntry = async (entryData, project, environment) => {
     for (const key in entryData) {
         if (entryData[key] === '') entryData[key] = 'N/A';
     }
-    const entryId =`${entryData.site}${taxa}${now.getTime()}`;
+    const entryId = `${entryData.site}${taxa}${now.getTime()}`;
     let collectionName = `Test${project.replace(/\s/g, '')}Data`;
     if (environment === 'live') {
         collectionName = `${project.replace(/\s/g, '')}Data`;
