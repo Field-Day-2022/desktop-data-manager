@@ -458,7 +458,7 @@ const TaxaField = ({ taxa, setTaxa, layout, disabled }) => {
                     disabled={disabled}
                     value={taxa}
                     onChange={(e) => {
-                        setTaxa(e);
+                        setTaxa(e.target.value);
                     }}
                 >
                     {taxaOptions.map((option) => {
@@ -669,6 +669,50 @@ const RegenTailField = ({ regenTail, setRegenTail, layout, disabled }) => (
     />
 )
 
+export const checkToeCodeValidity = async (toeCode, environment, project, site, array, speciesCode, recapture) => {
+    if (toeCode === undefined) toeCode = ''
+    if (toeCode.length < 2) {
+        notify(Type.error, 'Toe Clip Code needs to be at least 2 characters long');
+        return false;
+    } else if (toeCode.length % 2) {
+        notify(Type.error, 'Toe Clip Code must have an even number of characters');
+        return false;
+    } else {
+        const collectionName = environment === 'live' ? 
+            `${project.replace(/\s/g, '')}Data` 
+            : 
+            `Test${project.replace(/\s/g, '')}Data`;
+        const lizardSnapshot = await getDocs(query(
+            collection(db, collectionName),
+            where('toeClipCode', '==', toeCode),
+            where('site', '==', site),
+            where('array', '==', array),
+            where('speciesCode', '==', speciesCode)
+        ));
+        if (recapture === 'true') {
+            if (lizardSnapshot.size > 0) {
+                return true;
+            } else {
+                notify(
+                    Type.error,
+                    'Toe Clip Code is not previously recorded, please uncheck the recapture box to record a new entry'
+                );
+                return false;
+            }
+        } else {
+            if (lizardSnapshot.size > 0) {
+                notify(
+                    Type.error,
+                    'Toe Clip Code is already taken, choose another or check recapture box'
+                );
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+};
+
 
 const ToeClipCodeField = ({
     toeCode,
@@ -744,50 +788,6 @@ const ToeClipCodeField = ({
         }
     };
 
-    const checkToeCodeValidity = async () => {
-        if (toeCode === undefined) toeCode = ''
-        if (toeCode.length < 2) {
-            notify(Type.error, 'Toe Clip Code needs to be at least 2 characters long');
-            return false;
-        } else if (toeCode.length % 2) {
-            notify(Type.error, 'Toe Clip Code must have an even number of characters');
-            return false;
-        } else {
-            const collectionName = environment === 'live' ? 
-                `${project.replace(/\s/g, '')}Data` 
-                : 
-                `Test${project.replace(/\s/g, '')}Data`;
-            const lizardSnapshot = await getDocs(query(
-                collection(db, collectionName),
-                where('toeClipCode', '==', toeCode),
-                where('site', '==', site),
-                where('array', '==', array),
-                where('speciesCode', '==', speciesCode)
-            ));
-            if (recapture === 'true') {
-                if (lizardSnapshot.size > 0) {
-                    return true;
-                } else {
-                    notify(
-                        Type.error,
-                        'Toe Clip Code is not previously recorded, please uncheck the recapture box to record a new entry'
-                    );
-                    return false;
-                }
-            } else {
-                if (lizardSnapshot.size > 0) {
-                    notify(
-                        Type.error,
-                        'Toe Clip Code is already taken, choose another or check recapture box'
-                    );
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        }
-    };
-
     const findPreviousLizardEntries = async () => {
         setButtonText('Querying...');
         const collectionName = environment === 'live' ? 
@@ -822,9 +822,17 @@ const ToeClipCodeField = ({
                 : 'border-gray-500 border-2'}
                 type='text'
                 value={toeCode || ''}
-                onChange={e => setToeCode(e.target.value)}
+                onChange={e => setToeCode(e.target.value.toUpperCase())}
                 onBlur={async () => {
-                    setToeCodeIsValid(await checkToeCodeValidity())
+                    setToeCodeIsValid(await checkToeCodeValidity(
+                        toeCode, 
+                        environment, 
+                        project,
+                        site,
+                        array,
+                        speciesCode,
+                        recapture
+                    ))
                 }}
             />
             <button

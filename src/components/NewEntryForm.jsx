@@ -8,6 +8,7 @@ import { AmphibianIcon, ArthropodIcon, LizardIcon, MammalIcon, SnakeIcon, Turtle
 import { TABLE_KEYS } from "../const/tableLabels";
 import { FormField, ProjectField, YearField } from "./FormFields";
 import InputLabel from "./InputLabel";
+import { Type, notify } from "./Notifier";
 
 export default function NewEntryForm({ setData }) {
     const environment = useAtomValue(appMode);
@@ -185,6 +186,7 @@ const CritterForm = ({ critter, project, session }) => {
         let tempEntry = structuredClone(dataObjTemplate)
         tempEntry.sessionDateTime = session.dateTime;
         tempEntry.site = session.site;
+        tempEntry.taxa = critter;
         // console.log({tempEntry})
         setEntry(tempEntry);
         // console.log('tempEntry:')
@@ -211,8 +213,39 @@ const CritterForm = ({ critter, project, session }) => {
         }))
     }
 
+    const verifyForm = (species, data) => {
+        console.log({
+            species,
+            data,
+            keys: TABLE_KEYS[species]
+        })
+        switch(species) {
+            case 'Turtle':
+                for (const turtleKey of TABLE_KEYS.Turtle) {
+                    if (data[turtleKey] === '' &&
+                        turtleKey !== 'dead' &&
+                        turtleKey !== 'comments') {
+                        notify(Type.error, 'All required fields must be filled out')
+                        break;
+                    } 
+                }
+                notify(Type.success, 'Entry added to session!')
+                break;
+            case 'Lizard':
+                break;
+            case 'Arthropod':
+                break;
+            case 'Mammal':
+                break;
+            case 'Snake': 
+                break;
+            default:
+                break;
+        }
+    }
+
     const addEntry = () => {
-        console.log(entry);
+        verifyForm(critter, entry)
     }
 
     return (
