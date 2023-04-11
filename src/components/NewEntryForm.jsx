@@ -127,7 +127,7 @@ const CritterForm = ({ critter, project, session }) => {
     const [speciesArrayPromise, setSpeciesArrayPromise] = useState();
 
    useEffect(() => {
-        console.log(entry)
+        // console.log(entry)
    }, [entry])
 
    const dataObjTemplate = {
@@ -183,7 +183,7 @@ const CritterForm = ({ critter, project, session }) => {
 
     useEffect(() => {
         // console.log(session.site)
-        console.log(`iterating over ${critter}`)
+        // console.log(`iterating over ${critter}`)
         let tempEntry = structuredClone(dataObjTemplate)
         tempEntry.sessionDateTime = session.dateTime;
         tempEntry.site = session.site;

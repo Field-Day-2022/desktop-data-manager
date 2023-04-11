@@ -31,12 +31,12 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
         constraints = [constraints];
     }
 
-    console.log(
-        'Loading entries from collection:',
-        collectionName,
-        'with constraints:',
-        constraints
-    );
+    // console.log(
+    //     'Loading entries from collection:',
+    //     collectionName,
+    //     'with constraints:',
+    //     constraints
+    // );
 
     try {
         const currentQuery = query(
@@ -45,7 +45,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
             ...constraints
         );
         const docs = await getDocs(currentQuery);
-        console.log(`Read ${docs.size} docs from ${collectionName}.`);
+        // console.log(`Read ${docs.size} docs from ${collectionName}.`);
         return docs;
     } catch (error) {
         console.error('Error loading entries:', error);

@@ -114,7 +114,7 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
 
     useEffect(() => {
 
-        console.log(`date: ${date}, time: ${time}`)
+        // console.log(`date: ${date}, time: ${time}`)
         if (date !== '' && time !== '') {
             const newDate = new Date(`${date} ${time}`);
             setDateTime(newDate.toISOString());
