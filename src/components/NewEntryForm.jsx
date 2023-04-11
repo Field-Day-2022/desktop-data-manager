@@ -152,6 +152,7 @@ const CritterForm = ({ critter, project, session }) => {
         hdBody: '',
         hete: '',
         hyma: '',
+        hymb: '',
         lepi: '',
         mant: '',
         massG: '',
