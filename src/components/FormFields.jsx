@@ -278,11 +278,12 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
             layout={layout}
             input={<select
                 disabled={disabled}
-                value={trapStatus}
+                value={trapStatus || 'Select an option'}
                 onChange={(e) => {
                     setTrapStatus(e);
                 } }
             >
+                <option value="Select an option" disabled hidden>Select an option</option>
                 {trapStatusOptions.map((option) => {
                     return (
                         <option key={option} value={option}>{option}</option>
@@ -336,7 +337,6 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
     useEffect(() => {
         getFenceTraps().then((fenceTraps) => {
             setFenceTrapOptions(fenceTraps);
-            setFenceTrap(fenceTraps[0]);
         });
     }, []);
     return (
@@ -433,7 +433,7 @@ const VTLField = ({ vtl, setVTL, layout, disabled }) => (
         input={<input
             disabled={disabled}
             type='number'
-            value={vtl}
+            value={vtl || ''}
             onChange={(e) => {
                 setVTL(e.target.value);
             } } />} />
@@ -446,7 +446,7 @@ const SVLField = ({ svl, setSVL, layout, disabled }) => (
         input={<input
             disabled={disabled}
             type='number'
-            value={svl}
+            value={svl || ''}
             onChange={(e) => {
                 setSVL(e.target.value);
             } } />} />
@@ -467,7 +467,7 @@ const OTLField = ({ otl, setOTL, layout, disabled }) => {
             input={<input
                 disabled={disabled}
                 type='number'
-                value={otl}
+                value={otl || ''}
                 onChange={(e) => {
                     setOTL(e.target.value);
                 } } />} />
@@ -824,7 +824,7 @@ const ArthropodDataField = ({
             label={label.toUpperCase()}
             input={<input
                 type='number'
-                value={value}
+                value={value || ''}
                 onChange={(e) => setValue(e.target.value)} />} />
     );
 }
