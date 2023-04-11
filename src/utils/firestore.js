@@ -287,11 +287,40 @@ export const uploadNewEntry = async (entryData, project, environment) => {
     let success = false;
     const now = new Date();
     if (entryData.dateTime === '') entryData.dateTime = now.toISOString();
+    const taxa = entryData.taxa;
+    if (entryData.taxa === 'Arthropod') {
+        if (entryData.aran === '') entryData.aran = '0';
+        if (entryData.auch === '') entryData.auch = '0';
+        if (entryData.blat === '') entryData.blat = '0';
+        if (entryData.chil === '') entryData.chil = '0';
+        if (entryData.cole === '') entryData.cole = '0';
+        if (entryData.crus === '') entryData.crus = '0';
+        if (entryData.derm === '') entryData.derm = '0';
+        if (entryData.diel === '') entryData.diel = '0';
+        if (entryData.dipt === '') entryData.dipt = '0';
+        if (entryData.hete === '') entryData.hete = '0';
+        if (entryData.hyma === '') entryData.hyma = '0';
+        if (entryData.hymb === '') entryData.hymb = '0';
+        if (entryData.lepi === '') entryData.lepi = '0';
+        if (entryData.mant === '') entryData.mant = '0';
+        if (entryData.orth === '') entryData.orth = '0';
+        if (entryData.pseu === '') entryData.pseu = '0';
+        if (entryData.scor === '') entryData.scor = '0';
+        if (entryData.soli === '') entryData.soli = '0';
+        if (entryData.thys === '') entryData.thys = '0';
+        if (entryData.unki === '') entryData.unki = '0';
+        if (entryData.micro === '') entryData.micro = '0';
+        entryData.taxa = 'N/A';
+    } else if (entryData.taxa === 'Lizard') {
+        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
+            lastEditTime: now.getTime(),
+        });
+    }
     entryData.lastEdit = now.getTime();
     for (const key in entryData) {
         if (entryData[key] === '') entryData[key] = 'N/A';
     }
-    const entryId = `${entryData.site}${entryData.taxa}${now.getTime()}`;
+    const entryId =`${entryData.site}${taxa}${now.getTime()}`;
     let collectionName = `Test${project.replace(/\s/g, '')}Data`;
     if (environment === 'live') {
         collectionName = `${project.replace(/\s/g, '')}Data`;
