@@ -185,9 +185,10 @@ const CritterForm = ({ critter, project, session }) => {
     useEffect(() => {
         // console.log(session.site)
         // console.log(`iterating over ${critter}`)
-        let tempEntry = structuredClone(dataObjTemplate)
+        let tempEntry = dataObjTemplate
         tempEntry.sessionDateTime = session.dateTime;
         tempEntry.site = session.site;
+        tempEntry.array = session.array;
         tempEntry.taxa = critter;
         // console.log({tempEntry})
         setEntry(tempEntry);
@@ -248,6 +249,9 @@ const CritterForm = ({ critter, project, session }) => {
                 break;
             case 'Mammal':
                 success = checkRequiredFields(['speciesCode', 'fenceTrap', 'massG', 'sex'], data);
+                break;
+            case 'Amphibian': 
+                success = checkRequiredFields(['speciesCode', 'hdBody', 'massG', 'sex'], data);
                 break;
             case 'Snake':
                 success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap', 'svlMm', 'vtlMm'], data)
