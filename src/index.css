@@ -22,15 +22,15 @@
         @apply w-10;
     }
 
-    button {
+    .button {
         @apply flex rounded-md p-1.5 text-white whitespace-nowrap bg-asu-maroon border-2 border-transparent;
     }
 
-    button:disabled {
+    .button:disabled {
         @apply cursor-not-allowed bg-neutral-800;
     }
 
-    button:active {
+    .button:active {
         @apply border-asu-gold;
     }
 

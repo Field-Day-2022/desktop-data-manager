@@ -35,8 +35,8 @@ export default function Button({ className, flexible, text, onClick, disabled, i
         <motion.button
           layout
           text={text}
-          key="motionbutton"
-          className={className}
+          key="motion"
+          className={`${className} button`}
           onMouseEnter={() => flexible && expand()}
           onMouseLeave={() => flexible && contract()}
           onClick={onClick}

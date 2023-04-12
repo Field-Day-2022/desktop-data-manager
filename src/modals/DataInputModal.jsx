@@ -11,7 +11,7 @@ export default function DataInputModal({ showModal, closeModal }) {
     const [modalData, setModalData] = useState({});
 
     const tools = {
-        'New Data': <NewEntryForm />,
+        'New Data': <NewEntryForm setData={setModalData} />,
         'New Session': <NewSessionTool setData={setModalData} />,
     };
 
