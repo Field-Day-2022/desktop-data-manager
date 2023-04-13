@@ -6,6 +6,7 @@ import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useAtomValue } from "jotai";
 import { currentProjectName } from "../utils/jotai";
+import { getArthropodLabels } from "../utils/firestore";
 
 export default function ExportModal({ showModal, onCancel }) {
     const [ activeTab, setActiveTab ] = useState('Data Form');
@@ -104,9 +105,16 @@ const DataForm = () => {
 
         let tempCsvData = [];
 
-        // TODO: dynamically fetch arthopod labels and use those instead of the hardcoded ones!
+
+        const arthropodLabels = await getArthropodLabels();
 
         for (const entry of entries) {
+            const arthropodDataObject = {}
+            arthropodLabels.forEach(label => {
+                arthropodDataObject[label.toLowerCase()] = entry[label.toLowerCase()]
+            })
+
+
             tempCsvData.push({
                 sessionDateTime: new Date(entry.sessionDateTime).toLocaleString(),
                 dateTime: new Date(entry.dateTime).toLocaleString(),
@@ -127,29 +135,10 @@ const DataForm = () => {
                 dead: entry.dead,
                 comments: entry.comments,
                 predator: entry.predator,
-                aran: entry.aran,
-                auch: entry.auch,
-                blat: entry.blat,
-                chil: entry.chil,
-                cole: entry.cole,
-                crus: entry.crus,
-                derm: entry.derm,
-                diel: entry.diel,
-                dipt: entry.dipt,
-                hete: entry.hete,
-                hyma: entry.hyma,
-                hymb: entry.hymh,
-                lepi: entry.lepi,
-                mant: entry.mant,
-                orth: entry.orht,
-                pseu: entry.pseu,
-                scor: entry.scor,
-                soli: entry.soli,
-                thys: entry.thys,
-                unki: entry.unki,
-                micro: entry.micro,
+                ...arthropodDataObject,
             });
         }
+
 
         setCsvData(tempCsvData)
         setDisabledState(true);
