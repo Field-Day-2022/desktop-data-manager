@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../components/Modal";
 import TabBar from '../components/TabBar'
-import { CSVLink } from "react-csv";
-import { collection, getDocs } from "firebase/firestore";
+import { CSVDownload, CSVLink } from "react-csv";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firebase";
+import { useSynchronousState } from "@toolz/use-synchronous-state";
 
 export default function ExportModal({ showModal, onCancel }) {
     const [ activeTab, setActiveTab ] = useState('Data Form');
@@ -74,24 +75,39 @@ const DataForm = () => {
         'Arthropod': false,
         'Amphibian': false,
     })
-    const [buttonText, setButtonText] = useState('Download CSV');
+    const [buttonText, setButtonText] = useState('Generate CSV');
     const [csvData, setCsvData] = useState([]);
-    const csvRef = useRef();
+    const [disabledState, setDisabledState] = useState(false);
 
     const generateCsvData = async () => {
+        setButtonText("Generating CSV Data...")
         const entries = [];
-        const projects = ['Gateway, SanPedro, VirginRiver'];
+        const collections = ['TestGatewayData', 'TestSanPedroData', 'TestVirginRiverData'];
+        const selectedTaxas = []
+        for (const form in formsToInclude) {
+            if (formsToInclude[form]) {
+                if (form === 'Arthropod') selectedTaxas.push('N/A');
+                else selectedTaxas.push(form);
+            }
+        }
         for (const form of forms) {
             if (formsToInclude[form]) {
-                for (const project of projects) {
-                    const collectionSnapshot = await getDocs(collection(db, `${project}Data`));
-                    entries.push(...collectionSnapshot.docs);
+                for (const collectionName of collections) {
+                    const collectionSnapshot = await getDocs(query(
+                        collection(db, collectionName),
+                        where('taxa', 'in', selectedTaxas)
+                    ));
+                    collectionSnapshot.forEach(documentSnapshot => 
+                        entries.push(documentSnapshot.data()))
                 }
             }
         }
+
         let tempCsvData = [];
 
         // TODO: dynamically fetch arthopod labels and use those instead of the hardcoded ones!
+
+        // TODO: add option to select projects (currently gets all projects)
 
         for (const entry of entries) {
             tempCsvData.push({
@@ -137,15 +153,26 @@ const DataForm = () => {
                 micro: entry.micro,
             });
         }
-        setCsvData(tempCsvData);
+
+        setCsvData(tempCsvData)
+        setDisabledState(true);
+        setButtonText('CSV Generated');
     }   
 
-    const downloadForms = async () => {
-        setButtonText('Loading...');
-        await generateCsvData();
-        csvRef.current.click();
+    const clearData = () => {
+        setDisabledState(false);
+        setFormsToInclude({
+            'Turtle': false,
+            'Lizard': false,
+            'Mammal': false,
+            'Snake': false,
+            'Arthropod': false,
+            'Amphibian': false,
+        })
+        setButtonText('Generate CSV');
+        setCsvData([])
     }
-    
+
     return (
         <div>
             <h1 className='text-xl m-2'>Please select the forms to include in the file</h1>
@@ -153,22 +180,27 @@ const DataForm = () => {
                 <div 
                     key={form} 
                     className='flex items-center mx-2'
-                    onClick={() => {
-                        setFormsToInclude({...formsToInclude, [form]: !formsToInclude[form]});
-                    }}
                 >
                     <input 
                         className="mr-2 w-4"
-                        value={formsToInclude[form]}
+                        checked={formsToInclude[form]}
+                        onChange={() => setFormsToInclude({...formsToInclude, [form]: !formsToInclude[form]})}
                         type='checkbox' 
                         id={form} 
                     />
-                    <label for={form}>{form}</label>
+                    <label 
+                        htmlFor={form}
+                    >{form}</label>
                 </div>
             ))}
-                <button onClick={() => downloadForms()} className="m-2 button">{buttonText}</button>
+            <button 
+                className="m-2 button" 
+                onClick={() => generateCsvData()}
+                disabled={disabledState}
+            >{buttonText}</button>
+            {csvData.length > 0 && 
+            <div>
             <CSVLink
-                ref={csvRef}
                 data={csvData}
                 headers={[
                     {label: 'Session Date/Time', key: 'sessionDateTime'},
@@ -212,30 +244,88 @@ const DataForm = () => {
                     {label: 'UNKI', key: 'unki'},
                     {label: 'MICRO', key: 'micro'}
                 ]}
-                filename="dataForm.csv"
-            />
+                filename={`dataForm${new Date().getTime()}.csv`}
+            >
+                <button className="m-2 button" onClick={clearData}>Download CSV</button>
+            </CSVLink>
+            <button className="m-2 button" onClick={clearData}>Clear Form</button>
+            </div>
+            }
         </div>
     )
 }
 
 const SessionForm = () => {
-    const [buttonText, setButtonText] = useState('Download CSV');
-    const [csvData, setCsvData] = useState();
+    // TODO: add option to select projects (currently gets all projects)
+    const [buttonText, setButtonText] = useState('Generate CSV');
+    const [csvData, setCsvData] = useState([]);
+    const [disabledState, setDisabledState] = useState(false);
 
+    const clearData = () => {
+        setDisabledState(false);
+        setButtonText('Generate CSV');
+        setCsvData([])
+    }
 
-    const downloadForms = () => {
-        
+    const generateCSV = async () => {
+        setButtonText('Generating CSV Data...')
+        const entries = []
+        const collections = ['TestGatewaySession', 'TestSanPedroSession', 'TestVirginRiverSession'];
+        for (const collectionName of collections) {
+            const collectionSnapshot = await getDocs(
+                collection(db, collectionName)
+            )
+            collectionSnapshot.forEach(documentSnapshot => {
+                entries.push(documentSnapshot.data())
+            })
+        }
+        const tempCsvData = []
+        for (const entry of entries) {
+            tempCsvData.push({
+                dateTime: new Date(entry.dateTime).toLocaleString(),
+                recorder: entry.recorder,
+                handler: entry.handler,
+                site: entry.site,
+                array: entry.array,
+                noCapture: entry.noCaptures,
+                trapStatus: entry.trapStatus,
+                comments: entry.commentsAboutTheArray,
+            })
+        }
+        setCsvData(tempCsvData)
+        setDisabledState(true)
+        setButtonText('CSV Generated');
     }
     
     return (
         <div>
             <h1 className='text-xl m-2'>Download Session Entries</h1>
-            <CSVLink
-                data={csvData}
-                filename="sessionForm.csv"
-            >
-                <button className="m-2 button">{buttonText}</button>
-            </CSVLink>        
+            <button 
+                className="m-2 button" 
+                onClick={generateCSV}
+                disabled={disabledState}
+            >{buttonText}</button>
+            {csvData.length > 0 && 
+            <div>
+                <CSVLink
+                    data={csvData}
+                    headers={[
+                        {label: 'Session Date/Time', key: 'dateTime'},
+                        {label: 'Recorder', key: 'recorder'},
+                        {label: 'Handler', key: 'handler'},
+                        {label: 'Site', key: 'site'},
+                        {label: 'Array', key: 'array'},
+                        {label: 'No Captures', key: 'noCaptures'},
+                        {label: 'Trap Status', key: 'trapStatus'},
+                        {label: 'Comments About The Array', key: 'commentsAboutTheArray'}
+                    ]}
+                    filename={`sessionForm${new Date().getTime()}.csv`}
+                >
+                    <button className="m-2 button" onClick={clearData}>Download CSV</button>
+                </CSVLink>
+                <button className="m-2 button" onClick={clearData}>Clear Form</button>
+            </div>
+            }
         </div>
     )
 }
