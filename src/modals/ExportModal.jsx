@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import Modal from "../components/Modal";
 import TabBar from '../components/TabBar'
-import { CSVDownload, CSVLink } from "react-csv";
+import { CSVLink } from "react-csv";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firebase";
-import { useSynchronousState } from "@toolz/use-synchronous-state";
+import { useAtomValue } from "jotai";
+import { currentProjectName } from "../utils/jotai";
 
 export default function ExportModal({ showModal, onCancel }) {
     const [ activeTab, setActiveTab ] = useState('Data Form');
@@ -66,7 +67,7 @@ const DataForm = () => {
         'Arthropod',
         'Amphibian',
     ]
-
+    const project = useAtomValue(currentProjectName);
     const [formsToInclude, setFormsToInclude] = useState({
         'Turtle': false,
         'Lizard': false,
@@ -82,7 +83,7 @@ const DataForm = () => {
     const generateCsvData = async () => {
         setButtonText("Generating CSV Data...")
         const entries = [];
-        const collections = ['TestGatewayData', 'TestSanPedroData', 'TestVirginRiverData'];
+        const collectionName = `Test${project}Data`
         const selectedTaxas = []
         for (const form in formsToInclude) {
             if (formsToInclude[form]) {
@@ -92,22 +93,18 @@ const DataForm = () => {
         }
         for (const form of forms) {
             if (formsToInclude[form]) {
-                for (const collectionName of collections) {
-                    const collectionSnapshot = await getDocs(query(
-                        collection(db, collectionName),
-                        where('taxa', 'in', selectedTaxas)
-                    ));
-                    collectionSnapshot.forEach(documentSnapshot => 
-                        entries.push(documentSnapshot.data()))
-                }
+                const collectionSnapshot = await getDocs(query(
+                    collection(db, collectionName),
+                    where('taxa', 'in', selectedTaxas)
+                ));
+                collectionSnapshot.forEach(documentSnapshot => 
+                    entries.push(documentSnapshot.data()))
             }
         }
 
         let tempCsvData = [];
 
         // TODO: dynamically fetch arthopod labels and use those instead of the hardcoded ones!
-
-        // TODO: add option to select projects (currently gets all projects)
 
         for (const entry of entries) {
             tempCsvData.push({
@@ -256,7 +253,7 @@ const DataForm = () => {
 }
 
 const SessionForm = () => {
-    // TODO: add option to select projects (currently gets all projects)
+    const project = useAtomValue(currentProjectName);
     const [buttonText, setButtonText] = useState('Generate CSV');
     const [csvData, setCsvData] = useState([]);
     const [disabledState, setDisabledState] = useState(false);
@@ -270,15 +267,13 @@ const SessionForm = () => {
     const generateCSV = async () => {
         setButtonText('Generating CSV Data...')
         const entries = []
-        const collections = ['TestGatewaySession', 'TestSanPedroSession', 'TestVirginRiverSession'];
-        for (const collectionName of collections) {
-            const collectionSnapshot = await getDocs(
-                collection(db, collectionName)
-            )
-            collectionSnapshot.forEach(documentSnapshot => {
-                entries.push(documentSnapshot.data())
-            })
-        }
+        const collectionName = `Test${project}Session`
+        const collectionSnapshot = await getDocs(
+            collection(db, collectionName)
+        )
+        collectionSnapshot.forEach(documentSnapshot => {
+            entries.push(documentSnapshot.data())
+        })
         const tempCsvData = []
         for (const entry of entries) {
             tempCsvData.push({
