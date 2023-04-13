@@ -7,7 +7,7 @@ import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
 import TableTools from '../components/TableTools';
-import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon, MergeIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
@@ -111,6 +111,12 @@ export default function TablePage() {
                             text="New Data Entry"
                             icon={<NewDataIcon />}
                             onClick={() => setActiveTool('newData')}
+                        />
+                        <Button 
+                            flexible={true}
+                            text="Merge Sessions"
+                            icon={<MergeIcon />}
+                            onClick={() => setActiveTool('merge')}
                         />
                     </TableTools>
                     <Pagination
