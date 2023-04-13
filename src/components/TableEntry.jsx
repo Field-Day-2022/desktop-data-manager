@@ -4,25 +4,25 @@ import { currentTableName } from '../utils/jotai'
 import { AnimatePresence, motion } from 'framer-motion';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
-import { getKey, getKeys, getLabel } from '../const/tableLabels';
+import { getKey, getKeys, getLabel, TABLE_LABELS } from '../const/tableLabels';
 import { startEntryOperation } from '../utils/firestore';
 import { notify } from './Notifier';
-import InputField from './InputField';
+import { FormField } from './FormFields';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
         return 'N/A';
     }
     return entry._document.data.value.mapValue.fields
-        [getKey(column, name)].stringValue;
+    [getKey(column, name)].stringValue;
 }
 
 export const TableEntry = forwardRef((props, ref) => {
-    const { 
-        entrySnapshot, 
-        shownColumns, 
-        removeEntry: removeEntryFromUI, 
-        index 
+    const {
+        entrySnapshot,
+        shownColumns,
+        removeEntry: removeEntryFromUI,
+        index
     } = props;
 
     const [entryUIState, setEntryUIState] = useState('viewing');
@@ -43,19 +43,19 @@ export const TableEntry = forwardRef((props, ref) => {
     const onSaveClickedHandler = () => {
         entryUIState === 'editing' &&
             startEntryOperation(
-                'uploadEntryEdits', 
-                { 
-                    entrySnapshot, 
-                    entryData, 
-                    setEntryUIState 
+                'uploadEntryEdits',
+                {
+                    entrySnapshot,
+                    entryData,
+                    setEntryUIState
                 }
             ).then(response => notify(...response));
         entryUIState === 'deleting' &&
             startEntryOperation(
-                tableName.includes('Session') ? 
-                    'deleteSession' 
-                    : 
-                    'deleteEntry', 
+                tableName.includes('Session') ?
+                    'deleteSession'
+                    :
+                    'deleteEntry',
                 {
                     entrySnapshot,
                     removeEntryFromUI,
@@ -91,14 +91,14 @@ export const TableEntry = forwardRef((props, ref) => {
             />
             {keys && keys.map((key) => (
                 shownColumns.includes(getLabel(key)) && (
-                <EntryItem
-                    entrySnapshot={entrySnapshot}
-                    entryUIState={entryUIState}
-                    dbKey={key}
-                    entryData={entryData}
-                    setEntryData={setEntryData}
-                    key={key}
-                />)
+                    <EntryItem
+                        entrySnapshot={entrySnapshot}
+                        entryUIState={entryUIState}
+                        dbKey={key}
+                        entryData={entryData}
+                        setEntryData={setEntryData}
+                        key={key}
+                    />)
             ))}
         </motion.tr>
     );
@@ -158,10 +158,10 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
 
     return (
         <td key={dbKey} className="text-center border-b border-gray-400 p-1">
-            <InputField
+            <input
                 disabled={disabled}
                 className="text-center"
-                value={dbKey === 'dateTime' ? 
+                value={dbKey === 'dateTime' ?
                     displayText : entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 size={size}

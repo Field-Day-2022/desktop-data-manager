@@ -211,3 +211,13 @@ export const TABLE_LABELS = {
     Arthropod: arthropodLabels,
     Amphibian: amphibianLabels,
 };
+
+export const TABLE_KEYS = {
+    Session: getKeys('Session'),
+    Turtle: getKeys('Turtle'),
+    Lizard: getKeys('Lizard'),
+    Mammal: getKeys('Mammal'),
+    Snake: getKeys('Snake'),
+    Arthropod: getKeys('Arthropod'),
+    Amphibian: getKeys('Amphibian'),
+};

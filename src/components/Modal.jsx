@@ -12,7 +12,7 @@ export default function Modal({
 }) {
     return (
         <motion.div
-            className="relative z-50"
+            className={`relative z-50`}
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true"
@@ -89,7 +89,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white p-4 max-h-full-modal-content-height overflow-auto">{children}</div>;
+    return <div className="bg-white max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {

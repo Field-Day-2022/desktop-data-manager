@@ -6,15 +6,15 @@ import { TABLE_LABELS, dynamicArthropodLabels } from '../const/tableLabels';
 import DataManager from '../tools/DataManager';
 import { useAtom } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
-import Dropdown from '../components/Dropdown';
 import TableTools from '../components/TableTools';
-import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
-import NewSessionModal from '../modals/NewSessionModal';
-import NewDataModal from '../modals/NewDataModal';
+import DataInputModal from '../modals/DataInputModal';
+
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
+import { ProjectField } from '../components/FormFields';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -27,8 +27,6 @@ export default function TablePage() {
     const [batchSize, setBatchSize] = useAtom(currentBatchSize);
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
-
-    // entries[0] && console.log(entries[0].data());
 
     const loadDynamicArthropodLabels = async () => {
         setLabels(await dynamicArthropodLabels())
@@ -67,13 +65,9 @@ export default function TablePage() {
                 showModal={activeTool === 'export'}
                 onCancel={() => setActiveTool('none')}
             />
-            <NewSessionModal
-                showModal={activeTool === 'newSession'}
-                onCancel={() => setActiveTool('none')}
-            />
-            <NewDataModal
+            <DataInputModal
                 showModal={activeTool === 'newData'}
-                onCancel={() => setActiveTool('none')}
+                closeModal={() => setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar 
@@ -84,15 +78,9 @@ export default function TablePage() {
                     }))}
                 />
                 <div className="flex items-center px-5 space-x-5">
-                    <Dropdown
-                        label="Project"
-                        layout="horizontal"
-                        onClickHandler={(selectedOption) => {
-                            if (selectedOption !== currentProject)
-                                setCurrentProject(selectedOption.replace(/\s/g, ''));
-                        }}
-                        value={currentProject.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                        options={['Gateway', 'Virgin River', 'San Pedro']}
+                    <ProjectField
+                        project={currentProject.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                        setProject={(e) => setCurrentProject(e.replace(/ /g, ''))}
                     />
                 </div>
             </div>
@@ -117,12 +105,6 @@ export default function TablePage() {
                             text="Export to CSV"
                             icon={<ExportIcon />}
                             onClick={() => setActiveTool('export')}
-                        />
-                        <Button
-                            flexible={true}
-                            text="New Session"
-                            icon={<NewSessionIcon />}
-                            onClick={() => setActiveTool('newSession')}
                         />
                         <Button
                             flexible={true}

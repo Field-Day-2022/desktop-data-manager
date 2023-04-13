@@ -31,12 +31,12 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
         constraints = [constraints];
     }
 
-    console.log(
-        'Loading entries from collection:',
-        collectionName,
-        'with constraints:',
-        constraints
-    );
+    // console.log(
+    //     'Loading entries from collection:',
+    //     collectionName,
+    //     'with constraints:',
+    //     constraints
+    // );
 
     try {
         const currentQuery = query(
@@ -45,7 +45,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
             ...constraints
         );
         const docs = await getDocs(currentQuery);
-        console.log(`Read ${docs.size} docs from ${collectionName}.`);
+        // console.log(`Read ${docs.size} docs from ${collectionName}.`);
         return docs;
     } catch (error) {
         console.error('Error loading entries:', error);
@@ -184,6 +184,151 @@ const startEntryOperation = async (operationName, operationData) => {
     } else return [Type.error, 'Unknown error occurred'];
 };
 
+const getSitesForProject = async (projectName) => {
+    const answerSet = await getDocs(
+        query(collection(db, 'AnswerSet'), where('set_name', '==', `${projectName}Sites`))
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getArraysForSite = async (projectName, siteName) => {
+    const answerSet = await getDocs(
+        query(
+            collection(db, 'AnswerSet'),
+            where('set_name', '==', `${projectName}${siteName}Array`)
+        )
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getTrapStatuses = async () => {
+    const answerSet = await getDocs(
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'trap statuses'))
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getFenceTraps = async () => {
+    const answerSet = await getDocs(
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Fence Traps'))
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getSexes = async () => {
+    const answerSet = await getDocs(
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Sexes'))
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push(answer.primary);
+        });
+    });
+    return options;
+};
+
+const getSessionsByProjectAndYear = async (environment, projectName, year) => {
+    environment = environment === 'test' ? 'Test' : '';
+    const sessions = await getDocs(
+        query(
+            collection(db, `${environment}${projectName}Session`),
+            where('dateTime', '>=', `${year}-01-01`),
+            where('dateTime', '<=', `${year}-12-31`)
+        )
+    );
+    // console.log('sessions', sessions.docs);
+    return sessions.docs;
+};
+
+const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
+    // console.log(`${project}${taxa}Species`);
+    const answerSet = await getDocs(
+        query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`))
+    );
+    const options = [];
+    answerSet.docs.forEach((doc) => {
+        doc.data().answers.forEach((answer) => {
+            options.push({
+                code: answer.primary,
+                genus: answer.secondary.Genus,
+                species: answer.secondary.Species,
+            });
+        });
+    });
+    return options;
+};
+
+export const uploadNewEntry = async (entryData, project, environment) => {
+    let success = false;
+    const now = new Date();
+    if (entryData.dateTime === '') entryData.dateTime = now.toISOString();
+    const taxa = entryData.taxa;
+    if (entryData.taxa === 'Arthropod') {
+        if (entryData.aran === '') entryData.aran = '0';
+        if (entryData.auch === '') entryData.auch = '0';
+        if (entryData.blat === '') entryData.blat = '0';
+        if (entryData.chil === '') entryData.chil = '0';
+        if (entryData.cole === '') entryData.cole = '0';
+        if (entryData.crus === '') entryData.crus = '0';
+        if (entryData.derm === '') entryData.derm = '0';
+        if (entryData.diel === '') entryData.diel = '0';
+        if (entryData.dipt === '') entryData.dipt = '0';
+        if (entryData.hete === '') entryData.hete = '0';
+        if (entryData.hyma === '') entryData.hyma = '0';
+        if (entryData.hymb === '') entryData.hymb = '0';
+        if (entryData.lepi === '') entryData.lepi = '0';
+        if (entryData.mant === '') entryData.mant = '0';
+        if (entryData.orth === '') entryData.orth = '0';
+        if (entryData.pseu === '') entryData.pseu = '0';
+        if (entryData.scor === '') entryData.scor = '0';
+        if (entryData.soli === '') entryData.soli = '0';
+        if (entryData.thys === '') entryData.thys = '0';
+        if (entryData.unki === '') entryData.unki = '0';
+        if (entryData.micro === '') entryData.micro = '0';
+        entryData.taxa = 'N/A';
+    } else if (entryData.taxa === 'Lizard') {
+        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
+            lastEditTime: now.getTime(),
+        });
+    }
+    entryData.lastEdit = now.getTime();
+    for (const key in entryData) {
+        if (entryData[key] === '') entryData[key] = 'N/A';
+    }
+    const entryId = `${entryData.site}${taxa}${now.getTime()}`;
+    let collectionName = `Test${project.replace(/\s/g, '')}Data`;
+    if (environment === 'live') {
+        collectionName = `${project.replace(/\s/g, '')}Data`;
+    }
+    await setDoc(doc(db, collectionName, entryId), entryData).then(() => (success = true));
+    return success;
+};
+
 export {
     getDocsFromCollection,
     addDocToCollection,
@@ -192,4 +337,11 @@ export {
     getCollectionName,
     getCollectionNameFromDoc,
     startEntryOperation,
+    getSitesForProject,
+    getArraysForSite,
+    getTrapStatuses,
+    getFenceTraps,
+    getSexes,
+    getSessionsByProjectAndYear,
+    getSpeciesCodesForProjectByTaxa,
 };

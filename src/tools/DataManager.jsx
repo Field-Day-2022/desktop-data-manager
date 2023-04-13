@@ -5,19 +5,11 @@ import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import InputField from '../components/InputField';
+import {SearchField} from '../components/FormFields';
 import { CSVLink } from 'react-csv';
 import { getKey } from '../const/tableLabels';
 import { notify, Type } from '../components/Notifier';
 import { getCollectionNameFromDoc } from '../utils/firestore';
-
-const SearchField = ({ onChange }) => {
-    return (
-        <InputField type="search" onChange={onChange} placeholder="Search" />
-    );
-};
-
-const MemoizedSearchBar = React.memo(SearchField);
 
 export default function DataManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
@@ -68,8 +60,6 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
         if(name === 'Session') {
             return collectionName +  ' ' + dateTime;
         } else {
-            // Format current date and time to string
-            
             return collectionName.slice(0, -4) + name + ' ' + dateTime;
         }
     };
@@ -97,7 +87,7 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">
-                    <MemoizedSearchBar onChange={handleSearchChange} />
+                    <SearchField search={search} setSearch={handleSearchChange} />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}
