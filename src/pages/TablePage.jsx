@@ -15,6 +15,7 @@ import DataInputModal from '../modals/DataInputModal';
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
 import { ProjectField } from '../components/FormFields';
+import MergeSessionsModal from '../modals/MergeSessionsModal';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -68,6 +69,10 @@ export default function TablePage() {
             <DataInputModal
                 showModal={activeTool === 'newData'}
                 closeModal={() => setActiveTool('none')}
+            />
+            <MergeSessionsModal 
+                showModal={activeTool === 'merge'}
+                closeModal={() =>setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar 
