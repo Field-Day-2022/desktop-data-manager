@@ -7,7 +7,7 @@ export default function NewSessionTool({ setData }) {
     const [project, setProject] = useState('Gateway');
 
     const [sessionData, setSessionData] = useState({
-        dateTime: '2021-01-01T00:00:00.000Z',
+        dateTime: '0',
         recorder: '',
         handler: '',
         site: 'GWA1',
@@ -33,12 +33,13 @@ export default function NewSessionTool({ setData }) {
         setSessionData({
             ...sessionData,
             dateTime: dateTime,
-            year: dateTime.split('-')[0]
+            year: new Date(dateTime).getFullYear(),
         });
     }
 
     useEffect(() => {
         setData(sessionData);
+        console.log(sessionData);
     }, [sessionData]);
 
     return (
