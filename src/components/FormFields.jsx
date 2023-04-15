@@ -101,7 +101,7 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
         // console.log(`date: ${date}, time: ${time}`)
         if (date !== '' && time !== '') {
             const newDate = new Date(`${date} ${time}`);
-            setDateTime(newDate.toISOString());
+            setDateTime(newDate.getTime());
         }
     }, [date, time]);
 
@@ -147,7 +147,34 @@ const HandlerField = ({ handler, setHandler, layout, disabled }) => {
                 } } />} />
     );
 }
-const SiteField = ({ site }) => <ReadOnlyField label='Site' value={site} /> 
+const SiteField = ({ site, setSite, disabled, project }) => {
+    if (disabled) return <ReadOnlyField label='Site' value={site} />
+    const [siteOptions, setSiteOptions] = useState([])
+    const populateSiteOptions = async () => {
+        setSiteOptions(await getSitesForProject(project));
+    }
+    useEffect(() => {
+        populateSiteOptions();
+    }, [])
+    return (
+        <InputLabel
+            label={'Site'}
+            layout={'vertical'}
+            input={<select
+                value={site || 'Select an option'}
+                onChange={(e) => {
+                    setSite(e.target.value);
+                } }
+            >
+                <option value="Select an option" disabled hidden>Select an option</option>
+                {siteOptions.map((option) => {
+                    return (
+                        <option key={option} value={option}>{option}</option>
+                    );
+                })}
+            </select>} />
+    )
+} 
 
 const ReadOnlyField = ({ label, value }) => {
     return (
@@ -157,7 +184,34 @@ const ReadOnlyField = ({ label, value }) => {
     );
 }
 
-const ArrayField = ({ array }) => <ReadOnlyField label='Array' value={array} />
+const ArrayField = ({ array, setArray, disabled, site, project }) => {
+    if (disabled) return <ReadOnlyField label='Array' value={array} /> 
+    const [arrayOptions, setArrayOptions] = useState([])
+    const populateArrayOptions = async () => {
+        setArrayOptions(await getArraysForSite(project, site));
+    }
+    useEffect(() => {
+        populateArrayOptions();
+    }, [])
+    return (
+        <InputLabel
+            label={'Array'}
+            layout={'vertical'}
+            input={<select
+                value={array || 'Select an option'}
+                onChange={(e) => {
+                    setArray(e.target.value);
+                } }
+            >
+                <option value="Select an option" disabled hidden>Select an option</option>
+                {arrayOptions.map((option) => {
+                    return (
+                        <option key={option} value={option}>{option}</option>
+                    );
+                })}
+            </select>} />
+    )
+}
 
 const NoCapturesField = ({ noCaptures, setNoCaptures, layout, disabled }) => (
     <InputLabel

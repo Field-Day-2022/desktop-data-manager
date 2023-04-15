@@ -280,11 +280,11 @@ const CritterForm = ({ critter, project, session }) => {
         <div className='flex flex-col space-y-1 items-center'>
             <div className='grid grid-cols-3'>
                 {TABLE_KEYS[critter].map((key) => {
-                    {/* const disabled = session[key] */}
+                    const disabled = session[key]
                     return (
                         <FormField
                             key={key}
-                            disabled={false}
+                            disabled={disabled}
                             fieldName={key}
                             layout='vertical'
                             value={entry[key]}
