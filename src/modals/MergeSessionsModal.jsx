@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import InputLabel from '../components/InputLabel';
 import Modal from '../components/Modal';
 import InnerModalWrapper from './InnerModalWrapper';
-import { getDocs, collection, query, updateDoc, doc } from 'firebase/firestore';
+import { getDocs, collection, query, updateDoc, doc, where } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { useAtomValue } from 'jotai';
 import { currentProjectName } from '../utils/jotai';
@@ -28,26 +28,31 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
         lastSession
     ) => {
         const firstSessionSnapshot = sessions.filter(
-            (session) => {
-                const sessionDateTime = new Date(session.data().dateTime).toLocaleString()
-                console.log(`comparing ${sessionDateTime} and ${firstSession}`)
-                return sessionDateTime === firstSession
-            });
-
-
-            
+            (session) => new Date(session.data().dateTime).toLocaleString() === firstSession
+        )[0];
         const lastSessionSnapshot = sessions.filter(
             (session) => new Date(session.data().dateTime).toLocaleString() === lastSession
         )[0];
 
-        console.log(lastSessionSnapshot)
+        console.log(firstSessionSnapshot.data())
+        console.log(lastSessionSnapshot.data())
                 
-        // const commentsAboutTheArray = `${firstSessionSnapshot.data().commentsAboutTheArray}; ${
-        //     lastSessionSnapshot.data().commentsAboutTheArray
-        // }`;
-        // console.log(commentsAboutTheArray);
-        // await updateDoc(doc(db, `Test${project}Session`), {});
+        const newCommentsAboutTheArray = `${firstSessionSnapshot.data().commentsAboutTheArray}; ${
+            lastSessionSnapshot.data().commentsAboutTheArray
+        }`;
+        // await updateDoc(doc(db, `Test${project}Session`, firstSessionSnapshot.id), {
+        //     commentsAboutTheArray: newCommentsAboutTheArray
+        // });
     };
+
+    const updateSessionEntires =  async (firstSession, lastSession) => {
+        const queryDate = new Date(lastSession).toISOString();
+        const sessionDocuments = await getDocs(query(
+            collection(db, `Test${project}Data`),
+            where('sessionDateTime', '==', queryDate)
+        ))
+        sessionDocuments.forEach(document => console.log(document.data()))
+    }
 
     const mergeSessions = async () => {
         if (sessionOne === sessionTwo) {
@@ -65,7 +70,8 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
         copySessionCommentsFromLaterSessionToEarlierSession(
             firstSession,
             lastSession
-        )
+        );
+        updateSessionEntires(firstSession, lastSession);
     };
 
     return (
