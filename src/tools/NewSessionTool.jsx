@@ -30,10 +30,26 @@ export default function NewSessionTool({ setData }) {
     }
 
     const setDateTime = (dateTime) => {
+        const sessionDate = new Date(dateTime);
+        const formattedDate = `${
+            sessionDate.getFullYear()
+        }/${
+            sessionDate.getMonth() + 1
+        }/${
+            sessionDate.getDate()
+        }`
+        const formattedTime = new Intl.DateTimeFormat('en-US', {
+            timeStyle: 'medium',
+            hourCycle: 'h24',
+        }).format(sessionDate)
+        const formattedDateTime = `${formattedDate} ${formattedTime}`
+        console.log(`old date time: ${dateTime}`)
+        console.log(`going from formatted dateTime back to seconds: ${new Date(formattedDateTime).getTime()}`)
+        console.log(`the numbers ${dateTime === new Date(formattedDateTime).getTime() ? 'are' : 'are not'} equal`)
         setSessionData({
             ...sessionData,
-            dateTime: dateTime,
-            year: new Date(dateTime).getFullYear(),
+            dateTime: formattedDateTime,
+            year: sessionDate.getFullYear(),
         });
     }
 
