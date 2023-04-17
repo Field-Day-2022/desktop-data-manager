@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getSpeciesCodesForProjectByTaxa, getTrapStatuses } from "../utils/firestore";
+import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getSpeciesCodesForProjectByTaxa, getStandardizedDateTimeString, getTrapStatuses } from "../utils/firestore";
 import { useState } from "react";
 import classNames from "classnames";
 import { SearchIcon } from "../assets/icons";
@@ -101,7 +101,7 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
         console.log(`date: ${date}, time: ${time}`)
         if (date !== '' && time !== '') {
             const newDate = new Date(`${date} ${time}`);
-            setDateTime(newDate.getTime());
+            setDateTime(getStandardizedDateTimeString(newDate));
         }
     }, [date, time]);
 
