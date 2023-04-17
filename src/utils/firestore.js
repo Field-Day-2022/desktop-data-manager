@@ -301,10 +301,9 @@ export const uploadNewSession = async (sessionData, project, environment) => {
         collectionName = `${project.replace(/\s/g, '')}Session`;
     }
     let success = false;
-    await addDoc(collection(db, collectionName), sessionData)
-    .then(() => success = true)
+    await addDoc(collection(db, collectionName), sessionData).then(() => (success = true));
     return success;
-}
+};
 
 export const uploadNewEntry = async (entryData, project, environment) => {
     let success = false;
