@@ -82,6 +82,10 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
                 text="Select sessions to merge (will move entries from later to earlier session and delete later session entry)"
                 onCancel={() => closeModal()}
                 onOkay={() => closeModal()}
+                buttonOptions={{
+                    cancel: 'Close',
+                    okay: ''
+                }}
             >
                 <InnerModalWrapper>
                     {sessions && (

@@ -3,18 +3,17 @@ import { useState } from "react";
 import NewSessionForm from "../components/NewSessionForm";
 import { getStandardizedDateTimeString } from "../utils/firestore";
 
-export default function NewSessionTool({ setData }) {
+export default function NewSessionTool({ setData, project, setProject }) {
 
-    const [project, setProject] = useState('Gateway');
 
     const [sessionData, setSessionData] = useState({
         dateTime: '0',
         recorder: '',
         handler: '',
-        site: 'GWA1',
+        site: '',
         array: '',
-        noCaptures: 'true',
-        trapStatus: 'OPEN',
+        noCaptures: '',
+        trapStatus: '',
         commentsAboutTheArray: '',
         year: '',
     });
@@ -24,9 +23,19 @@ export default function NewSessionTool({ setData }) {
             setDateTime(value);
             return;
         }
-        setSessionData({
-            ...sessionData,
-            [field]: value
+        setSessionData(sessionData => {
+            if (field === 'project') {
+                return ({
+                    ...sessionData,
+                    [field]: value,
+                    site: '',
+                    array: '',
+                })
+            }
+            return ({
+                ...sessionData,
+                [field]: value
+            })
         });
     }
 

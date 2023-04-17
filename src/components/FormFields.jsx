@@ -97,8 +97,6 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
     const [time, setTime] = useState('');
 
     useEffect(() => {
-
-        console.log(`date: ${date}, time: ${time}`)
         if (date !== '' && time !== '') {
             const newDate = new Date(`${date} ${time}`);
             setDateTime(getStandardizedDateTimeString(newDate));
@@ -155,7 +153,7 @@ const SiteField = ({ site, setSite, disabled, project }) => {
     }
     useEffect(() => {
         populateSiteOptions();
-    }, [])
+    }, [project])
     return (
         <InputLabel
             label={'Site'}
@@ -192,7 +190,7 @@ const ArrayField = ({ array, setArray, disabled, site, project }) => {
     }
     useEffect(() => {
         populateArrayOptions();
-    }, [])
+    }, [site])
     return (
         <InputLabel
             label={'Array'}
@@ -203,7 +201,7 @@ const ArrayField = ({ array, setArray, disabled, site, project }) => {
                     setArray(e.target.value);
                 } }
             >
-                <option value="Select an option" disabled hidden>Select an option</option>
+                <option value="Select an option" disabled hidden>{site === '' ? 'Select a site' : 'Select an option'}</option>
                 {arrayOptions.map((option) => {
                     return (
                         <option key={option} value={option}>{option}</option>
@@ -214,15 +212,11 @@ const ArrayField = ({ array, setArray, disabled, site, project }) => {
 }
 
 const NoCapturesField = ({ noCaptures, setNoCaptures, layout, disabled }) => (
-    <InputLabel
-        label='No Captures'
-        layout={layout}
-        input={<TrueFalseToggle
-            disabled={disabled}
-            value={noCaptures}
-            setValue={(e) => {
-                setNoCaptures(e.target.value);
-            } } />} />
+    <Checkbox 
+        label={'No Captures?'}
+        setValue={setNoCaptures}  
+        value={noCaptures}
+    />
 );
 
 const TrueFalseToggle = ({ disabled, value, setValue }) => (
@@ -323,7 +317,6 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
     useEffect(() => {
         getTrapStatuses().then((statuses) => {
             setTrapStatusOptions(statuses);
-            setTrapStatus(statuses[0]);
         });
     }, []);
     return (
@@ -334,7 +327,7 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
                 disabled={disabled}
                 value={trapStatus || 'Select an option'}
                 onChange={(e) => {
-                    setTrapStatus(e);
+                    setTrapStatus(e.target.value);
                 } }
             >
                 <option value="Select an option" disabled hidden>Select an option</option>

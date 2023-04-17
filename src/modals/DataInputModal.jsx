@@ -5,14 +5,19 @@ import { notify, Type } from "../components/Notifier";
 import TabBar from "../components/TabBar";
 import NewSessionTool from "../tools/NewSessionTool";
 import NewEntryForm from "../components/NewEntryForm";
+import { uploadNewSession } from "../utils/firestore";
+import { useAtomValue } from "jotai";
+import { appMode } from "../utils/jotai";
 
 export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');
     const [modalData, setModalData] = useState({});
+    const [sessionProject, setSessionProject] = useState('Gateway')
+    const environment = useAtomValue(appMode);
 
     const tools = {
         'New Data': <NewEntryForm setData={setModalData} />,
-        'New Session': <NewSessionTool setData={setModalData} />,
+        'New Session': <NewSessionTool setData={setModalData} project={sessionProject} setProject={setSessionProject} />,
     };
 
     const requiredSessionFields = [
@@ -39,7 +44,8 @@ export default function DataInputModal({ showModal, closeModal }) {
                 notify(Type.error, 'Please fill in all fields before submitting.')
                 return false;
             } else {
-                notify(Type.success, 'Session data saved.')
+                if (uploadNewSession(data, sessionProject, environment))
+                    notify(Type.success, 'Session data saved.')
                 console.log(data);
                 return true;
             }
@@ -58,6 +64,10 @@ export default function DataInputModal({ showModal, closeModal }) {
                 text='Select a tab to create a new data entry or session.'
                 onCancel={() => closeModal()}
                 onOkay={() => onOkay()}
+                buttonOptions={{
+                    cancel: 'Close',
+                    okay: activeTab === 'New Session' ? 'Submit' : ''
+                }}
             >
                 <div className='flex-col w-full-modal-width h-full-modal-content-height max-w-5xl'>
                     <div className='bg-neutral-100 flex-shrink-0 h-tab-bar'>

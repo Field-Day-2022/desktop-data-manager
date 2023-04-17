@@ -9,6 +9,10 @@ export default function FormBuilderModal({ showModal, onCancel, onOkay, triggerR
             onOkay={onOkay}
             title='Form Builder'
             text='Build custom forms with Field Day!'
+            buttonOptions={{
+                cancel: 'Close',
+                okay: '',
+            }}
         >
             <div className="w-full-modal-width">
                 <FormBuilder triggerRerender={triggerRerender} />

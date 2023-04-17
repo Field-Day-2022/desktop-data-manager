@@ -23,6 +23,10 @@ export default function ExportModal({ showModal, onCancel }) {
             title='Export'
             text='Choose export options.'
             onCancel={() => onCancel()}
+            buttonOptions={{
+                cancel: 'Close',
+                okay: '',
+            }}
         >
         <InnerModalWrapper>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
