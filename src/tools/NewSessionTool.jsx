@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import NewSessionForm from "../components/NewSessionForm";
+import { getStandardizedDateTimeString } from "../utils/firestore";
 
 export default function NewSessionTool({ setData }) {
 
@@ -30,20 +31,11 @@ export default function NewSessionTool({ setData }) {
     }
 
     const setDateTime = (dateTime) => {
-        const sessionDate = new Date(dateTime);
-        const formattedDateTime = `${
-            sessionDate.getFullYear()
-        }/${
-            sessionDate.getMonth() + 1
-        }/${
-            sessionDate.getDate()
-        } ${sessionDate.toLocaleTimeString('en-US', {
-            hourCycle: 'h24'
-        })}`
+        const formattedDateTime = getStandardizedDateTimeString(dateTime)
         setSessionData({
             ...sessionData,
             dateTime: formattedDateTime,
-            year: sessionDate.getFullYear(),
+            year: new Date(dateTime).getFullYear(),
         });
     }
 
