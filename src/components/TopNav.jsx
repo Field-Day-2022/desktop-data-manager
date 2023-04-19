@@ -3,6 +3,7 @@ import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
 import { useAtom } from 'jotai';
 import { currentPageName } from '../utils/jotai';
+import EnvironmentSelector from './EnvironmentSelector';
 
 /**
  *
@@ -38,6 +39,7 @@ function UserController({ user, auth }) {
             <div key="email">{user.email}</div>
             <UserImage key="profilePicture" className="h-12" user={user} />
             <LogoutButton key="logoutBtn" auth={auth} />
+            <EnvironmentSelector />
         </div>
     );
 }
