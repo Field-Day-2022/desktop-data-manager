@@ -4,8 +4,8 @@ import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
 import { TABLE_LABELS, dynamicArthropodLabels } from '../const/tableLabels';
 import DataManager from '../tools/DataManager';
-import { useAtom } from 'jotai';
-import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
+import { useAtom, useAtomValue } from 'jotai';
+import { currentBatchSize, currentProjectName, currentTableName, appMode } from '../utils/jotai';
 import TableTools from '../components/TableTools';
 import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
@@ -25,6 +25,7 @@ export default function TablePage() {
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
     const [batchSize, setBatchSize] = useAtom(currentBatchSize);
+    const environment = useAtomValue(appMode);
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
@@ -41,7 +42,7 @@ export default function TablePage() {
             setLabels(TABLE_LABELS[tableName])
         }
         loadBatch()
-    }, [tableName, batchSize, currentProject, rerender]);
+    }, [tableName, batchSize, currentProject, environment, rerender]);
 
     const tabsData = [
         { text: 'Turtle', icon: <TurtleIcon /> },
