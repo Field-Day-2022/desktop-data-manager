@@ -131,6 +131,8 @@ const CritterForm = ({ critter, project, session }) => {
         // console.log(entry)
    }, [entry])
 
+   // TODO: dynamically fetch arthopod labels and use those instead of the hardcoded ones!
+
    const dataObjTemplate = {
         aran: '',
         array: '',
