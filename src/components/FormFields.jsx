@@ -602,21 +602,7 @@ export const checkToeCodeValidity = async (toeCode, environment, project, site, 
 const ToeClipCodeField = ({
     toeCode, setToeCode, project, site, array, speciesCode, recapture
 }) => {
-
     const environment = useAtomValue(appMode);
-
-    { /* console.log({
-        toeCode,
-        setToeCode,
-        environment,
-        project,
-        site,
-        array,
-        speciesCode,
-        recapture
-    }) */
-    }
-
     const [buttonText, setButtonText] = useState('Generate');
     const [recaptureHistoryIsOpen, setRecaptureHistoryIsOpen] = useState(false);
     const [previousLizardEntries, setPreviousLizardEntries] = useState([]);
@@ -705,15 +691,16 @@ const ToeClipCodeField = ({
                 value={toeCode || ''}
                 onChange={e => setToeCode(e.target.value.toUpperCase())}
                 onBlur={async () => {
-                    setToeCodeIsValid(await checkToeCodeValidity(
-                        toeCode,
-                        environment,
-                        project,
-                        site,
-                        array,
-                        speciesCode,
-                        recapture
-                    ));
+                    if (toeCode.length > 0)
+                        setToeCodeIsValid(await checkToeCodeValidity(
+                            toeCode,
+                            environment,
+                            project,
+                            site,
+                            array,
+                            speciesCode,
+                            recapture
+                        ));
                 } } />
             <button
                 className="w-min mt-1 button"

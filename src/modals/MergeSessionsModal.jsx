@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import InputLabel from '../components/InputLabel';
 import Modal from '../components/Modal';
 import InnerModalWrapper from './InnerModalWrapper';
-import { getDocs, collection, query, updateDoc, doc, where } from 'firebase/firestore';
+import { getDocs, collection, query, updateDoc, doc, where, writeBatch, orderBy, deleteDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { useAtomValue } from 'jotai';
-import { currentProjectName } from '../utils/jotai';
+import { appMode, currentProjectName } from '../utils/jotai';
 import { Type, notify } from '../components/Notifier';
 
 export default function MergeSessionsModal({ showModal, closeModal }) {
@@ -13,45 +13,60 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
     const [sessionTwo, setSessionTwo] = useState(null);
     const [sessions, setSessions] = useState();
     const project = useAtomValue(currentProjectName);
+    const environment = useAtomValue(appMode);
 
     const getSessionsFromFirestore = async () => {
-        const collectionSnapshot = await getDocs(collection(db, `Test${project}Session`));
+        const collectionSnapshot = await getDocs(query(collection(db, `${environment === 'test' ? 'Test' : ''}${project}Session`), orderBy('dateTime', 'desc')));
         setSessions(collectionSnapshot.docs);
     };
 
     useEffect(() => {
-        getSessionsFromFirestore();
-    }, []);
+        if (showModal) getSessionsFromFirestore();
+    }, [showModal]);
 
-    const copySessionCommentsFromLaterSessionToEarlierSession = async (
+    const updateSessions = async (
         firstSession,
         lastSession
     ) => {
         const firstSessionSnapshot = sessions.filter(
-            (session) => new Date(session.data().dateTime).toLocaleString() === firstSession
+            (session) => session.data().dateTime === firstSession
         )[0];
         const lastSessionSnapshot = sessions.filter(
-            (session) => new Date(session.data().dateTime).toLocaleString() === lastSession
+            (session) => session.data().dateTime === lastSession
         )[0];
 
+        console.log('firstSession to merge into:')
         console.log(firstSessionSnapshot.data())
+        console.log('lastSession to merge out of and dispose:')
         console.log(lastSessionSnapshot.data())
                 
         const newCommentsAboutTheArray = `${firstSessionSnapshot.data().commentsAboutTheArray}; ${
             lastSessionSnapshot.data().commentsAboutTheArray
         }`;
-        // await updateDoc(doc(db, `Test${project}Session`, firstSessionSnapshot.id), {
-        //     commentsAboutTheArray: newCommentsAboutTheArray
-        // });
+        console.log(`updating first session ${firstSessionSnapshot.id} to contain comments: ${newCommentsAboutTheArray}`)
+        await updateDoc(doc(db, `${environment === 'test' ? 'Test' : ''}${project}Session`, firstSessionSnapshot.id), {
+            commentsAboutTheArray: newCommentsAboutTheArray
+        });
+        console.log(`deleting old session: ${lastSessionSnapshot.data().dateTime}`)
+        await deleteDoc(doc(db, `${environment === 'test' ? 'Test' : ''}${project}Session`, lastSessionSnapshot.id))
     };
 
-    const updateSessionEntires =  async (firstSession, lastSession) => {
-        const queryDate = new Date(lastSession).toISOString();
+    const updateSessionEntries =  async (firstSession, lastSession) => {
+        console.log(lastSession);
+        console.log(`${environment === 'test' ? 'Test' : ''}${project}Data`)
         const sessionDocuments = await getDocs(query(
-            collection(db, `Test${project}Data`),
-            where('sessionDateTime', '==', queryDate)
+            collection(db, `${environment === 'test' ? 'Test' : ''}${project}Data`),
+            where('sessionDateTime', '==', lastSession)
         ))
-        sessionDocuments.forEach(document => console.log(document.data()))
+        const batch = writeBatch(db);
+        console.log(`updating these documents from ${lastSession} to ${firstSession}`)
+        console.log(sessionDocuments)
+        sessionDocuments.forEach(document => {
+            batch.update(doc(db, `${environment === 'test' ? 'Test' : ''}${project}Data`, document.id), {
+                sessionDateTime: firstSession 
+            })
+        })
+        await batch.commit();
     }
 
     const mergeSessions = async () => {
@@ -67,12 +82,13 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
             new Date(sessionOne).getTime() > new Date(sessionTwo).getTime()
                 ? sessionOne
                 : sessionTwo;
-        copySessionCommentsFromLaterSessionToEarlierSession(
-            firstSession,
-            lastSession
-        );
-        updateSessionEntires(firstSession, lastSession);
+        updateSessionEntries(firstSession, lastSession);
+        updateSessions(firstSession, lastSession);
     };
+
+    useEffect(() => {
+        sessions && sessions.forEach(entry => console.log(entry.data()))
+    }, [sessions])
 
     return (
         <div>
@@ -103,9 +119,7 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
                                         </option>
                                         {sessions.map((documentSnapshot) => (
                                             <option key={documentSnapshot.id}>
-                                                {new Date(
-                                                    documentSnapshot.data().dateTime
-                                                ).toLocaleString()}
+                                                {documentSnapshot.data().dateTime}
                                             </option>
                                         ))}
                                     </select>
@@ -124,9 +138,7 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
                                         </option>
                                         {sessions.map((documentSnapshot) => (
                                             <option key={documentSnapshot.id}>
-                                                {new Date(
-                                                    documentSnapshot.data().dateTime
-                                                ).toLocaleString()}
+                                                {documentSnapshot.data().dateTime}
                                             </option>
                                         ))}
                                     </select>
