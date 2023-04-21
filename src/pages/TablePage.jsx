@@ -7,7 +7,7 @@ import DataManager from '../tools/DataManager';
 import { useAtom, useAtomValue } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName, appMode } from '../utils/jotai';
 import TableTools from '../components/TableTools';
-import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon, MergeIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
@@ -15,6 +15,7 @@ import DataInputModal from '../modals/DataInputModal';
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
 import { ProjectField } from '../components/FormFields';
+import MergeSessionsModal from '../modals/MergeSessionsModal';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
@@ -70,6 +71,10 @@ export default function TablePage() {
                 showModal={activeTool === 'newData'}
                 closeModal={() => setActiveTool('none')}
             />
+            <MergeSessionsModal 
+                showModal={activeTool === 'merge'}
+                closeModal={() =>setActiveTool('none')}
+            />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar 
                     tabs={tabsData.map((tab) => ({
@@ -112,6 +117,12 @@ export default function TablePage() {
                             text="New Data Entry"
                             icon={<NewDataIcon />}
                             onClick={() => setActiveTool('newData')}
+                        />
+                        <Button 
+                            flexible={true}
+                            text="Merge Sessions"
+                            icon={<MergeIcon />}
+                            onClick={() => setActiveTool('merge')}
                         />
                     </TableTools>
                     <Pagination

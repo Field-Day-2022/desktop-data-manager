@@ -5,7 +5,7 @@ import { TbTable } from 'react-icons/tb';
 import { HiDocumentPlus, HiFolderPlus } from 'react-icons/hi2';
 import { MdViewColumn } from 'react-icons/md';
 import { CgSortAz, CgSortZa } from 'react-icons/cg';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineMergeCells, AiOutlineSearch } from 'react-icons/ai';
 
 export function TurtleIcon() { return (<GiTurtle />) }
 export function AmphibianIcon() { return (<GiFrog />) }
@@ -21,6 +21,7 @@ export function ColumnToggleIcon() { return (<MdViewColumn />) }
 export function SortDescIcon() { return (<CgSortAz />) }
 export function SortAscIcon() { return (<CgSortZa />) }
 export function SearchIcon() { return (<AiOutlineSearch />) }
+export function MergeIcon() { return <AiOutlineMergeCells /> }
 
 export function LizardIcon({ className }) {
     return (

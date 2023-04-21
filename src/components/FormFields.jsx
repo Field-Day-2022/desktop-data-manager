@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getSpeciesCodesForProjectByTaxa, getTrapStatuses } from "../utils/firestore";
+import { getArraysForSite, getFenceTraps, getSexes, getSitesForProject, getSpeciesCodesForProjectByTaxa, getStandardizedDateTimeString, getTrapStatuses } from "../utils/firestore";
 import { useState } from "react";
 import classNames from "classnames";
 import { SearchIcon } from "../assets/icons";
@@ -97,11 +97,9 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
     const [time, setTime] = useState('');
 
     useEffect(() => {
-
-        // console.log(`date: ${date}, time: ${time}`)
         if (date !== '' && time !== '') {
             const newDate = new Date(`${date} ${time}`);
-            setDateTime(newDate.toISOString());
+            setDateTime(getStandardizedDateTimeString(newDate));
         }
     }, [date, time]);
 
@@ -147,7 +145,34 @@ const HandlerField = ({ handler, setHandler, layout, disabled }) => {
                 } } />} />
     );
 }
-const SiteField = ({ site }) => <ReadOnlyField label='Site' value={site} /> 
+const SiteField = ({ site, setSite, disabled, project }) => {
+    if (disabled) return <ReadOnlyField label='Site' value={site} />
+    const [siteOptions, setSiteOptions] = useState([])
+    const populateSiteOptions = async () => {
+        setSiteOptions(await getSitesForProject(project));
+    }
+    useEffect(() => {
+        populateSiteOptions();
+    }, [project])
+    return (
+        <InputLabel
+            label={'Site'}
+            layout={'vertical'}
+            input={<select
+                value={site || 'Select an option'}
+                onChange={(e) => {
+                    setSite(e.target.value);
+                } }
+            >
+                <option value="Select an option" disabled hidden>Select an option</option>
+                {siteOptions.map((option) => {
+                    return (
+                        <option key={option} value={option}>{option}</option>
+                    );
+                })}
+            </select>} />
+    )
+} 
 
 const ReadOnlyField = ({ label, value }) => {
     return (
@@ -157,18 +182,41 @@ const ReadOnlyField = ({ label, value }) => {
     );
 }
 
-const ArrayField = ({ array }) => <ReadOnlyField label='Array' value={array} />
+const ArrayField = ({ array, setArray, disabled, site, project }) => {
+    if (disabled) return <ReadOnlyField label='Array' value={array} /> 
+    const [arrayOptions, setArrayOptions] = useState([])
+    const populateArrayOptions = async () => {
+        setArrayOptions(await getArraysForSite(project, site));
+    }
+    useEffect(() => {
+        populateArrayOptions();
+    }, [site])
+    return (
+        <InputLabel
+            label={'Array'}
+            layout={'vertical'}
+            input={<select
+                value={array || 'Select an option'}
+                onChange={(e) => {
+                    setArray(e.target.value);
+                } }
+            >
+                <option value="Select an option" disabled hidden>{site === '' ? 'Select a site' : 'Select an option'}</option>
+                {arrayOptions.map((option) => {
+                    return (
+                        <option key={option} value={option}>{option}</option>
+                    );
+                })}
+            </select>} />
+    )
+}
 
 const NoCapturesField = ({ noCaptures, setNoCaptures, layout, disabled }) => (
-    <InputLabel
-        label='No Captures'
-        layout={layout}
-        input={<TrueFalseToggle
-            disabled={disabled}
-            value={noCaptures}
-            setValue={(e) => {
-                setNoCaptures(e.target.value);
-            } } />} />
+    <Checkbox 
+        label={'No Captures?'}
+        setValue={setNoCaptures}  
+        value={noCaptures}
+    />
 );
 
 const TrueFalseToggle = ({ disabled, value, setValue }) => (
@@ -269,7 +317,6 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
     useEffect(() => {
         getTrapStatuses().then((statuses) => {
             setTrapStatusOptions(statuses);
-            setTrapStatus(statuses[0]);
         });
     }, []);
     return (
@@ -280,7 +327,7 @@ const TrapStatusField = ({ trapStatus, setTrapStatus, layout, disabled }) => {
                 disabled={disabled}
                 value={trapStatus || 'Select an option'}
                 onChange={(e) => {
-                    setTrapStatus(e);
+                    setTrapStatus(e.target.value);
                 } }
             >
                 <option value="Select an option" disabled hidden>Select an option</option>
@@ -555,21 +602,7 @@ export const checkToeCodeValidity = async (toeCode, environment, project, site, 
 const ToeClipCodeField = ({
     toeCode, setToeCode, project, site, array, speciesCode, recapture
 }) => {
-
     const environment = useAtomValue(appMode);
-
-    { /* console.log({
-        toeCode,
-        setToeCode,
-        environment,
-        project,
-        site,
-        array,
-        speciesCode,
-        recapture
-    }) */
-    }
-
     const [buttonText, setButtonText] = useState('Generate');
     const [recaptureHistoryIsOpen, setRecaptureHistoryIsOpen] = useState(false);
     const [previousLizardEntries, setPreviousLizardEntries] = useState([]);
@@ -658,15 +691,16 @@ const ToeClipCodeField = ({
                 value={toeCode || ''}
                 onChange={e => setToeCode(e.target.value.toUpperCase())}
                 onBlur={async () => {
-                    setToeCodeIsValid(await checkToeCodeValidity(
-                        toeCode,
-                        environment,
-                        project,
-                        site,
-                        array,
-                        speciesCode,
-                        recapture
-                    ));
+                    if (toeCode.length > 0)
+                        setToeCodeIsValid(await checkToeCodeValidity(
+                            toeCode,
+                            environment,
+                            project,
+                            site,
+                            array,
+                            speciesCode,
+                            recapture
+                        ));
                 } } />
             <button
                 className="w-min mt-1 button"

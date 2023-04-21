@@ -186,30 +186,12 @@ const CritterForm = ({ critter, project, session }) => {
 
 
     useEffect(() => {
-        // console.log(session.site)
-        // console.log(`iterating over ${critter}`)
         let tempEntry = dataObjTemplate
         tempEntry.sessionDateTime = session.dateTime;
         tempEntry.site = session.site;
         tempEntry.array = session.array;
         tempEntry.taxa = critter;
-        // console.log({tempEntry})
         setEntry(tempEntry);
-        // console.log('tempEntry:')
-        // console.log(tempEntry);
-        // setEntry(
-        //     // TABLE_KEYS[critter].reduce((acc, key) => {
-        //     //     acc[key] = '';
-        //     //     return acc;
-        //     // }, {
-        //     //     sessionDateTime: session.dateTime,
-        //     //     site: 'test',
-        //     // })
-        // )
-        // setEntry(TABLE_KEYS[critter])
-        // console.log(`switching to ${critter}`)
-        // console.log(TABLE_KEYS[critter])
-        // console.log(session)
         hydrateSpeciesArrays(project, critter)
     }, [critter])
     
@@ -280,11 +262,11 @@ const CritterForm = ({ critter, project, session }) => {
         <div className='flex flex-col space-y-1 items-center'>
             <div className='grid grid-cols-3'>
                 {TABLE_KEYS[critter].map((key) => {
-                    {/* const disabled = session[key] */}
+                    const disabled = session[key] && key !== 'dateTime'
                     return (
                         <FormField
                             key={key}
-                            disabled={false}
+                            disabled={disabled}
                             fieldName={key}
                             layout='vertical'
                             value={entry[key]}

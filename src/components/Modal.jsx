@@ -9,6 +9,10 @@ export default function Modal({
     onCancel,
     children,
     showModal,
+    buttonOptions = {
+        cancel: 'Cancel',
+        okay: 'Okay'
+    }
 }) {
     return (
         <motion.div
@@ -34,16 +38,16 @@ export default function Modal({
                                     <ModalHeader title={title} text={text} />
                                     <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
-                                        <Button
+                                        {buttonOptions.cancel && <Button
                                             onClick={() => onCancel()}
-                                            text="Cancel"
+                                            text={buttonOptions.cancel}
                                             enabled={true}
-                                        />
-                                        <Button
+                                        />}
+                                        {buttonOptions.okay && <Button
                                             onClick={() => onOkay()}
-                                            text="Okay"
+                                            text={buttonOptions.okay}
                                             enabled={true}
-                                        />
+                                        />}
                                     </ModalFooter>
                                 </ModalWrapper>
                             </ModalBuffer>

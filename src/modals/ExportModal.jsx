@@ -7,6 +7,7 @@ import { db } from "../utils/firebase";
 import { useAtomValue } from "jotai";
 import { currentProjectName } from "../utils/jotai";
 import { getArthropodLabels } from "../utils/firestore";
+import InnerModalWrapper from "./InnerModalWrapper";
 
 export default function ExportModal({ showModal, onCancel }) {
     const [ activeTab, setActiveTab ] = useState('Data Form');
@@ -22,6 +23,10 @@ export default function ExportModal({ showModal, onCancel }) {
             title='Export'
             text='Choose export options.'
             onCancel={() => onCancel()}
+            buttonOptions={{
+                cancel: 'Close',
+                okay: '',
+            }}
         >
         <InnerModalWrapper>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -30,12 +35,6 @@ export default function ExportModal({ showModal, onCancel }) {
         </Modal>
     );
 }
-
-const InnerModalWrapper = ({children}) => (
-    <div className='flex-col w-full-modal-width h-full-modal-content-height max-w-5xl'>
-        {children}
-    </div>
-)
 
 const Tabs = ({
     activeTab,

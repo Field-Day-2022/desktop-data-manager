@@ -283,10 +283,32 @@ const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
     return options;
 };
 
+export const getStandardizedDateTimeString = (dateString) => {
+    const tempDate = new Date(dateString);
+    return `${tempDate.getFullYear()}/${(tempDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${tempDate
+        .getDate()
+        .toString()
+        .padStart(2, '0')} ${tempDate.toLocaleTimeString('en-US', {
+        hourCycle: 'h24',
+    })}`;
+};
+
+export const uploadNewSession = async (sessionData, project, environment) => {
+    let collectionName = `Test${project.replace(/\s/g, '')}Session`;
+    if (environment === 'live') {
+        collectionName = `${project.replace(/\s/g, '')}Session`;
+    }
+    let success = false;
+    await addDoc(collection(db, collectionName), sessionData).then(() => (success = true));
+    return success;
+};
+
 export const uploadNewEntry = async (entryData, project, environment) => {
     let success = false;
     const now = new Date();
-    if (entryData.dateTime === '') entryData.dateTime = now.toISOString();
+    if (entryData.dateTime === '') entryData.dateTime = getStandardizedDateTimeString(now);
     const taxa = entryData.taxa;
     if (entryData.taxa === 'Arthropod') {
         if (entryData.aran === '') entryData.aran = '0';
