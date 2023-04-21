@@ -1,19 +1,15 @@
 import React from 'react';
-import { ExportIcon, SearchIcon } from '../assets/icons';
+import { ExportIcon } from '../assets/icons';
 import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import InputField from '../components/InputField';
-
-const SearchField = ({ onChange }) => {
-    return (
-        <InputField type="search" onChange={onChange} placeholder="Search" />
-    );
-};
-
-const MemoizedSearchBar = React.memo(SearchField);
+import {SearchField} from '../components/FormFields';
+import { CSVLink } from 'react-csv';
+import { getKey } from '../const/tableLabels';
+import { notify, Type } from '../components/Notifier';
+import { getCollectionNameFromDoc } from '../utils/firestore';
 
 export default function DataManager({ name, labels = [], entries = [], setEntries }) {
     const [columns, setColumns] = useState({});
@@ -35,6 +31,38 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
             }
         }));
     }, []);
+
+    const generateCSV = (labels, entries) => {
+        if (!labels || !entries) {
+            return [];
+        }
+        let csvData = [];
+        csvData.push(labels);
+        entries.forEach((entry) => {
+            let row = [];
+            labels.forEach((label) => {
+                if (label !== 'Actions') {
+                    let key = getKey(label, name);
+                    row.push(entry.data()[key]);
+                }
+            });
+            csvData.push(row);
+        });
+        return csvData;
+    };
+
+    const getCSVName = (entry) => {
+        if (!entry) {
+            return '';
+        }
+        const collectionName = getCollectionNameFromDoc(entry);
+        const dateTime = new Date().toLocaleString();
+        if(name === 'Session') {
+            return collectionName +  ' ' + dateTime;
+        } else {
+            return collectionName.slice(0, -4) + name + ' ' + dateTime;
+        }
+    };
 
     const handleSearchChange = useCallback((e) => {
         setSearch(e.target.value);
@@ -59,14 +87,27 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">
-                    <MemoizedSearchBar onChange={handleSearchChange} />
+                    <SearchField search={search} setSearch={handleSearchChange} />
                     <div className='flex justify-center text-2xl'>
                         <ColumnSelectorButton
                             labels={labels}
                             columns={columns}
                             toggleColumn={toggleColumn}
                         />
-                        <ExportIcon />
+                        <CSVLink
+                            className='hover:scale-125 transition h-8 cursor-pointer'
+                            data={generateCSV(labels, entries)}
+                            filename={getCSVName(entries[0]) + '.csv'}
+                            onClick={() => {
+                                if(generateCSV(labels, entries).length === 0) {
+                                    notify(Type.error, 'No data to export');
+                                } else {
+                                    notify(Type.success, 'Exported data to CSV');
+                                }
+                            }}
+                        >
+                            <ExportIcon />
+                        </CSVLink>
                     </div>
 
                 </div>

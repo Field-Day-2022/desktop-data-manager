@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import InputField from './InputField';
+import InputLabel from './InputLabel';
 
 const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
     const ref = useRef();
@@ -35,17 +35,21 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                     <div className='flex-col space-y-2 whitespace-nowrap max-h-full-column-selector-height'>
                         <h1 className='text-xl pt-2 px-4'>Column Selector</h1>
                         {labels && labels.map((label) =>
-                            <div className='hover:bg-neutral-100 px-6'>
-                                    <InputField
-                                        key={label}
-                                        label={label}
-                                        type='checkbox'
-                                        checked={columns[label]?.show}
-                                        disabled={getShownColumnCount() === 1 && columns[label].show}
-                                        onChange={() => {
-                                            toggleColumn(label);
-                                        }}
-                                    />
+                            <div key={label} className='hover:bg-neutral-100 px-6'>
+                                <InputLabel
+                                    label={label}
+                                    orientation='horizontal'
+                                    input={
+                                        <input
+                                            type='checkbox'
+                                            checked={columns[label]?.show}
+                                            disabled={getShownColumnCount() === 1 && columns[label].show}
+                                            onChange={() => {
+                                                toggleColumn(label);
+                                            }}
+                                        />
+                                    }
+                                />
                             </div>
                         )}
                     </div>

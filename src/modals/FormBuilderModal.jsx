@@ -1,7 +1,7 @@
 import Modal from "../components/Modal";
 import { FormBuilder } from "../pages";
 
-export default function FormBuilderModal({ showModal, onCancel, onOkay }) {
+export default function FormBuilderModal({ showModal, onCancel, onOkay, triggerRerender }) {
     return (
         <Modal
             showModal={showModal}
@@ -9,9 +9,13 @@ export default function FormBuilderModal({ showModal, onCancel, onOkay }) {
             onOkay={onOkay}
             title='Form Builder'
             text='Build custom forms with Field Day!'
+            buttonOptions={{
+                cancel: 'Close',
+                okay: '',
+            }}
         >
             <div className="w-full-modal-width">
-                <FormBuilder />
+                <FormBuilder triggerRerender={triggerRerender} />
             </div>
             
         </Modal>

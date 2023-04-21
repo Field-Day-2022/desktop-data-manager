@@ -9,10 +9,14 @@ export default function Modal({
     onCancel,
     children,
     showModal,
+    buttonOptions = {
+        cancel: 'Cancel',
+        okay: 'Okay'
+    }
 }) {
     return (
         <motion.div
-            className="relative z-50"
+            className={`relative z-50`}
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true"
@@ -34,16 +38,16 @@ export default function Modal({
                                     <ModalHeader title={title} text={text} />
                                     <ModalContent>{children}</ModalContent>
                                     <ModalFooter>
-                                        <Button
+                                        {buttonOptions.cancel && <Button
                                             onClick={() => onCancel()}
-                                            text="Cancel"
+                                            text={buttonOptions.cancel}
                                             enabled={true}
-                                        />
-                                        <Button
+                                        />}
+                                        {buttonOptions.okay && <Button
                                             onClick={() => onOkay()}
-                                            text="Okay"
+                                            text={buttonOptions.okay}
                                             enabled={true}
-                                        />
+                                        />}
                                     </ModalFooter>
                                 </ModalWrapper>
                             </ModalBuffer>
@@ -89,7 +93,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white p-4 max-h-full-modal-content-height overflow-auto">{children}</div>;
+    return <div className="bg-white max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {

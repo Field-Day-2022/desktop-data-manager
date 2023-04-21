@@ -6,6 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      height: {
+        'data-input': 'calc(100vh - 22em)',
+        'tab-modal-content': 'calc(100vh - 334px)',
+        'tab-bar': '54px'
+      },
       colors: {
         'asu-maroon': '#8c1d40',
         'asu-gold': '#ffc627'
@@ -16,8 +21,13 @@ module.exports = {
         'full-column-selector-height': 'calc(100vh - 16em)',
         'full-minus-nav': 'calc(100vh - 64px)',
         'full-minus-sideBar': 'calc(100vw - 18rem)',
-        'full-table': 'calc(100vh - 261px)'
-      }
+        'full-table': 'calc(100vh - 262px)'
+      },
+      zIndex: {
+        '50': '50',
+        '60': '60',
+        '70': '70',
+      },
     },
   },
   plugins: [],

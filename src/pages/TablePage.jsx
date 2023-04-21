@@ -2,36 +2,48 @@ import { useState, useEffect } from 'react';
 import PageWrapper from './PageWrapper';
 import { Pagination } from '../components/Pagination';
 import TabBar from '../components/TabBar';
-import { TABLE_LABELS } from '../const/tableLabels';
+import { TABLE_LABELS, dynamicArthropodLabels } from '../const/tableLabels';
 import DataManager from '../tools/DataManager';
-import { useAtom } from 'jotai';
-import { currentBatchSize, currentProjectName, currentTableName } from '../utils/jotai';
-import Dropdown from '../components/Dropdown';
+import { useAtom, useAtomValue } from 'jotai';
+import { currentBatchSize, currentProjectName, currentTableName, appMode } from '../utils/jotai';
 import TableTools from '../components/TableTools';
-import { FormBuilderIcon, ExportIcon, NewSessionIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon } from '../assets/icons';
+import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon, MergeIcon } from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
-import NewSessionModal from '../modals/NewSessionModal';
-import NewDataModal from '../modals/NewDataModal';
+import DataInputModal from '../modals/DataInputModal';
 
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
+import { ProjectField } from '../components/FormFields';
+import MergeSessionsModal from '../modals/MergeSessionsModal';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
+    const [rerender, setRerender] = useState(false);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
     const [batchSize, setBatchSize] = useAtom(currentBatchSize);
+    const environment = useAtomValue(appMode);
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
+    const loadDynamicArthropodLabels = async () => {
+        setLabels(await dynamicArthropodLabels())
+    }
+
+    const triggerRerender = () => setRerender(!rerender);
+
     useEffect(() => {
-        setLabels(TABLE_LABELS[tableName]);
-        loadBatch();
-    }, [tableName, batchSize, currentProject]);
+        if (tableName === 'Arthropod') {
+            loadDynamicArthropodLabels();
+        } else {
+            setLabels(TABLE_LABELS[tableName])
+        }
+        loadBatch()
+    }, [tableName, batchSize, currentProject, environment, rerender]);
 
     const tabsData = [
         { text: 'Turtle', icon: <TurtleIcon /> },
@@ -48,19 +60,20 @@ export default function TablePage() {
             <FormBuilderModal
                 showModal={activeTool === 'formBuilder'}
                 onCancel={() => setActiveTool('none')}
-                onOkay={() => console.log('okay then...')}
+                onOkay={() => setActiveTool('none')}
+                triggerRerender={triggerRerender}
             />
             <ExportModal
                 showModal={activeTool === 'export'}
                 onCancel={() => setActiveTool('none')}
             />
-            <NewSessionModal
-                showModal={activeTool === 'newSession'}
-                onCancel={() => setActiveTool('none')}
-            />
-            <NewDataModal
+            <DataInputModal
                 showModal={activeTool === 'newData'}
-                onCancel={() => setActiveTool('none')}
+                closeModal={() => setActiveTool('none')}
+            />
+            <MergeSessionsModal 
+                showModal={activeTool === 'merge'}
+                closeModal={() =>setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto">
                 <TabBar 
@@ -71,15 +84,9 @@ export default function TablePage() {
                     }))}
                 />
                 <div className="flex items-center px-5 space-x-5">
-                    <Dropdown
-                        label="Project"
-                        layout="horizontal"
-                        onClickHandler={(selectedOption) => {
-                            if (selectedOption !== currentProject)
-                                setCurrentProject(selectedOption.replace(/\s/g, ''));
-                        }}
-                        value={currentProject.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                        options={['Gateway', 'Virgin River', 'San Pedro']}
+                    <ProjectField
+                        project={currentProject.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                        setProject={(e) => setCurrentProject(e.replace(/ /g, ''))}
                     />
                 </div>
             </div>
@@ -107,15 +114,15 @@ export default function TablePage() {
                         />
                         <Button
                             flexible={true}
-                            text="New Session"
-                            icon={<NewSessionIcon />}
-                            onClick={() => setActiveTool('newSession')}
-                        />
-                        <Button
-                            flexible={true}
                             text="New Data Entry"
                             icon={<NewDataIcon />}
                             onClick={() => setActiveTool('newData')}
+                        />
+                        <Button 
+                            flexible={true}
+                            text="Merge Sessions"
+                            icon={<MergeIcon />}
+                            onClick={() => setActiveTool('merge')}
                         />
                     </TableTools>
                     <Pagination
