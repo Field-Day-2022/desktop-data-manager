@@ -257,8 +257,9 @@ const getSessionsByProjectAndYear = async (environment, projectName, year) => {
     const sessions = await getDocs(
         query(
             collection(db, `${environment}${projectName}Session`),
-            where('dateTime', '>=', `${year}-01-01`),
-            where('dateTime', '<=', `${year}-12-31`)
+            where('dateTime', '>=', `${year}/01/01 00:00:00`),
+            where('dateTime', '<=', `${year}/12/31 23:59:59`),
+            orderBy('dateTime', 'desc')
         )
     );
     // console.log('sessions', sessions.docs);
