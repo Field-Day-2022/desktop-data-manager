@@ -150,7 +150,7 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData, editMsg) =>
 };
 
 const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
-    console.log(`editing session and its entries: ${sessionData.toString()}`)
+    console.log(`editing session and its entries: ${sessionData.toString()}`);
     const entries = await getDocs(
         query(
             collection(
@@ -165,20 +165,20 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
     );
     const batch = writeBatch(db);
     let entryCount = 0;
-    entries.docs.forEach(entry => {
+    entries.docs.forEach((entry) => {
         entryCount++;
         batch.update(doc(db, entry.ref.parent.id, entry.id), {
             dateTime: sessionData.dateTime,
             sessionDateTime: sessionData.dateTime,
-        })
-    })
+        });
+    });
     await batch.commit();
     return pushEntryChangesToFirestore(
-        sessionSnapshot, 
+        sessionSnapshot,
         sessionData,
-        `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`    
+        `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`
     );
-}
+};
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     const entries = await getDocs(
