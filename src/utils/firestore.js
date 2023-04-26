@@ -10,6 +10,7 @@ import {
     arrayUnion,
     setDoc,
     where,
+    writeBatch,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { Type } from '../components/Notifier';
@@ -131,7 +132,7 @@ const updateLizardMetadata = async (operation, operationDataObject) => {
     }
 };
 
-const pushEntryChangesToFirestore = async (entrySnapshot, entryData) => {
+const pushEntryChangesToFirestore = async (entrySnapshot, entryData, editMsg) => {
     if (entryData.taxa === 'Lizard') {
         const lastEditTime = new Date().getTime();
         entryData.lastEdit = lastEditTime;
@@ -140,13 +141,44 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData) => {
     let response = [];
     await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
         .then(() => {
-            response = [Type.success, 'Changes successfully written to database!'];
+            response = [Type.success, editMsg || 'Changes successfully written to database!'];
         })
         .catch((e) => {
             response = [Type.error, `Error writing changes to database: ${e}`];
         });
     return response;
 };
+
+const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
+    console.log(`editing session and its entries: ${sessionData.toString()}`)
+    const entries = await getDocs(
+        query(
+            collection(
+                db,
+                `${sessionSnapshot.ref.parent.id.substr(
+                    0,
+                    sessionSnapshot.ref.parent.id.length - 7
+                )}Data`
+            ),
+            where('sessionId', '==', sessionSnapshot.data().sessionId)
+        )
+    );
+    const batch = writeBatch(db);
+    let entryCount = 0;
+    entries.docs.forEach(entry => {
+        entryCount++;
+        batch.update(doc(db, entry.ref.parent.id, entry.id), {
+            dateTime: sessionData.dateTime,
+            sessionDateTime: sessionData.dateTime,
+        })
+    })
+    await batch.commit();
+    return pushEntryChangesToFirestore(
+        sessionSnapshot, 
+        sessionData,
+        `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`    
+    );
+}
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     const entries = await getDocs(
@@ -181,6 +213,8 @@ const startEntryOperation = async (operationName, operationData) => {
         return deleteDocumentFromFirestore(operationData.entrySnapshot);
     } else if (operationName === 'deleteSession') {
         return deleteSessionAndItsEntries(operationData.entrySnapshot);
+    } else if (operationName === 'uploadSessionEdits') {
+        return editSessionAndItsEntries(operationData.entrySnapshot, operationData.entryData);
     } else return [Type.error, 'Unknown error occurred'];
 };
 

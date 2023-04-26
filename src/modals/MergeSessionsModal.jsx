@@ -51,19 +51,30 @@ export default function MergeSessionsModal({ showModal, closeModal }) {
         await deleteDoc(doc(db, `${environment === 'test' ? 'Test' : ''}${project}Session`, lastSessionSnapshot.id))
     };
 
-    const updateSessionEntries =  async (firstSession, lastSession) => {
-        console.log(lastSession);
+    const updateSessionEntries =  async (firstSessionDateTime, lastSessionDateTime) => {
+        console.log(lastSessionDateTime);
         console.log(`${environment === 'test' ? 'Test' : ''}${project}Data`)
         const sessionDocuments = await getDocs(query(
             collection(db, `${environment === 'test' ? 'Test' : ''}${project}Data`),
-            where('sessionDateTime', '==', lastSession)
+            where('sessionDateTime', '==', lastSessionDateTime)
         ))
         const batch = writeBatch(db);
-        console.log(`updating these documents from ${lastSession} to ${firstSession}`)
+        console.log(`updating these documents from ${lastSessionDateTime} to ${firstSessionDateTime}`)
         console.log(sessionDocuments)
+        let firstSessionId = null;
+        sessions.forEach(sessionDocument => {
+            console.log(`comparing ${sessionDocument.data().dateTime} and ${firstSessionDateTime}`)
+            if (sessionDocument.data().dateTime === firstSessionDateTime) {
+                firstSessionId = sessionDocument.data().sessionId;
+                console.log('is equal, setting sessionId')
+                return;
+            }
+        })
         sessionDocuments.forEach(document => {
             batch.update(doc(db, `${environment === 'test' ? 'Test' : ''}${project}Data`, document.id), {
-                sessionDateTime: firstSession 
+                sessionDateTime: firstSessionDateTime,
+                dateTime: firstSessionDateTime,
+                sessionId: firstSessionId ?? new Date(firstSessionDateTime).getTime(), 
             })
         })
         await batch.commit();
