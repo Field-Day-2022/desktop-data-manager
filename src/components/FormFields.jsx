@@ -97,6 +97,14 @@ const DateTimeField = ({ dateTime, setDateTime, layout, disabled }) => {
     const [time, setTime] = useState('');
 
     useEffect(() => {
+        if (dateTime) {
+            setDate(getStandardizedDateTimeString(dateTime).split(' ')[0].replace(/\//g,'-'))
+            setTime(getStandardizedDateTimeString(dateTime).split(' ')[1])
+        }
+    }, [dateTime])
+
+
+    useEffect(() => {
         if (date !== '' && time !== '') {
             const newDate = new Date(`${date} ${time}`);
             setDateTime(getStandardizedDateTimeString(newDate));

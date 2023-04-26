@@ -343,7 +343,7 @@ export const uploadNewSession = async (sessionData, project, environment) => {
 export const uploadNewEntry = async (entryData, project, environment) => {
     let success = false;
     const now = new Date();
-    if (entryData.dateTime === '') entryData.dateTime = getStandardizedDateTimeString(now);
+    if (!entryData.entryId) entryData.entryId = now.getTime();
     const taxa = entryData.taxa;
     if (entryData.taxa === 'Arthropod') {
         if (entryData.aran === '') entryData.aran = '0';
@@ -377,7 +377,7 @@ export const uploadNewEntry = async (entryData, project, environment) => {
     for (const key in entryData) {
         if (entryData[key] === '') entryData[key] = 'N/A';
     }
-    const entryId = `${entryData.site}${taxa}${now.getTime()}`;
+    const entryId = `${entryData.site}${taxa === 'N/A' ? 'Arthropod' : taxa}${entryData.entryId || now.getTime()}`;
     let collectionName = `Test${project.replace(/\s/g, '')}Data`;
     if (environment === 'live') {
         collectionName = `${project.replace(/\s/g, '')}Data`;
