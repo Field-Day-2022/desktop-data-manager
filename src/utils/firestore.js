@@ -194,11 +194,10 @@ export const getSessionEntryCount = async (sessionSnapshot) => {
             ),
             or(
                 where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
-                where('sessionId', '==', sessionSnapshot.data().sessionId)
             )
         )
     );
-    return snapshot.data().count || 0;
+    return snapshot.data().count;
 };
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
@@ -213,7 +212,6 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
             ),
             or(
                 where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
-                where('sessionId', '==', sessionSnapshot.data().sessionId)
             )
         )
     );
