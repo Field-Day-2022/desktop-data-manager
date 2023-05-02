@@ -5,7 +5,7 @@ import { CSVLink } from "react-csv";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useAtomValue } from "jotai";
-import { currentProjectName } from "../utils/jotai";
+import { appMode, currentProjectName } from "../utils/jotai";
 import { getArthropodLabels } from "../utils/firestore";
 import InnerModalWrapper from "./InnerModalWrapper";
 
@@ -59,6 +59,7 @@ const Tabs = ({
 )
 
 const DataForm = () => {
+    const environment = useAtomValue(appMode);
     const forms = [
         'Turtle',
         'Lizard',
@@ -83,7 +84,11 @@ const DataForm = () => {
     const generateCsvData = async () => {
         setButtonText("Generating CSV Data...")
         const entries = [];
-        const collectionName = `Test${project}Data`
+        let collectionName = `Test${project}Data`
+        if (environment === 'live') collectionName = `${project}Data`
+        console.log(project)
+        console.log(environment)
+        console.log(`getting data from ${collectionName}`)
         const selectedTaxas = []
         for (const form in formsToInclude) {
             if (formsToInclude[form]) {
@@ -107,6 +112,12 @@ const DataForm = () => {
 
         const arthropodLabels = await getArthropodLabels();
 
+        entries.sort((a, b) => {
+            const dateA = new Date(a.dateTime).getTime();
+            const dateB = new Date(b.dateTime).getTime();
+            return dateB - dateA;
+        })
+
         for (const entry of entries) {
             const arthropodDataObject = {}
             arthropodLabels.forEach(label => {
@@ -115,13 +126,18 @@ const DataForm = () => {
 
 
             tempCsvData.push({
+                year: new Date(entry.sessionDateTime).getFullYear(),
                 sessionDateTime: new Date(entry.sessionDateTime).toLocaleString(),
                 dateTime: new Date(entry.dateTime).toLocaleString(),
+                site: entry.site,
+                array: entry.array,
                 fenceTrap: entry.fenceTrap,
                 taxa: entry.taxa,
                 speciesCode: entry.speciesCode,
                 genus: entry.genus,
                 species: entry.species,
+                ccl: entry.cclMm,
+                pl: entry.plMm,
                 toeClipCode: entry.toeClipCode,
                 recapture: entry.recapture,
                 svl: entry.svlMm,
@@ -158,6 +174,8 @@ const DataForm = () => {
         setCsvData([])
     }
 
+    // TODO: dynamic arthropod labels
+
     return (
         <div>
             <h1 className='text-xl m-2'>Please select the forms to include in the file</h1>
@@ -188,13 +206,22 @@ const DataForm = () => {
             <CSVLink
                 data={csvData}
                 headers={[
+                    {label: 'Year', key: 'year'},
                     {label: 'Session Date/Time', key: 'sessionDateTime'},
                     {label: 'Date/Time', key: 'dateTime'},
+                    {label: 'Site', key: 'site'},
+                    {label: 'Array', key: 'array'},
                     {label: 'Fence Trap', key: 'fenceTrap'},
                     {label: 'Taxa', key: 'taxa'},
                     {label: 'Species Code', key: 'speciesCode'},
                     {label: 'Genus', key: 'genus'},
                     {label: 'Species', key: 'species'},
+                    {label: 'CCL(mm)', key: 'ccl'},
+                    {label: 'PL(mm)', key: 'pl'},
+                    {label: 'Mass(g)', key: 'mass'},
+                    {label: 'Sex', key: 'sex'},
+                    {label: 'Dead?', key: 'dead'},
+                    {label: 'Comments', key: 'comments'},
                     {label: 'Toe-Clip Code', key: 'toeClipCode'},
                     {label: 'Recapture', key: 'recapture'},
                     {label: 'SVL(mm)', key: 'svl'},
@@ -202,10 +229,6 @@ const DataForm = () => {
                     {label: 'Regen Tail', key: 'regenTail'},
                     {label: 'OTL(mm)', key: 'otl'},
                     {label: 'Hatchling', key: 'hatchling'},
-                    {label: 'Mass(g)', key: 'mass'},
-                    {label: 'Sex', key: 'sex'},
-                    {label: 'Dead?', key: 'dead'},
-                    {label: 'Comments', key: 'comments'},
                     {label: 'Predator?', key: 'predator'},
                     {label: 'ARAN', key: 'aran'},
                     {label: 'AUCH', key: 'auch'},
