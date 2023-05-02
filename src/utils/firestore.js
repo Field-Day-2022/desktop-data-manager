@@ -197,9 +197,9 @@ export const getSessionEntryCount = async (sessionSnapshot) => {
                 where('sessionId', '==', sessionSnapshot.data().sessionId)
             )
         )
-    )
+    );
     return snapshot.data().count || 0;
-}
+};
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     const entries = await getDocs(
