@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel, TABLE_LABELS } from '../const/tableLabels';
-import { startEntryOperation } from '../utils/firestore';
+import { getSessionEntryCount, startEntryOperation } from '../utils/firestore';
 import { Type, notify } from './Notifier';
 import { FormField } from './FormFields';
 import { isNumber } from '@syncfusion/ej2-react-spreadsheet';
@@ -30,6 +30,7 @@ export const TableEntry = forwardRef((props, ref) => {
     const [entryData, setEntryData] = useState(entrySnapshot.data());
     const [keys, setKeys] = useState();
     const tableName = useAtomValue(currentTableName);
+    const [deleteMessage, setDeleteMessage] = useState('Are you sure you want to delete this row?')
 
 
     const onEditClickedHandler = () => {
@@ -37,8 +38,12 @@ export const TableEntry = forwardRef((props, ref) => {
         setEntryUIState('editing');
     };
 
-    const onDeleteClickedHandler = () => {
+    const onDeleteClickedHandler = async () => {
         setEntryUIState('deleting');
+        if (entrySnapshot.ref.parent.id.includes('Session')) {
+            const entryCount = await getSessionEntryCount(entrySnapshot);
+            setDeleteMessage(`Are you sure you want to delete this session and its ${entryCount} animal entries?`)
+        }
     };
 
     const onSaveClickedHandler = () => {
@@ -92,6 +97,7 @@ export const TableEntry = forwardRef((props, ref) => {
                 onDeleteClickedHandler={onDeleteClickedHandler}
                 onSaveClickedHandler={onSaveClickedHandler}
                 entryUIState={entryUIState}
+                deleteMessage={deleteMessage}
             />
             {keys && keys.map((key) => (
                 shownColumns.includes(getLabel(key)) && (
@@ -171,6 +177,7 @@ const Actions = ({
     onSaveClickedHandler,
     onCancelClickedHandler,
     entryUIState,
+    deleteMessage
 }) => {
     return (
         <td className="border-b border-gray-400 p-2">
@@ -193,7 +200,7 @@ const Actions = ({
                                 opacity: 0,
                             }}
                         >
-                            Are you sure you want to delete this row?
+                            {deleteMessage}
                         </motion.div>
                     )}
                     {entryUIState === 'viewing' &&

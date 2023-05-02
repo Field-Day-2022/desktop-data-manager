@@ -12,6 +12,7 @@ import {
     where,
     writeBatch,
     or,
+    getCountFromServer,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { Type } from '../components/Notifier';
@@ -180,6 +181,25 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
         `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`
     );
 };
+
+export const getSessionEntryCount = async (sessionSnapshot) => {
+    const snapshot = await getCountFromServer(
+        query(
+            collection(
+                db,
+                `${sessionSnapshot.ref.parent.id.substr(
+                    0,
+                    sessionSnapshot.ref.parent.id.length - 7
+                )}Data`
+            ),
+            or(
+                where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
+                where('sessionId', '==', sessionSnapshot.data().sessionId)
+            )
+        )
+    )
+    return snapshot.data().count || 0;
+}
 
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     const entries = await getDocs(
