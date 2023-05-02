@@ -1,6 +1,7 @@
 import { getArthropodLabels } from '../utils/firestore';
 
 const keyLabelMap = {
+    year: 'Year',
     dateTime: 'Date & Time',
     recorder: 'Recorder',
     handler: 'Handler',
@@ -51,6 +52,7 @@ const keyLabelMap = {
 };
 
 const sessionLabels = [
+    'Year',
     'Date & Time',
     'Recorder',
     'Handler',
@@ -62,6 +64,7 @@ const sessionLabels = [
 ];
 
 const turtleLabels = [
+    'Year',
     'Date & Time',
     'Site',
     'Array',
@@ -77,6 +80,7 @@ const turtleLabels = [
 ];
 
 const lizardLabels = [
+    'Year',
     'Date & Time',
     'Site',
     'Array',
@@ -99,6 +103,7 @@ const lizardLabels = [
 ];
 
 const mammalLabels = [
+    'Year',
     'Date & Time',
     'Site',
     'Array',
@@ -114,6 +119,7 @@ const mammalLabels = [
 ];
 
 const snakeLabels = [
+    'Year',
     'Date & Time',
     'Site',
     'Array',
@@ -143,6 +149,7 @@ export const dynamicArthropodLabels = async () => {
 };
 
 const arthropodLabels = [
+    'Year',
     'Date & Time',
     'Site',
     'Array',
@@ -173,6 +180,7 @@ const arthropodLabels = [
 ];
 
 const amphibianLabels = [
+    'Year',
     'Date & Time',
     'Site',
     'Array',
