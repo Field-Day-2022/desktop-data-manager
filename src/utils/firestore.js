@@ -11,6 +11,7 @@ import {
     setDoc,
     where,
     writeBatch,
+    or,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { Type } from '../components/Notifier';
@@ -190,9 +191,13 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
                     sessionSnapshot.ref.parent.id.length - 7
                 )}Data`
             ),
-            where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
+            or(
+                where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
+                where('sessionId', '==', sessionSnapshot.data().sessionId)
+            )
         )
     );
+    console.log(entries);
     let entryCount = 0;
     entries.docs.forEach((entry) => {
         entryCount++;
