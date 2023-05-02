@@ -153,18 +153,34 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData, editMsg) =>
 
 const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
     console.log(`editing session and its entries: ${sessionData.toString()}`);
-    const entries = await getDocs(
-        query(
-            collection(
-                db,
-                `${sessionSnapshot.ref.parent.id.substr(
-                    0,
-                    sessionSnapshot.ref.parent.id.length - 7
-                )}Data`
-            ),
-            where('sessionId', '==', sessionSnapshot.data().sessionId)
-        )
-    );
+    let entries = null;
+    if (sessionSnapshot.data().sessionId) {
+        entries = await getDocs(
+            query(
+                collection(
+                    db,
+                    `${sessionSnapshot.ref.parent.id.substr(
+                        0,
+                        sessionSnapshot.ref.parent.id.length - 7
+                    )}Data`
+                ),
+                where('sessionId', '==', sessionSnapshot.data().sessionId)
+            )
+        );
+    } else {
+        entries = await getDocs(
+            query(
+                collection(
+                    db,
+                    `${sessionSnapshot.ref.parent.id.substr(
+                        0,
+                        sessionSnapshot.ref.parent.id.length - 7
+                    )}Data`
+                ),
+                where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
+            )
+        );
+    }
     const batch = writeBatch(db);
     let entryCount = 0;
     entries.docs.forEach((entry) => {
