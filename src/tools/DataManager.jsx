@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExportIcon } from '../assets/icons';
-import { motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
@@ -10,10 +10,14 @@ import { CSVLink } from 'react-csv';
 import { getKey } from '../const/tableLabels';
 import { notify, Type } from '../components/Notifier';
 import { getCollectionNameFromDoc } from '../utils/firestore';
+import { where } from 'firebase/firestore';
 
-export default function DataManager({ name, labels = [], entries = [], setEntries }) {
+export default function DataManager({ name, labels = [], entries = [], setEntries, updateConstraints }) {
     const [columns, setColumns] = useState({});
     const [search, setSearch] = useState('');
+    const [searchField, setSearchField] = useState('Year');
+    const [searchTerm, setSearchTerm] = useState('')
+    const [searchButtonText, setSearchButtonText] = useState('Search')
 
     useEffect(() => {
         setColumns(labels.reduce((acc, label) => {
@@ -64,6 +68,11 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
         }
     };
 
+    const doSearch = () => {
+        const key = getKey(searchField)
+        updateConstraints(where(key, '==', searchTerm))
+    }
+
     const handleSearchChange = useCallback((e) => {
         setSearch(e.target.value);
     }, []);
@@ -86,6 +95,34 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
         <motion.div className="bg-white">
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
+                <motion.div
+                    className='relative flex flex-row mt-2 border-gray-400/25 border-2 rounded-xl p-2 space-x-2'
+                >  
+                    <motion.p
+                        className='absolute -top-3 bg-white text-sm'
+                    >Search entire project</motion.p>
+                    <p className='text-lg self-center'>Year:</p>
+                    {/* <motion.select
+                        value={searchField || 'Select an option'}
+                        onChange={e => setSearchField(e.target.value)}
+                        >
+                    <motion.option value="Select an option" disabled hidden>Select an option</motion.option>
+                        {labels.map(l => <option key={l}>{l}</option>)}
+                    </motion.select> */}
+                    <motion.input 
+                        className='w-20'
+                        placeholder='2023'
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                    />
+                    <motion.button
+                        disabled={!(searchTerm)}
+                        className='button w-min transition'
+                        onClick={doSearch}
+                    >
+                        {searchButtonText}
+                    </motion.button>
+                </motion.div>
                 <div className="flex px-5 items-center">
                     <SearchField search={search} setSearch={handleSearchChange} />
                     <div className='flex justify-center text-2xl'>
