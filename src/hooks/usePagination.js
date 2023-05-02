@@ -42,7 +42,7 @@ export const usePagination = (updateEntries) => {
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
         whereClause && constraints.push(whereClause);
         constraints.push(limit(batchSize));
-        console.log(constraints)
+        console.log(constraints);
         return await getDocsFromCollection(collectionName, constraints);
     };
 
