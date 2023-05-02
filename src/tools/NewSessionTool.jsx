@@ -7,7 +7,7 @@ export default function NewSessionTool({ setData, project, setProject }) {
 
 
     const [sessionData, setSessionData] = useState({
-        dateTime: '0',
+        dateTime: '',
         recorder: '',
         handler: '',
         site: '',
