@@ -194,6 +194,7 @@ const CritterForm = ({ critter, project, session }) => {
         tempEntry.site = session.site;
         tempEntry.array = session.array;
         tempEntry.taxa = critter;
+        tempEntry.year = session.year;
         setEntry(tempEntry);
         hydrateSpeciesArrays(project, critter)
     }, [critter])
