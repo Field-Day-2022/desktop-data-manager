@@ -96,16 +96,14 @@ const DataForm = () => {
                 else selectedTaxas.push(form);
             }
         }
-        for (const form of forms) {
-            if (formsToInclude[form]) {
-                const collectionSnapshot = await getDocs(query(
-                    collection(db, collectionName),
-                    where('taxa', 'in', selectedTaxas)
-                ));
-                collectionSnapshot.forEach(documentSnapshot => 
-                    entries.push(documentSnapshot.data()))
-            }
-        }
+        console.log(selectedTaxas)
+        
+        const collectionSnapshot = await getDocs(query(
+            collection(db, collectionName),
+            where('taxa', 'in', selectedTaxas)
+        ));
+        collectionSnapshot.forEach(documentSnapshot => 
+            entries.push(documentSnapshot.data()))
 
         let tempCsvData = [];
 
@@ -117,6 +115,8 @@ const DataForm = () => {
             const dateB = new Date(b.dateTime).getTime();
             return dateB - dateA;
         })
+
+        console.log(entries);
 
         for (const entry of entries) {
             const arthropodDataObject = {}
@@ -154,6 +154,7 @@ const DataForm = () => {
             });
         }
 
+        console.log(tempCsvData);
 
         setCsvData(tempCsvData)
         setDisabledState(true);
