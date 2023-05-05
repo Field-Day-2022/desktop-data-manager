@@ -291,7 +291,7 @@ export const getStandardizedDateTimeString = (dateString) => {
         .getDate()
         .toString()
         .padStart(2, '0')} ${tempDate.toLocaleTimeString('en-US', {
-        hourCycle: 'h24',
+        hourCycle: 'h23',
     })}`;
 };
 
