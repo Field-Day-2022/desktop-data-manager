@@ -8,6 +8,8 @@ import { useAtomValue } from "jotai";
 import { appMode, currentProjectName } from "../utils/jotai";
 import { getArthropodLabels } from "../utils/firestore";
 import InnerModalWrapper from "./InnerModalWrapper";
+import { _ } from "lodash";
+import { TABLE_LABELS, dynamicArthropodLabels, getKey } from "../const/tableLabels";
 
 export default function ExportModal({ showModal, onCancel }) {
     const [ activeTab, setActiveTab ] = useState('Data Form');
@@ -81,6 +83,25 @@ const DataForm = () => {
     const [csvData, setCsvData] = useState([]);
     const [disabledState, setDisabledState] = useState(false);
 
+    const generateCSV = (labels, entries) => {
+        if (!labels || !entries) {
+            return [];
+        }
+        let csvData = [];
+        csvData.push(labels);
+        entries.forEach((entry) => {
+            let row = [];
+            labels.forEach((label) => {
+                if (label !== 'Actions') {
+                    let key = getKey(label, name);
+                    row.push(entry[key]);
+                }
+            });
+            csvData.push(row);
+        });
+        return csvData;
+    };
+
     const generateCsvData = async () => {
         setButtonText("Generating CSV Data...")
         const entries = [];
@@ -116,43 +137,59 @@ const DataForm = () => {
             return dateB - dateA;
         })
 
-        console.log(entries);
+        // console.log(entries);
 
-        for (const entry of entries) {
-            const arthropodDataObject = {}
-            arthropodLabels.forEach(label => {
-                arthropodDataObject[label.toLowerCase()] = entry[label.toLowerCase()]
-            })
+        let labelArray = [];
+        for (const form in formsToInclude) {
+            if (formsToInclude[form]) {
+                console.log(`${form} is included`)
+                if (form === 'Arthropod') {
+                    labelArray = _.union(labelArray, await dynamicArthropodLabels())
+                } else {
+                    labelArray = _.union(labelArray, TABLE_LABELS[form])
+                }
+            }
+        };
+        console.log(labelArray);
+
+        tempCsvData = generateCSV(labelArray, entries);
 
 
-            tempCsvData.push({
-                year: new Date(entry.sessionDateTime).getFullYear(),
-                sessionDateTime: new Date(entry.sessionDateTime).toLocaleString(),
-                dateTime: new Date(entry.dateTime).toLocaleString(),
-                site: entry.site,
-                array: entry.array,
-                fenceTrap: entry.fenceTrap,
-                taxa: entry.taxa,
-                speciesCode: entry.speciesCode,
-                genus: entry.genus,
-                species: entry.species,
-                ccl: entry.cclMm,
-                pl: entry.plMm,
-                toeClipCode: entry.toeClipCode,
-                recapture: entry.recapture,
-                svl: entry.svlMm,
-                vtl: entry.vtlMm,
-                regenTail: entry.regenTail,
-                otl: entry.otlMm,
-                hatchling: entry.hatchling,
-                mass: entry.massG,
-                sex: entry.sex,
-                dead: entry.dead,
-                comments: entry.comments,
-                predator: entry.predator,
-                ...arthropodDataObject,
-            });
-        }
+        // for (const entry of entries) {
+        //     const arthropodDataObject = {}
+        //     arthropodLabels.forEach(label => {
+        //         arthropodDataObject[label.toLowerCase()] = entry[label.toLowerCase()]
+        //     })
+
+
+        //     tempCsvData.push({
+        //         year: new Date(entry.sessionDateTime).getFullYear(),
+        //         sessionDateTime: new Date(entry.sessionDateTime).toLocaleString(),
+        //         dateTime: new Date(entry.dateTime).toLocaleString(),
+        //         site: entry.site,
+        //         array: entry.array,
+        //         fenceTrap: entry.fenceTrap,
+        //         taxa: entry.taxa,
+        //         speciesCode: entry.speciesCode,
+        //         genus: entry.genus,
+        //         species: entry.species,
+        //         ccl: entry.cclMm,
+        //         pl: entry.plMm,
+        //         toeClipCode: entry.toeClipCode,
+        //         recapture: entry.recapture,
+        //         svl: entry.svlMm,
+        //         vtl: entry.vtlMm,
+        //         regenTail: entry.regenTail,
+        //         otl: entry.otlMm,
+        //         hatchling: entry.hatchling,
+        //         mass: entry.massG,
+        //         sex: entry.sex,
+        //         dead: entry.dead,
+        //         comments: entry.comments,
+        //         predator: entry.predator,
+        //         ...arthropodDataObject,
+        //     });
+        // }
 
         console.log(tempCsvData);
 
@@ -174,8 +211,6 @@ const DataForm = () => {
         setButtonText('Generate CSV');
         setCsvData([])
     }
-
-    // TODO: dynamic arthropod labels
 
     return (
         <div>
@@ -206,53 +241,6 @@ const DataForm = () => {
             <div>
             <CSVLink
                 data={csvData}
-                headers={[
-                    {label: 'Year', key: 'year'},
-                    {label: 'Session Date/Time', key: 'sessionDateTime'},
-                    {label: 'Date/Time', key: 'dateTime'},
-                    {label: 'Site', key: 'site'},
-                    {label: 'Array', key: 'array'},
-                    {label: 'Fence Trap', key: 'fenceTrap'},
-                    {label: 'Taxa', key: 'taxa'},
-                    {label: 'Species Code', key: 'speciesCode'},
-                    {label: 'Genus', key: 'genus'},
-                    {label: 'Species', key: 'species'},
-                    {label: 'CCL(mm)', key: 'ccl'},
-                    {label: 'PL(mm)', key: 'pl'},
-                    {label: 'Mass(g)', key: 'mass'},
-                    {label: 'Sex', key: 'sex'},
-                    {label: 'Dead?', key: 'dead'},
-                    {label: 'Comments', key: 'comments'},
-                    {label: 'Toe-Clip Code', key: 'toeClipCode'},
-                    {label: 'Recapture', key: 'recapture'},
-                    {label: 'SVL(mm)', key: 'svl'},
-                    {label: 'VTL(mm)', key: 'vtl'},
-                    {label: 'Regen Tail', key: 'regenTail'},
-                    {label: 'OTL(mm)', key: 'otl'},
-                    {label: 'Hatchling', key: 'hatchling'},
-                    {label: 'Predator?', key: 'predator'},
-                    {label: 'ARAN', key: 'aran'},
-                    {label: 'AUCH', key: 'auch'},
-                    {label: 'BLAT', key: 'blat'},
-                    {label: 'CHIL', key: 'chil'},
-                    {label: 'COLE', key: 'cole'},
-                    {label: 'CRUS', key: 'crus'},
-                    {label: 'DERM', key: 'derm'},
-                    {label: 'DIEL', key: 'diel'},
-                    {label: 'DIPT', key: 'dipt'},
-                    {label: 'HETE', key: 'hete'},
-                    {label: 'HYMA', key: 'hyma'},
-                    {label: 'HYMB', key: 'hymb'},
-                    {label: 'LEPI', key: 'lepi'},
-                    {label: 'MANT', key: 'mant'},
-                    {label: 'ORTH', key: 'orth'},
-                    {label: 'PSEU', key: 'pseu'},
-                    {label: 'SCOR', key: 'scor'},
-                    {label: 'SOLI', key: 'soli'},
-                    {label: 'THYS', key: 'thys'},
-                    {label: 'UNKI', key: 'unki'},
-                    {label: 'MICRO', key: 'micro'}
-                ]}
                 filename={`dataForm${new Date().getTime()}.csv`}
             >
                 <button className="m-2 button" onClick={clearData}>Download CSV</button>
