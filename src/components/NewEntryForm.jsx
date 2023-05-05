@@ -92,8 +92,8 @@ export default function NewEntryForm({ setData }) {
                                     setSelectedSessionIndex(sessionIndexMap[activeSessions.indexOf(e.target.value)])
                                 }}
                             >
-                                {activeSessions.map((session) => (
-                                    <option key={session} value={session}>{session}</option>
+                                {activeSessions.map((session, index) => (
+                                    <option key={index} value={session}>{session}</option>
                                 ))}
                             </select>
                         }
@@ -225,33 +225,7 @@ const CritterForm = ({ critter, project, session }) => {
             data,
             keys: TABLE_KEYS[species]
         })
-        let success = false;
-        switch(species) {
-            case 'Turtle':
-                success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap'], data);
-                break;
-            case 'Lizard':
-                success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap', 'svlMm', 'vtlMm'], data);
-                break;
-            case 'Arthropod':
-                success = checkRequiredFields(['fenceTrap'], data);
-                break;
-            case 'Mammal':
-                success = checkRequiredFields(['speciesCode', 'fenceTrap', 'massG', 'sex'], data);
-                break;
-            case 'Amphibian': 
-                success = checkRequiredFields(['speciesCode', 'hdBody', 'massG', 'sex'], data);
-                break;
-            case 'Snake':
-                success = checkRequiredFields(['sex', 'massG', 'speciesCode', 'fenceTrap', 'svlMm', 'vtlMm'], data)
-                break;
-            default:
-                break;
-        }
-        if (success === false) {
-            notify(Type.error, 'Fill out required fields')
-        }
-        return success;
+        return true;
     }
 
     const addEntry = async () => {
@@ -265,11 +239,11 @@ const CritterForm = ({ critter, project, session }) => {
     return (
         <div className='flex flex-col space-y-1 items-center'>
             <div className='grid grid-cols-3'>
-                {TABLE_KEYS[critter].map((key) => {
+                {TABLE_KEYS[critter].map((key, index) => {
                     const disabled = session[key]
                     return (
                         <FormField
-                            key={key}
+                            key={index}
                             disabled={disabled}
                             fieldName={key}
                             layout='vertical'
