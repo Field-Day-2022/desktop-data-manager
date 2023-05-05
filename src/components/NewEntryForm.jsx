@@ -210,15 +210,6 @@ const CritterForm = ({ critter, project, session }) => {
         setSpeciesArrayPromise(getSpeciesCodesForProjectByTaxa(project, taxa));
     }
 
-    const checkRequiredFields = (requiredFields, data) => {
-        for (const field of requiredFields) {
-            if (data[field] === '') {
-                return false;
-            }
-        }
-        return true;
-    }
-
     const verifyForm = (species, data) => {
         console.log({
             species,
