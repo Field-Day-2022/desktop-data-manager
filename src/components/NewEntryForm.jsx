@@ -35,12 +35,7 @@ export default function NewEntryForm({ setData }) {
   
 
     const activeSessions = sessions.map((session) => {
-        const date = new Date(session.data().dateTime);
-        const month = date.toLocaleString('default', { month: 'long' });
-        const day = date.getDate();
-        const year = date.getFullYear();
-        const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return `${month} ${day}, ${year} ${time}`;
+        return session.data().dateTime;
     });
 
     const selectedSession = sessions[selectedSessionIndex]?.data() || {
