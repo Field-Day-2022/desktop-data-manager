@@ -93,7 +93,7 @@ const DataForm = () => {
             let row = [];
             labels.forEach((label) => {
                 if (label !== 'Actions') {
-                    let key = getKey(label, name);
+                    let key = getKey(label, 'Data');
                     row.push(entry[key]);
                 }
             });
@@ -274,17 +274,22 @@ const SessionForm = () => {
         collectionSnapshot.forEach(documentSnapshot => {
             entries.push(documentSnapshot.data())
         })
+        entries.sort((a, b) => {
+            const dateA = new Date(a.dateTime).getTime();
+            const dateB = new Date(b.dateTime).getTime();
+            return dateB - dateA;
+        })
         const tempCsvData = []
         for (const entry of entries) {
             tempCsvData.push({
-                dateTime: new Date(entry.dateTime).toLocaleString(),
+                dateTime: entry.dateTime,
                 recorder: entry.recorder,
                 handler: entry.handler,
                 site: entry.site,
                 array: entry.array,
-                noCapture: entry.noCaptures,
+                noCaptures: entry.noCaptures,
                 trapStatus: entry.trapStatus,
-                comments: entry.commentsAboutTheArray,
+                commentsAboutTheArray: entry.commentsAboutTheArray,
             })
         }
         setCsvData(tempCsvData)
