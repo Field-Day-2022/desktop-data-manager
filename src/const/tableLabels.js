@@ -138,6 +138,7 @@ const snakeLabels = [
 
 export const dynamicArthropodLabels = async () => {
     return [
+        'Year',
         'Date & Time',
         'Site',
         'Array',
