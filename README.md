@@ -55,8 +55,9 @@ Professor Heather Bateman - Professor and Researcher of Biology
 
 ## Contributors
 
--   Isaiah Lathem
--   Jack Norman
--   Dennis Grassl
--   Ian Skelskey
--   Zachary Jacobson
+### 2022
+<a href="https://github.com/ilathem"><img src="https://github.com/ilathem.png" width="50" height="50" alt="Isaiah Lathem"></a>
+<a href="https://github.com/jakBkwik"><img src="https://github.com/jakBkwik.png" width="50" height="50" alt="Jack Norman"></a>
+<a href="https://github.com/realdgrassl"><img src="https://github.com/realdgrassl.png" width="50" height="50" alt="Dennis Grassl"></a>  
+<a href="https://github.com/ianskelskey"><img src="https://github.com/ianskelskey.png" width="50" height="50" alt="Ian Skelskey"></a> 
+<a href="https://github.com/zacharyjacobson"><img src="https://github.com/zacharyjacobson.png" width="50" height="50" alt="Zachary Jacobson"></a>
