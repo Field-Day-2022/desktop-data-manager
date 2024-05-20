@@ -10,11 +10,11 @@ Field Day Web UI is an essential tool for viewing, managing, and exporting wildl
 
 ## Key Features
 
-- **Data Management**: Efficiently view, search, edit, and sort collected data in a table view.
-- **Dynamic Data Loading**: Data is loaded dynamically from the database based on user activity to optimize performance and reduce costs.
-- **Google Authentication**: Enhanced authentication security with 2-factor Google authentication.
-- **Data Export**: Export data to CSV format for further analysis.
-- **Answer Sets Management**: Manage answer sets, which are templates for data input specifying permissible data types for given fields.
+-   **Data Management**: Efficiently view, search, edit, and sort collected data in a table view.
+-   **Dynamic Data Loading**: Data is loaded dynamically from the database based on user activity to optimize performance and reduce costs.
+-   **Google Authentication**: Enhanced authentication security with 2-factor Google authentication.
+-   **Data Export**: Export data to CSV format for further analysis.
+-   **Answer Sets Management**: Manage answer sets, which are templates for data input specifying permissible data types for given fields.
 
 ## Development Stack
 
@@ -40,7 +40,7 @@ Field Day Web UI is an essential tool for viewing, managing, and exporting wildl
     npm install
     ```
 3. Set up Firebase:
-    // TODO: Add instructions for setting up Firebase
+   // TODO: Add instructions for setting up Firebase
 
 4. Start the development server:
     ```bash
