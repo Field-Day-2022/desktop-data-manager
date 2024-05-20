@@ -137,8 +137,6 @@ const DataForm = () => {
             return dateB - dateA;
         })
 
-        // console.log(entries);
-
         let labelArray = [];
         for (const form in formsToInclude) {
             if (formsToInclude[form]) {
@@ -153,43 +151,6 @@ const DataForm = () => {
         console.log(labelArray);
 
         tempCsvData = generateCSV(labelArray, entries);
-
-
-        // for (const entry of entries) {
-        //     const arthropodDataObject = {}
-        //     arthropodLabels.forEach(label => {
-        //         arthropodDataObject[label.toLowerCase()] = entry[label.toLowerCase()]
-        //     })
-
-
-        //     tempCsvData.push({
-        //         year: new Date(entry.sessionDateTime).getFullYear(),
-        //         sessionDateTime: new Date(entry.sessionDateTime).toLocaleString(),
-        //         dateTime: new Date(entry.dateTime).toLocaleString(),
-        //         site: entry.site,
-        //         array: entry.array,
-        //         fenceTrap: entry.fenceTrap,
-        //         taxa: entry.taxa,
-        //         speciesCode: entry.speciesCode,
-        //         genus: entry.genus,
-        //         species: entry.species,
-        //         ccl: entry.cclMm,
-        //         pl: entry.plMm,
-        //         toeClipCode: entry.toeClipCode,
-        //         recapture: entry.recapture,
-        //         svl: entry.svlMm,
-        //         vtl: entry.vtlMm,
-        //         regenTail: entry.regenTail,
-        //         otl: entry.otlMm,
-        //         hatchling: entry.hatchling,
-        //         mass: entry.massG,
-        //         sex: entry.sex,
-        //         dead: entry.dead,
-        //         comments: entry.comments,
-        //         predator: entry.predator,
-        //         ...arthropodDataObject,
-        //     });
-        // }
 
         console.log(tempCsvData);
 
