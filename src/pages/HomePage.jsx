@@ -1,4 +1,3 @@
-import Card from "../components/Card";
 import Button from "../components/Button";
 import PageWrapper from "./PageWrapper";
 import { useAtom } from "jotai";
@@ -10,7 +9,7 @@ export default function HomePage() {
 
     return (
         <PageWrapper>
-            <Card className='bg-asu-maroon mt-8'>
+            <div className='m-5 p-10 rounded-lg shadow-md bg-asu-maroon mt-8'>
                 <div className="text-white">
                     <h1 className="title">Field Day</h1>
                     <h2 className="subtitle">Data Management Tool</h2>
@@ -18,8 +17,8 @@ export default function HomePage() {
                         Field Day builds rich, dynamic forms for mobile data collection and query.
                     </p>
                 </div>
-            </Card>
-            <Card className='bg-white flex md:flex-row gap-5 flex-col items-center'>
+            </div>
+            <div className='m-5 p-10 rounded-lg shadow-md bg-white flex md:flex-row gap-5 flex-col items-center'>
                 <img src={lizardImage} alt="Lizard" className="w-full md:w-1/3 rounded-full shadow-md" />
                 <div className="flex flex-col items-center gap-5">
                     <h1 className="heading">Enter the WebUI</h1>
@@ -39,7 +38,7 @@ export default function HomePage() {
                 </div>
 
 
-            </Card>
+            </div>
 
         </PageWrapper>
     )
