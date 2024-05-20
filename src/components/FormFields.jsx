@@ -871,6 +871,8 @@ const ArthropodDataField = ({
     );
 }
 
+const EntryYearField = ({year}) => (<p>Year: {year}</p>)
+
 export function FormField({ fieldName, value, setValue, site, project, taxa, layout, disabled, entry, array, speciesArray }) {
     switch (fieldName) {
         case 'dateTime':
@@ -973,6 +975,8 @@ export function FormField({ fieldName, value, setValue, site, project, taxa, lay
             return <PredatorField pred={value} setPred={setValue} />;
         case 'hdBody':
             return <HdBodyField value={value} setValue={setValue} />;
+        case 'year': 
+            return <EntryYearField year={value} />
         default:
             return <div>{`Field not found: ${fieldName}`}</div>;
     }
