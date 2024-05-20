@@ -42,12 +42,13 @@ export const usePagination = (updateEntries) => {
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
         whereClause && constraints.push(whereClause);
         constraints.push(limit(batchSize));
-
+        console.log(constraints);
         return await getDocsFromCollection(collectionName, constraints);
     };
 
     const loadBatch = async (constraints = []) => {
         const docs = (await getBatch(constraints)).docs;
+        console.log(docs);
         const newLastVisibleDoc = docs[docs.length - 1];
         updateEntries(docs);
         setLastVisibleDoc(newLastVisibleDoc);

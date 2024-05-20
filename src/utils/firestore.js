@@ -12,6 +12,7 @@ import {
     where,
     writeBatch,
     or,
+    getCountFromServer,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { Type } from '../components/Notifier';
@@ -32,13 +33,6 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
     if (!Array.isArray(constraints)) {
         constraints = [constraints];
     }
-
-    // console.log(
-    //     'Loading entries from collection:',
-    //     collectionName,
-    //     'with constraints:',
-    //     constraints
-    // );
 
     try {
         const currentQuery = query(
@@ -152,18 +146,34 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData, editMsg) =>
 
 const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
     console.log(`editing session and its entries: ${sessionData.toString()}`);
-    const entries = await getDocs(
-        query(
-            collection(
-                db,
-                `${sessionSnapshot.ref.parent.id.substr(
-                    0,
-                    sessionSnapshot.ref.parent.id.length - 7,
-                )}Data`,
-            ),
-            where('sessionId', '==', sessionSnapshot.data().sessionId),
-        ),
-    );
+    let entries = null;
+    if (sessionSnapshot.data().sessionId) {
+        entries = await getDocs(
+            query(
+                collection(
+                    db,
+                    `${sessionSnapshot.ref.parent.id.substr(
+                        0,
+                        sessionSnapshot.ref.parent.id.length - 7
+                    )}Data`
+                ),
+                where('sessionId', '==', sessionSnapshot.data().sessionId)
+            )
+        );
+    } else {
+        entries = await getDocs(
+            query(
+                collection(
+                    db,
+                    `${sessionSnapshot.ref.parent.id.substr(
+                        0,
+                        sessionSnapshot.ref.parent.id.length - 7
+                    )}Data`
+                ),
+                where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
+            )
+        );
+    }
     const batch = writeBatch(db);
     let entryCount = 0;
     entries.docs.forEach((entry) => {
@@ -181,6 +191,22 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
     );
 };
 
+export const getSessionEntryCount = async (sessionSnapshot) => {
+    const snapshot = await getCountFromServer(
+        query(
+            collection(
+                db,
+                `${sessionSnapshot.ref.parent.id.substr(
+                    0,
+                    sessionSnapshot.ref.parent.id.length - 7
+                )}Data`
+            ),
+            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime))
+        )
+    );
+    return snapshot.data().count;
+};
+
 const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     const entries = await getDocs(
         query(
@@ -191,10 +217,7 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
                     sessionSnapshot.ref.parent.id.length - 7,
                 )}Data`,
             ),
-            or(
-                where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
-                where('sessionId', '==', sessionSnapshot.data().sessionId),
-            ),
+            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime))
         ),
     );
     console.log(entries);

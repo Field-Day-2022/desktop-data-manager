@@ -17,6 +17,7 @@
     "firebase": "^9.15.0",
     "framer-motion": "^8.5.0",
     "jotai": "^1.13.1",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
