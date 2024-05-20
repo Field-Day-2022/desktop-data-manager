@@ -154,11 +154,11 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
                     db,
                     `${sessionSnapshot.ref.parent.id.substr(
                         0,
-                        sessionSnapshot.ref.parent.id.length - 7
-                    )}Data`
+                        sessionSnapshot.ref.parent.id.length - 7,
+                    )}Data`,
                 ),
-                where('sessionId', '==', sessionSnapshot.data().sessionId)
-            )
+                where('sessionId', '==', sessionSnapshot.data().sessionId),
+            ),
         );
     } else {
         entries = await getDocs(
@@ -167,11 +167,11 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
                     db,
                     `${sessionSnapshot.ref.parent.id.substr(
                         0,
-                        sessionSnapshot.ref.parent.id.length - 7
-                    )}Data`
+                        sessionSnapshot.ref.parent.id.length - 7,
+                    )}Data`,
                 ),
-                where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
-            )
+                where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
+            ),
         );
     }
     const batch = writeBatch(db);
@@ -198,11 +198,11 @@ export const getSessionEntryCount = async (sessionSnapshot) => {
                 db,
                 `${sessionSnapshot.ref.parent.id.substr(
                     0,
-                    sessionSnapshot.ref.parent.id.length - 7
-                )}Data`
+                    sessionSnapshot.ref.parent.id.length - 7,
+                )}Data`,
             ),
-            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime))
-        )
+            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime)),
+        ),
     );
     return snapshot.data().count;
 };
@@ -217,7 +217,7 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
                     sessionSnapshot.ref.parent.id.length - 7,
                 )}Data`,
             ),
-            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime))
+            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime)),
         ),
     );
     console.log(entries);
