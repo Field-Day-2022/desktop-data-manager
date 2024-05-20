@@ -6,8 +6,9 @@ import { tableRows } from '../utils/variants';
 import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel, TABLE_LABELS } from '../const/tableLabels';
 import { startEntryOperation } from '../utils/firestore';
-import { notify } from './Notifier';
+import { Type, notify } from './Notifier';
 import { FormField } from './FormFields';
+import { isNumber } from '@syncfusion/ej2-react-spreadsheet';
 
 export const getValue = (entry, column) => {
     if (!entry._document.data.value.mapValue.fields[getKey(column, name)]) {
@@ -43,7 +44,10 @@ export const TableEntry = forwardRef((props, ref) => {
     const onSaveClickedHandler = () => {
         entryUIState === 'editing' &&
             startEntryOperation(
-                'uploadEntryEdits',
+                tableName.includes('Session') ?
+                    'uploadSessionEdits'
+                    :
+                    'uploadEntryEdits',
                 {
                     entrySnapshot,
                     entryData,
@@ -112,14 +116,6 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
     const TRUE_KEYS = ['Y', 'y', 'T', 't'];
     const FALSE_KEYS = ['N', 'n', 'F', 'f'];
 
-    useEffect(() => {
-        if (dbKey === 'dateTime') {
-            let tempDate = new Date(entrySnapshot.data()[dbKey]);
-            setDisplayText(tempDate.toLocaleString());
-            setEditable(false);
-        }
-    }, []);
-
     const onChangeHandler = (e) => {
         if (BINARY_KEYS.includes(dbKey)) {
             if (TRUE_KEYS.includes(e.target.value.slice(-1))) {
@@ -161,8 +157,7 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
             <input
                 disabled={disabled}
                 className="text-center"
-                value={dbKey === 'dateTime' ?
-                    displayText : entryData[dbKey] ?? 'N/A'}
+                value={entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 size={size}
             />
