@@ -3,12 +3,14 @@ import Button from "../components/Button";
 import PageWrapper from "./PageWrapper";
 import { useAtom } from "jotai";
 import { currentPageName } from '../utils/jotai';
+import lizardImage from '../../public/lizard.jpg';
 
 export default function HomePage() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
+
     return (
         <PageWrapper>
-            <Card className='bg-asu-maroon'>
+            <Card className='bg-asu-maroon mt-8'>
                 <div className="text-white">
                     <h1 className="title">Field Day</h1>
                     <h2 className="subtitle">Data Management Tool</h2>
@@ -17,70 +19,27 @@ export default function HomePage() {
                     </p>
                 </div>
             </Card>
-            <div className="flex">
-                <Card className='bg-white'>
-                    <h1 className="heading">Overview</h1>
-                    <p>
-                        Field Day is a set of wildlife data collection and query tools designed to mitigate errors in
-                        data collected through the capture-mark-recapture (CMR) process. Field Day consists of a data
-                        collection and access tools such as a PWA, a database, as well as supporting documentation.
-                        Currently, the application and database are only used by Dr. Bateman and wildlife students.
-                        Dr. Bateman would like the application to be designed in such a way that it can be adapted to
-                        different projects in the future. Potential users could be state and federal natural resource
-                        employees and members of non-profit organizations. Dr. Bateman also mentioned medical doctors
-                        and researchers. The application should be designed to accommodate potential users across many
-                        diverse fields of study. Any professional that needs to collect and query data in the field
-                        should be able to adapt this application to suit their needs.
-                    </p>
-                </Card>
-
-                {/*TODO set width of cards for webui and overview, rather than changing by amount of text*/}
-
-                <Card className='bg-white'>
+            <Card className='bg-white flex md:flex-row gap-5 flex-col items-center'>
+                <img src={lizardImage} alt="Lizard" className="w-full md:w-1/3 rounded-full shadow-md" />
+                <div className="flex flex-col items-center gap-5">
                     <h1 className="heading">Enter the WebUI</h1>
                     <p>
-                        Field Day is an academic research tool for wildlife students at ASU. The focus of Field Day is
-                        to simplify the process of collecting and querying data in a way that also reduces errors.
-                        Created by software engineering students, it also serves as practice with interdisciplinary
-                        work. Software students learn to understand and meet the needs of clients outside their own
-                        domain.-------------------------------------------------------------
-                        -------------------------------------------------------------
-                        -------------------------------------------------------------
-                        -------------------------------------------------------------
-                        -------------------------------------------------------------
-                        -------------------------------------------------------------
-
+                        The Field Day Web UI is a powerful desktop application designed to manage wildlife data collected through the Field Day mobile app. It serves as an essential tool for researchers, allowing them to efficiently view, manage, and export data collected in the field.
                     </p>
                     <p>&nbsp;</p>
-                    <center>
-                        <Button text='Enter WebUi' onClick={() => setCurrentPage('Table')} />
-                    </center>
-                </Card>
-            </div>
-            <div>
-                {/*TODO add hyperlinks to repository and documentation of technology*/}
-                <div>
-                Tailwind with Vite - https://tailwindcss.com/docs/guides/vite
-                React - https://reactjs.org/docs/getting-started.html
-                Firebase - https://firebase.google.com/docs
-                Firestore - https://cloud.google.com/firestore/docs
+                    <Button text='Enter WebUI' onClick={() => setCurrentPage('Table')} />
+                    <h1 className="heading">Resources</h1>
+                    <ul className="list-disc pl-5 flex flex-wrap space-x-10 justify-around">
+                        <li><a href="https://github.com/Field-Day-2022/field-day-2022-webUI" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+                        <li><a href="https://tailwindcss.com/docs/guides/vite" target="_blank" rel="noopener noreferrer">Tailwind with Vite</a></li>
+                        <li><a href="https://reactjs.org/docs/getting-started.html" target="_blank" rel="noopener noreferrer">React Documentation</a></li>
+                        <li><a href="https://firebase.google.com/docs" target="_blank" rel="noopener noreferrer">Firebase Documentation</a></li>
+                        <li><a href="https://cloud.google.com/firestore/docs" target="_blank" rel="noopener noreferrer">Firestore Documentation</a></li>
+                    </ul>
                 </div>
-                {/*TODO add page for quick start guide*/}
-                <Card className='bg-white'>
-                    <h1 className="heading">What's New About Field Day?</h1>
-                    <p>
-                     Description of changes with links to quick start guide and documentation
-                    </p>
-                    <p>&nbsp;</p>
-                    <center>
-                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Software Team' onClick={() => setCurrentPage('New')}/>
-                    </center>
-                    <p>&nbsp;</p>
-                    <center>
-                        <Button style={'position: absolute; left: 50%; transform: translateX(-50%)'} text='Documentation for Users' onClick={() => setCurrentPage('Guide')}/>
-                    </center>
-                </Card>
-            </div>
+
+
+            </Card>
 
         </PageWrapper>
     )
