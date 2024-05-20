@@ -1,6 +1,6 @@
 # Field Day Web UI
 
-Welcome to the Field Day Web UI repository! This project is a desktop web application designed for managing wildlife data collected in the field.
+Welcome to the Field Day Web UI repository! This project is a desktop web application designed for managing wildlife data collected in the field. The application is hosted on Firebase [here](https://asu-field-day-webui.web.app/). An ASU email address,`@asu.edu`, is required to access the application.
 
 ![Device Mockup](./public/mockup.png)
 
