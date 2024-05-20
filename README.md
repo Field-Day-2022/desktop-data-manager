@@ -1,4 +1,4 @@
-# Field Day Web UI
+# <img src="./public/logo.svg" alt="Field Day Logo" width="100">Field Day Web UI
 
 Welcome to the Field Day Web UI repository! This project is a desktop web application designed for managing wildlife data collected in the field. The application is hosted on Firebase [here](https://asu-field-day-webui.web.app/). An ASU email address,`@asu.edu`, is required to access the application.
 
@@ -6,7 +6,7 @@ Welcome to the Field Day Web UI repository! This project is a desktop web applic
 
 ## Project Overview
 
-Field Day Web UI is an essential tool for viewing, managing, and exporting wildlife data collected by researchers using the Field Day mobile app. The application is optimized for use on larger screens, such as laptops, desktop computers, and tablets.
+Field Day Web UI is an essential tool for viewing, managing, and exporting wildlife data collected by researchers using the Field Day mobile app. The application is optimized for use on larger screens, such as laptops, desktop computers, and tablets (width > 1200px).
 
 ## Key Features
 
@@ -51,7 +51,7 @@ Field Day Web UI is an essential tool for viewing, managing, and exporting wildl
 
 ## Sponsor
 
-Professor Heather Bateman - Professor and Researcher of Biology
+[Professor Heather Bateman](https://www.linkedin.com/in/heather-bateman-68341013/) - Professor and Researcher of Biology
 
 ## Contributors
 
