@@ -6,7 +6,6 @@ import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { useAtomValue } from "jotai";
 import { appMode, currentProjectName } from "../utils/jotai";
-import { getArthropodLabels } from "../utils/firestore";
 import InnerModalWrapper from "./InnerModalWrapper";
 import { _ } from "lodash";
 import { TABLE_LABELS, dynamicArthropodLabels, getKey } from "../const/tableLabels";
@@ -128,9 +127,6 @@ const DataForm = () => {
 
         let tempCsvData = [];
 
-
-        const arthropodLabels = await getArthropodLabels();
-
         entries.sort((a, b) => {
             const dateA = new Date(a.dateTime).getTime();
             const dateB = new Date(b.dateTime).getTime();
@@ -214,6 +210,7 @@ const DataForm = () => {
 }
 
 const SessionForm = () => {
+    const environment = useAtomValue(appMode);
     const project = useAtomValue(currentProjectName);
     const [buttonText, setButtonText] = useState('Generate CSV');
     const [csvData, setCsvData] = useState([]);
@@ -228,7 +225,8 @@ const SessionForm = () => {
     const generateCSV = async () => {
         setButtonText('Generating CSV Data...')
         const entries = []
-        const collectionName = `Test${project}Session`
+        let collectionName = `Test${project}Session`
+        if (environment === 'live') collectionName = `${project}Session`
         const collectionSnapshot = await getDocs(
             collection(db, collectionName)
         )
