@@ -13,7 +13,7 @@ export default function LoginPage({ auth }) {
                 <h1 className="title">Field Day</h1>
                 <h2 className="subtitle">Data Management Tool</h2>
             </div>
-            <div className='m-5 p-10 rounded-lg shadow-md bg-white mx-auto w-full md:w-96'>
+            <div className='m-5 p-10 rounded-lg shadow-md bg-white dark:bg-neutral-950 mx-auto w-full md:w-96'>
                 <div className="flex flex-col space-y-5">
                     <p>
                         {(auth.loading ? LOADING_MESSAGE : LOGIN_MESSAGE)}
@@ -24,7 +24,7 @@ export default function LoginPage({ auth }) {
                         onClick={() =>
                             auth.login()
                         }
-                        icon={<GoogleIcon className="w-6 mx-auto bg-white p-0.5 rounded-full" />}
+                        icon={<GoogleIcon className="w-6 mx-auto bg-white dark:bg-black p-0.5 rounded-full" />}
                     />
                 </div>
             </div>
