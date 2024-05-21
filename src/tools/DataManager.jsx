@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExportIcon } from '../assets/icons';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
@@ -10,7 +10,6 @@ import { CSVLink } from 'react-csv';
 import { getKey } from '../const/tableLabels';
 import { notify, Type } from '../components/Notifier';
 import { getCollectionNameFromDoc } from '../utils/firestore';
-import { where } from 'firebase/firestore';
 
 export default function DataManager({ name, labels = [], entries = [], setEntries, updateConstraints }) {
     const [columns, setColumns] = useState({});
@@ -84,7 +83,7 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
     }, [labels]);
 
     return (
-        <motion.div className="bg-white">
+        <motion.div className="bg-white dark:bg-black">
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">

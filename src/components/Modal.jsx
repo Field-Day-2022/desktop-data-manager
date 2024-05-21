@@ -62,7 +62,7 @@ export default function Modal({
 function ModalOverlay() {
     return (
         <motion.div
-            className="fixed inset-0 bg-neutral-300 opacity-0"
+            className="fixed inset-0 bg-neutral-300 dark:bg-neutral-700 opacity-0"
             key="overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.75 }}
@@ -85,7 +85,7 @@ function ModalWrapper({ children }) {
 
 function ModalHeader({ title, text }) {
     return (
-        <div className="bg-neutral-100 p-3">
+        <div className="bg-neutral-100 dark:bg-neutral-900 p-3">
             <h1 className="text-2xl p-2">{title}</h1>
             <p className="p-2">{text}</p>
         </div>
@@ -93,9 +93,9 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white max-h-full-modal-content-height overflow-auto">{children}</div>;
+    return <div className="bg-white dark:bg-black max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {
-    return <div className="bg-neutral-100 p-4 flex justify-end space-x-5">{children}</div>;
+    return <div className="bg-neutral-100 dark:bg-neutral-900 p-4 flex justify-end space-x-5">{children}</div>;
 }

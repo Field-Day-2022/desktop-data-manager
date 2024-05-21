@@ -18,7 +18,7 @@ export default function HomePage() {
                     </p>
                 </div>
             </div>
-            <div className='m-5 p-10 rounded-lg shadow-md bg-white flex md:flex-row gap-5 flex-col items-center'>
+            <div className='m-5 p-10 rounded-lg shadow-md bg-white dark:bg-neutral-900 flex md:flex-row gap-5 flex-col items-center'>
                 <img src={lizardImage} alt="Lizard" className="w-full md:w-1/3 rounded-full shadow-md" />
                 <div className="flex flex-col items-center gap-5">
                     <h1 className="heading">Enter the WebUI</h1>

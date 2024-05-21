@@ -96,7 +96,7 @@ export default function NewEntryForm({ setData }) {
                 </div>
                 <SessionSummary session={selectedSession} />
             </div>
-            <div className="bg-white">
+            <div className="bg-white dark:bg-black">
                 <h1 className='heading p-4'>Choose a Critter</h1>
                 <div className="overflow-x-auto">
                     <TabBar

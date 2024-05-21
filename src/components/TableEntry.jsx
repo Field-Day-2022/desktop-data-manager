@@ -83,7 +83,7 @@ export const TableEntry = forwardRef((props, ref) => {
     }, [])
 
     return (
-        <motion.tr className="relative hover:bg-neutral-100"
+        <motion.tr className="relative hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 ease-in-out"
             variants={tableRows}
             initial='initial'
             animate='visible'
@@ -159,7 +159,7 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
     }
 
     return (
-        <td key={dbKey} className="text-center border-b border-gray-400 p-1">
+        <td key={dbKey} className="text-center border-b border-neutral-400 dark:border-neutral-600 p-1">
             <input
                 disabled={disabled}
                 className="text-center"
@@ -180,7 +180,7 @@ const Actions = ({
     deleteMessage
 }) => {
     return (
-        <td className="border-b border-gray-400 p-2">
+        <td className="border-b border-neutral-400 dark:border-neutral-600 p-2">
             <div className="flex flex-row w-full justify-around">
                 <AnimatePresence>
                     {entryUIState === 'deleting' && (

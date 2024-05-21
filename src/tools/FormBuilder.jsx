@@ -1,9 +1,8 @@
-import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, where, query, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, addDoc, where, query, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function FormBuilder({ triggerRerender }) {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected

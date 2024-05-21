@@ -19,7 +19,7 @@ function App() {
     }
 
     return (
-        <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
+        <div className="flex flex-col w-full min-h-screen bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 select-none">
             <Notifier />
             <TopNav title="Field Day" auth={auth} />
             <div className="flex flex-grow">
