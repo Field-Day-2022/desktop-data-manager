@@ -35,7 +35,7 @@
     }
 
     select {
-        @apply cursor-pointer w-fit p-1.5 bg-neutral-200 dark:bg-neutral-800 dark:text-white rounded-md border-solid border-2 border-neutral-300 dark:border-neutral-500 focus:border-asu-gold h-10;
+        @apply cursor-pointer w-fit p-1.5 bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white rounded-md border-solid border-2 border-neutral-300 dark:border-neutral-500 focus:border-asu-gold h-10;
     }
 
     input {
