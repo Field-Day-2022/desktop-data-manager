@@ -5,7 +5,7 @@ import ColumnSelectorButton from '../components/ColumnSelectorButton';
 import { Table } from '../components/Table';
 import { useState, useEffect, useCallback } from 'react';
 import { getValue } from '../components/TableEntry';
-import {SearchField} from '../components/FormFields';
+import { SearchField } from '../components/FormFields';
 import { CSVLink } from 'react-csv';
 import { getKey } from '../const/tableLabels';
 import { notify, Type } from '../components/Notifier';
@@ -57,8 +57,8 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
         }
         const collectionName = getCollectionNameFromDoc(entry);
         const dateTime = new Date().toLocaleString();
-        if(name === 'Session') {
-            return collectionName +  ' ' + dateTime;
+        if (name === 'Session') {
+            return collectionName + ' ' + dateTime;
         } else {
             return collectionName.slice(0, -4) + name + ' ' + dateTime;
         }
@@ -99,7 +99,7 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
                             data={generateCSV(labels, entries)}
                             filename={getCSVName(entries[0]) + '.csv'}
                             onClick={() => {
-                                if(generateCSV(labels, entries).length === 0) {
+                                if (generateCSV(labels, entries).length === 0) {
                                     notify(Type.error, 'No data to export');
                                 } else {
                                     notify(Type.success, 'Exported data to CSV');

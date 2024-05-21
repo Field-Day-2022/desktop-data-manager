@@ -18,33 +18,18 @@ import { db } from './firebase';
 import { Type } from '../components/Notifier';
 
 export const getArthropodLabels = async () => {
-    let labelArray = [];
-    await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'ArthropodSpecies')),
-    ).then((snapshot) => {
-        snapshot.docs[0].data().answers.forEach((ans) => {
-            labelArray.push(ans.primary);
-        });
-    });
-    return labelArray;
+    const snapshot = await getDocs(query(collection(db, 'AnswerSet'), where('set_name', '==', 'ArthropodSpecies')));
+    return snapshot.docs[0].data().answers.map(ans => ans.primary);
 };
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {
-    if (!Array.isArray(constraints)) {
-        constraints = [constraints];
-    }
-
+    if (!Array.isArray(constraints)) constraints = [constraints];
     try {
-        const currentQuery = query(
-            collection(db, collectionName),
-            orderBy('dateTime', 'desc'),
-            ...constraints,
-        );
-        const docs = await getDocs(currentQuery);
-        // console.log(`Read ${docs.size} docs from ${collectionName}.`);
-        return docs;
+        const currentQuery = query(collection(db, collectionName), orderBy('dateTime', 'desc'), ...constraints);
+        return await getDocs(currentQuery);
     } catch (error) {
         console.error('Error loading entries:', error);
+        return null;
     }
 };
 
@@ -76,54 +61,35 @@ const deleteDocFromCollection = async (collectionName, docId) => {
 };
 
 const getCollectionName = (environment, projectName, tableName) => {
-    return `${environment === 'test' ? 'Test' : ''}${projectName}${
-        tableName === 'Session' ? 'Session' : 'Data'
-    }`;
+    return `${environment === 'test' ? 'Test' : ''}${projectName}${tableName === 'Session' ? 'Session' : 'Data'}`;
 };
 
-const getCollectionNameFromDoc = (snapshot) => {
-    return snapshot?.ref.parent.id;
-};
+const getCollectionNameFromDoc = snapshot => snapshot?.ref.parent.id;
 
 const deleteDocumentFromFirestore = async (entrySnapshot, deleteMsg) => {
     let response = [];
-    await deleteDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id))
-        .then(() => {
-            response = [Type.success, deleteMsg || 'Document successfully deleted!'];
-        })
-        .catch((e) => {
-            response = [Type.error, `Error deleting document: ${e}`];
-        });
+    try {
+        await deleteDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id));
+        response = [Type.success, deleteMsg || 'Document successfully deleted!'];
+    } catch (e) {
+        response = [Type.error, `Error deleting document: ${e}`];
+    }
     if (entrySnapshot.data().taxa === 'Lizard') updateLizardMetadata('delete', { entrySnapshot });
     return response;
 };
 
 const updateLizardMetadata = async (operation, operationDataObject) => {
-    if (operation === 'create') {
-    } else if (operation === 'update') {
-        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
-            lastEditTime: operationDataObject.lastEditTime,
-        })
-            .then(() => {
-                console.log('Sent update to the PWA');
-            })
-            .catch((e) => {
-                console.error(`Error sending deletion to PWA: ${e}`);
-            });
-    } else if (operation === 'delete') {
-        const { entrySnapshot } = operationDataObject;
-        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
-            deletedEntries: arrayUnion({
-                entryId: entrySnapshot.id,
-                collectionId: entrySnapshot.ref.parent.id,
-            }),
-        })
-            .then(() => {
-                console.log('Sent deletion to the PWA');
-            })
-            .catch((e) => {
-                console.error(`Error sending deletion to PWA: ${e}`);
-            });
+    const lizardDoc = doc(db, 'Metadata', 'LizardData');
+    const { entrySnapshot } = operationDataObject;
+    try {
+        if (operation === 'update') {
+            await updateDoc(lizardDoc, { lastEditTime: operationDataObject.lastEditTime });
+        } else if (operation === 'delete') {
+            await updateDoc(lizardDoc, { deletedEntries: arrayUnion({ entryId: entrySnapshot.id, collectionId: entrySnapshot.ref.parent.id }) });
+        }
+        console.log(`Sent ${operation} to the PWA`);
+    } catch (e) {
+        console.error(`Error sending ${operation} to PWA: ${e}`);
     }
 };
 
@@ -134,102 +100,44 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData, editMsg) =>
         updateLizardMetadata('update', { lastEditTime });
     }
     let response = [];
-    await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
-        .then(() => {
-            response = [Type.success, editMsg || 'Changes successfully written to database!'];
-        })
-        .catch((e) => {
-            response = [Type.error, `Error writing changes to database: ${e}`];
-        });
+    try {
+        await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData);
+        response = [Type.success, editMsg || 'Changes successfully written to database!'];
+    } catch (e) {
+        response = [Type.error, `Error writing changes to database: ${e}`];
+    }
     return response;
 };
 
 const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
-    console.log(`editing session and its entries: ${sessionData.toString()}`);
-    let entries = null;
-    if (sessionSnapshot.data().sessionId) {
-        entries = await getDocs(
-            query(
-                collection(
-                    db,
-                    `${sessionSnapshot.ref.parent.id.substr(
-                        0,
-                        sessionSnapshot.ref.parent.id.length - 7,
-                    )}Data`,
-                ),
-                where('sessionId', '==', sessionSnapshot.data().sessionId),
-            ),
-        );
-    } else {
-        entries = await getDocs(
-            query(
-                collection(
-                    db,
-                    `${sessionSnapshot.ref.parent.id.substr(
-                        0,
-                        sessionSnapshot.ref.parent.id.length - 7,
-                    )}Data`,
-                ),
-                where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
-            ),
-        );
-    }
+    const collectionId = sessionSnapshot.ref.parent.id.slice(0, -7);
+    const entriesQuery = query(
+        collection(db, `${collectionId}Data`),
+        sessionSnapshot.data().sessionId ? 
+            where('sessionId', '==', sessionSnapshot.data().sessionId) :
+            where('sessionDateTime', '==', sessionSnapshot.data().dateTime)
+    );
+    const entries = await getDocs(entriesQuery);
     const batch = writeBatch(db);
-    let entryCount = 0;
-    entries.docs.forEach((entry) => {
-        entryCount++;
-        batch.update(doc(db, entry.ref.parent.id, entry.id), {
-            dateTime: sessionData.dateTime,
-            sessionDateTime: sessionData.dateTime,
-        });
+    entries.docs.forEach(entry => {
+        batch.update(doc(db, entry.ref.parent.id, entry.id), { dateTime: sessionData.dateTime, sessionDateTime: sessionData.dateTime });
     });
     await batch.commit();
-    return pushEntryChangesToFirestore(
-        sessionSnapshot,
-        sessionData,
-        `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`,
-    );
+    return pushEntryChangesToFirestore(sessionSnapshot, sessionData, `Session ${entries.size ? `and its ${entries.size} entries` : ''} successfully changed`);
 };
 
-export const getSessionEntryCount = async (sessionSnapshot) => {
-    const snapshot = await getCountFromServer(
-        query(
-            collection(
-                db,
-                `${sessionSnapshot.ref.parent.id.substr(
-                    0,
-                    sessionSnapshot.ref.parent.id.length - 7,
-                )}Data`,
-            ),
-            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime)),
-        ),
-    );
+export const getSessionEntryCount = async sessionSnapshot => {
+    const collectionId = sessionSnapshot.ref.parent.id.slice(0, -7);
+    const snapshot = await getCountFromServer(query(collection(db, `${collectionId}Data`), where('sessionDateTime', '==', sessionSnapshot.data().dateTime)));
     return snapshot.data().count;
 };
 
-const deleteSessionAndItsEntries = async (sessionSnapshot) => {
-    const entries = await getDocs(
-        query(
-            collection(
-                db,
-                `${sessionSnapshot.ref.parent.id.substr(
-                    0,
-                    sessionSnapshot.ref.parent.id.length - 7,
-                )}Data`,
-            ),
-            or(where('sessionDateTime', '==', sessionSnapshot.data().dateTime)),
-        ),
-    );
-    console.log(entries);
-    let entryCount = 0;
-    entries.docs.forEach((entry) => {
-        entryCount++;
-        deleteDocumentFromFirestore(entry);
-    });
-    return deleteDocumentFromFirestore(
-        sessionSnapshot,
-        `Session ${entryCount > 0 ? `and its ${entryCount} entries` : ''} successfully deleted`,
-    );
+const deleteSessionAndItsEntries = async sessionSnapshot => {
+    const collectionId = sessionSnapshot.ref.parent.id.slice(0, -7);
+    const entries = await getDocs(query(collection(db, `${collectionId}Data`), where('sessionDateTime', '==', sessionSnapshot.data().dateTime)));
+    const deletePromises = entries.docs.map(entry => deleteDocumentFromFirestore(entry));
+    await Promise.all(deletePromises);
+    return deleteDocumentFromFirestore(sessionSnapshot, `Session ${entries.size ? `and its ${entries.size} entries` : ''} successfully deleted`);
 };
 
 const startEntryOperation = async (operationName, operationData) => {
@@ -243,177 +151,101 @@ const startEntryOperation = async (operationName, operationData) => {
         return deleteSessionAndItsEntries(operationData.entrySnapshot);
     } else if (operationName === 'uploadSessionEdits') {
         return editSessionAndItsEntries(operationData.entrySnapshot, operationData.entryData);
-    } else return [Type.error, 'Unknown error occurred'];
+    } else {
+        return [Type.error, 'Unknown error occurred'];
+    }
 };
 
-const getSitesForProject = async (projectName) => {
-    const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', `${projectName}Sites`)),
-    );
-    const options = [];
-    answerSet.docs.forEach((doc) => {
-        doc.data().answers.forEach((answer) => {
-            options.push(answer.primary);
-        });
-    });
-    return options;
+const getAnswerSetOptions = async setName => {
+    const answerSet = await getDocs(query(collection(db, 'AnswerSet'), where('set_name', '==', setName)));
+    return answerSet.docs.flatMap(doc => doc.data().answers.map(answer => answer.primary));
 };
 
-const getArraysForSite = async (projectName, siteName) => {
-    const answerSet = await getDocs(
-        query(
-            collection(db, 'AnswerSet'),
-            where('set_name', '==', `${projectName}${siteName}Array`),
-        ),
-    );
-    const options = [];
-    answerSet.docs.forEach((doc) => {
-        doc.data().answers.forEach((answer) => {
-            options.push(answer.primary);
-        });
-    });
-    return options;
-};
-
-const getTrapStatuses = async () => {
-    const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'trap statuses')),
-    );
-    const options = [];
-    answerSet.docs.forEach((doc) => {
-        doc.data().answers.forEach((answer) => {
-            options.push(answer.primary);
-        });
-    });
-    return options;
-};
-
-const getFenceTraps = async () => {
-    const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Fence Traps')),
-    );
-    const options = [];
-    answerSet.docs.forEach((doc) => {
-        doc.data().answers.forEach((answer) => {
-            options.push(answer.primary);
-        });
-    });
-    return options;
-};
-
-const getSexes = async () => {
-    const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Sexes')),
-    );
-    const options = [];
-    answerSet.docs.forEach((doc) => {
-        doc.data().answers.forEach((answer) => {
-            options.push(answer.primary);
-        });
-    });
-    return options;
-};
+export const getSitesForProject = projectName => getAnswerSetOptions(`${projectName}Sites`);
+export const getArraysForSite = (projectName, siteName) => getAnswerSetOptions(`${projectName}${siteName}Array`);
+export const getTrapStatuses = () => getAnswerSetOptions('trap statuses');
+export const getFenceTraps = () => getAnswerSetOptions('Fence Traps');
+export const getSexes = () => getAnswerSetOptions('Sexes');
 
 const getSessionsByProjectAndYear = async (environment, projectName, year) => {
-    environment = environment === 'test' ? 'Test' : '';
-    const sessions = await getDocs(
-        query(
-            collection(db, `${environment}${projectName}Session`),
-            where('dateTime', '>=', `${year}/01/01 00:00:00`),
-            where('dateTime', '<=', `${year}/12/31 23:59:59`),
-            orderBy('dateTime', 'desc'),
-        ),
+    const collectionName = `${environment === 'test' ? 'Test' : ''}${projectName}Session`;
+    const sessionsQuery = query(
+        collection(db, collectionName),
+        where('dateTime', '>=', `${year}/01/01 00:00:00`),
+        where('dateTime', '<=', `${year}/12/31 23:59:59`),
+        orderBy('dateTime', 'desc')
     );
-    // console.log('sessions', sessions.docs);
-    return sessions.docs;
+    return (await getDocs(sessionsQuery)).docs;
 };
 
 const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
-    // console.log(`${project}${taxa}Species`);
-    const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`)),
-    );
-    const options = [];
-    answerSet.docs.forEach((doc) => {
-        doc.data().answers.forEach((answer) => {
-            options.push({
-                code: answer.primary,
-                genus: answer.secondary.Genus,
-                species: answer.secondary.Species,
-            });
-        });
-    });
-    return options;
+    const answerSet = await getDocs(query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`)));
+    return answerSet.docs.flatMap(doc => doc.data().answers.map(answer => ({
+        code: answer.primary,
+        genus: answer.secondary.Genus,
+        species: answer.secondary.Species,
+    })));
 };
 
-export const getStandardizedDateTimeString = (dateString) => {
+export const getStandardizedDateTimeString = dateString => {
     const tempDate = new Date(dateString);
-    return `${tempDate.getFullYear()}/${(tempDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}/${tempDate
-        .getDate()
-        .toString()
-        .padStart(2, '0')} ${tempDate.toLocaleTimeString('en-US', {
-        hourCycle: 'h23',
-    })}`;
+    return `${tempDate.getFullYear()}/${String(tempDate.getMonth() + 1).padStart(2, '0')}/${String(tempDate.getDate()).padStart(2, '0')} ${tempDate.toLocaleTimeString('en-US', { hourCycle: 'h23' })}`;
 };
 
 export const uploadNewSession = async (sessionData, project, environment) => {
-    let collectionName = `Test${project.replace(/\s/g, '')}Session`;
-    if (environment === 'live') {
-        collectionName = `${project.replace(/\s/g, '')}Session`;
+    const collectionName = `${environment === 'live' ? '' : 'Test'}${project.replace(/\s/g, '')}Session`;
+    try {
+        await addDoc(collection(db, collectionName), sessionData);
+        return true;
+    } catch {
+        return false;
     }
-    let success = false;
-    await addDoc(collection(db, collectionName), sessionData).then(() => (success = true));
-    return success;
 };
 
 export const uploadNewEntry = async (entryData, project, environment) => {
-    let success = false;
     const now = new Date();
-    if (!entryData.entryId) entryData.entryId = now.getTime();
-    const taxa = entryData.taxa;
-    if (entryData.taxa === 'Arthropod') {
-        if (entryData.aran === '') entryData.aran = '0';
-        if (entryData.auch === '') entryData.auch = '0';
-        if (entryData.blat === '') entryData.blat = '0';
-        if (entryData.chil === '') entryData.chil = '0';
-        if (entryData.cole === '') entryData.cole = '0';
-        if (entryData.crus === '') entryData.crus = '0';
-        if (entryData.derm === '') entryData.derm = '0';
-        if (entryData.diel === '') entryData.diel = '0';
-        if (entryData.dipt === '') entryData.dipt = '0';
-        if (entryData.hete === '') entryData.hete = '0';
-        if (entryData.hyma === '') entryData.hyma = '0';
-        if (entryData.hymb === '') entryData.hymb = '0';
-        if (entryData.lepi === '') entryData.lepi = '0';
-        if (entryData.mant === '') entryData.mant = '0';
-        if (entryData.orth === '') entryData.orth = '0';
-        if (entryData.pseu === '') entryData.pseu = '0';
-        if (entryData.scor === '') entryData.scor = '0';
-        if (entryData.soli === '') entryData.soli = '0';
-        if (entryData.thys === '') entryData.thys = '0';
-        if (entryData.unki === '') entryData.unki = '0';
-        if (entryData.micro === '') entryData.micro = '0';
-        entryData.taxa = 'N/A';
-    } else if (entryData.taxa === 'Lizard') {
-        await updateDoc(doc(db, 'Metadata', 'LizardData'), {
-            lastEditTime: now.getTime(),
-        });
-    }
+    entryData.entryId = entryData.entryId || now.getTime();
     entryData.lastEdit = now.getTime();
+    if (entryData.taxa === 'Arthropod') {
+        entryData = {
+            ...entryData,
+            aran: entryData.aran || '0',
+            auch: entryData.auch || '0',
+            blat: entryData.blat || '0',
+            chil: entryData.chil || '0',
+            cole: entryData.cole || '0',
+            crus: entryData.crus || '0',
+            derm: entryData.derm || '0',
+            diel: entryData.diel || '0',
+            dipt: entryData.dipt || '0',
+            hete: entryData.hete || '0',
+            hyma: entryData.hyma || '0',
+            hymb: entryData.hymb || '0',
+            lepi: entryData.lepi || '0',
+            mant: entryData.mant || '0',
+            orth: entryData.orth || '0',
+            pseu: entryData.pseu || '0',
+            scor: entryData.scor || '0',
+            soli: entryData.soli || '0',
+            thys: entryData.thys || '0',
+            unki: entryData.unki || '0',
+            micro: entryData.micro || '0',
+            taxa: 'N/A',
+        };
+    } else if (entryData.taxa === 'Lizard') {
+        await updateDoc(doc(db, 'Metadata', 'LizardData'), { lastEditTime: now.getTime() });
+    }
     for (const key in entryData) {
         if (entryData[key] === '') entryData[key] = 'N/A';
     }
-    const entryId = `${entryData.site}${taxa === 'N/A' ? 'Arthropod' : taxa}${
-        entryData.entryId || now.getTime()
-    }`;
-    let collectionName = `Test${project.replace(/\s/g, '')}Data`;
-    if (environment === 'live') {
-        collectionName = `${project.replace(/\s/g, '')}Data`;
+    const entryId = `${entryData.site}${entryData.taxa === 'N/A' ? 'Arthropod' : entryData.taxa}${entryData.entryId}`;
+    const collectionName = `${environment === 'live' ? '' : 'Test'}${project.replace(/\s/g, '')}Data`;
+    try {
+        await setDoc(doc(db, collectionName, entryId), entryData);
+        return true;
+    } catch {
+        return false;
     }
-    await setDoc(doc(db, collectionName, entryId), entryData).then(() => (success = true));
-    return success;
 };
 
 export {
@@ -424,11 +256,6 @@ export {
     getCollectionName,
     getCollectionNameFromDoc,
     startEntryOperation,
-    getSitesForProject,
-    getArraysForSite,
-    getTrapStatuses,
-    getFenceTraps,
-    getSexes,
     getSessionsByProjectAndYear,
     getSpeciesCodesForProjectByTaxa,
 };
