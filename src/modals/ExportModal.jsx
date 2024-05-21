@@ -27,10 +27,10 @@ export default function ExportModal({ showModal, onCancel }) {
                 okay: '',
             }}
         >
-            <div>
+            <InnerModalWrapper>
                 <Tabs activeTab={activeTab} setActiveTab={setActiveTab} currentProject={currentProject} setCurrentProject={setCurrentProject} />
                 {activeTab === 'Data Form' ? <DataForm /> : <SessionForm />}
-            </div>
+            </InnerModalWrapper>
         </Modal>
     );
 }
@@ -100,7 +100,7 @@ const DataForm = () => {
     };
 
     return (
-        <div className="flex flex-col items-center p-10">
+        <div className="flex flex-col items-center p-10 max-w-full-modal-width max-h-full-modal-content-height">
             <h1 className='text-xl m-2'>Please select the forms to include in the file</h1>
             {forms.map(form => (
                 <div key={form} className='flex items-center mx-2'>

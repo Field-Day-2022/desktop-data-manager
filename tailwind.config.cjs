@@ -15,6 +15,12 @@ module.exports = {
         'asu-maroon': '#8c1d40',
         'asu-gold': '#ffc627'
       },
+      maxWidth: {
+        'full-modal-width': 'calc(90vw)',
+      },
+      maxHeight: {
+        'full-modal-content-height': 'calc(100vh - 280px)',
+      },
       spacing: {
         'full-modal-content-height': 'calc(100vh - 280px)',
         'full-modal-width': 'calc(90vw)',
