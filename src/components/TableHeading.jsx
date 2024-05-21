@@ -10,7 +10,7 @@ export const TableHeading = ({ label, active, sortDirection, onClick }) => {
     };
 
     const thClasses = classNames(
-        'sticky top-0 bg-white z-10 border-b border-neutral-800 dark:bg-black p-2 font-semibold cursor-pointer',
+        'sticky top-0 bg-white z-10 border-b border-neutral-800 dark:bg-neutral-950 p-2 font-semibold cursor-pointer',
         { 'text-asu-maroon dark:text-asu-gold': active }
     );
 

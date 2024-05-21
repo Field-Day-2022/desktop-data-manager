@@ -83,7 +83,7 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
     }, [labels]);
 
     return (
-        <motion.div className="bg-white dark:bg-black">
+        <motion.div className="bg-white dark:bg-neutral-950">
             <div className="flex justify-between px-5 items-center">
                 <h1 className="heading pt-4">{name} - Entries</h1>
                 <div className="flex px-5 items-center">

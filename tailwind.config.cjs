@@ -14,7 +14,8 @@ module.exports = {
       },
       colors: {
         'asu-maroon': '#8c1d40',
-        'asu-gold': '#ffc627'
+        'asu-gold': '#ffc627',
+        'neutral-950': '#0F0F0F',
       },
       maxWidth: {
         'full-modal-width': 'calc(90vw)',

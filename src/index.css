@@ -4,7 +4,7 @@
 
 @layer components {
     body {
-        @apply bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white accent-asu-maroon;
+        @apply bg-neutral-100 dark:bg-neutral-700 text-neutral-900 dark:text-white accent-asu-maroon;
     }
     .title {
         @apply text-7xl pt-5 leading-none;
@@ -35,11 +35,11 @@
     }
 
     select {
-        @apply cursor-pointer w-fit p-1.5 bg-neutral-200 dark:bg-neutral-800 dark:text-white rounded-md border-solid border-2 focus:border-asu-gold h-10;
+        @apply cursor-pointer w-fit p-1.5 bg-neutral-200 dark:bg-neutral-800 dark:text-white rounded-md border-solid border-2 border-neutral-300 dark:border-neutral-500 focus:border-asu-gold h-10;
     }
 
     input {
-        @apply bg-white dark:bg-black dark:text-white focus:outline-asu-gold disabled:border-0 disabled:bg-transparent border border-neutral-300 rounded-lg py-1 px-4 leading-normal w-auto h-10;
+        @apply bg-white dark:bg-black dark:text-white focus:outline-asu-gold disabled:border-0 disabled:bg-transparent border border-neutral-300 dark:border-neutral-500 rounded-lg py-1 px-4 leading-normal w-auto h-10;
     }
 
     textarea {

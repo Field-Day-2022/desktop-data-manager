@@ -2,8 +2,8 @@ import classNames from 'classnames';
 
 export default function Tab({ text, icon, active, onClick }) {
     const background = classNames({
-        'bg-white dark:bg-black': active,
-        'bg-neutral-200 dark:bg-neutral-900': !active,
+        'bg-white dark:bg-neutral-950': active,
+        'bg-neutral-200 dark:bg-neutral-800': !active,
     });
     const containerClasses = classNames(
         background,

@@ -62,7 +62,7 @@ export default function Modal({
 function ModalOverlay() {
     return (
         <motion.div
-            className="fixed inset-0 bg-neutral-300 dark:bg-neutral-700 opacity-0"
+            className="fixed inset-0 bg-neutral-300 dark:bg-neutral-800 opacity-0"
             key="overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.75 }}
@@ -93,7 +93,7 @@ function ModalHeader({ title, text }) {
 }
 
 function ModalContent({ children }) {
-    return <div className="bg-white dark:bg-black max-h-full-modal-content-height overflow-auto">{children}</div>;
+    return <div className="bg-white dark:bg-neutral-950 max-h-full-modal-content-height overflow-auto">{children}</div>;
 }
 
 function ModalFooter({ children }) {
