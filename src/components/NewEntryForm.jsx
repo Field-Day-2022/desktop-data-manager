@@ -96,9 +96,9 @@ export default function NewEntryForm({ setData }) {
                 </div>
                 <SessionSummary session={selectedSession} />
             </div>
-            <div className="bg-white dark:bg-black">
+            <div className="bg-neutral-100 dark:bg-neutral-800 ">
                 <h1 className='heading p-4'>Choose a Critter</h1>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto ">
                     <TabBar
                         tabs={critterTabs.map((tab) => ({
                             ...tab,

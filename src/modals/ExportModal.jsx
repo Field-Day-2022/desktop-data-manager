@@ -36,7 +36,7 @@ export default function ExportModal({ showModal, onCancel }) {
 }
 
 const Tabs = ({ activeTab, setActiveTab, currentProject, setCurrentProject }) => (
-    <div className="flex justify-between items-center overflow-auto">
+    <div className="flex justify-between items-center overflow-auto bg-neutral-100 dark:bg-neutral-800">
         <TabBar
             tabs={[
                 { text: 'Sessions', icon: <SessionIcon />, active: activeTab === 'Session Form', onClick: () => setActiveTab('Session Form') },

@@ -70,7 +70,7 @@ export default function DataInputModal({ showModal, closeModal }) {
                 }}
             >
                 <div className='flex-col w-full-modal-width h-full-modal-content-height max-w-5xl'>
-                    <div className='bg-neutral-100 dark:bg-neutral-900 flex-shrink-0 h-tab-bar'>
+                    <div className='bg-neutral-100 dark:bg-neutral-800 flex-shrink-0 h-tab-bar'>
                         <TabBar
                             tabs={[
                                 {
