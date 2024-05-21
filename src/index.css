@@ -4,7 +4,7 @@
 
 @layer components {
     body {
-        @apply bg-neutral-100 dark:bg-neutral-700 text-neutral-900 dark:text-white accent-asu-maroon;
+        @apply bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white accent-asu-maroon;
     }
     .title {
         @apply text-7xl pt-5 leading-none;

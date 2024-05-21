@@ -83,7 +83,7 @@ export default function TablePage() {
                 showModal={activeTool === 'merge'}
                 closeModal={() =>setActiveTool('none')}
             />
-            <div className="flex justify-between items-center overflow-auto">
+            <div className="flex justify-between items-center overflow-auto bg-neutral-700">
                 <TabBar 
                     tabs={tabsData.map((tab) => ({
                         ...tab,
