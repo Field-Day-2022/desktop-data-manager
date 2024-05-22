@@ -7,6 +7,14 @@
         <title>Field Day</title>
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#8C1D40">
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const manifestEl = document.querySelector('link[rel="manifest"]');
+                const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                manifestEl.setAttribute('href', prefersDarkScheme ? '/manifest-dark.json' : '/manifest.json');
+            });
+        </script>
     </head>
     <body>
         <div id="root"></div>
