@@ -49,6 +49,12 @@ Field Day Web UI is an essential tool for viewing, managing, and exporting wildl
 5. Open the application in your browser at `http://localhost:3000`.
 6. You're all set! 🎉
 
+## Test Deployments
+
+Test deployments are automatically created on PR into `main` and `dev` branches using the workflow: `firebase-hosting-pull-request.yml`. The URLs for the test deployment are provided in the PR checks.
+
+In order to use Google Auth and access the test deployment, you will need to add it as an authorized domain in the Firebase Console. The domain is the URL provided in the PR checks. Removing the domain from the authorized domains when no longer needed is recommended.
+
 ## Sponsor
 
 [Professor Heather Bateman](https://www.linkedin.com/in/heather-bateman-68341013/) - Professor and Researcher of Biology
