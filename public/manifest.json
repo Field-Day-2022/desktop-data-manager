@@ -1,6 +1,6 @@
 {
-	"name": "Field Day",
-	"short_name": "FieldDay",
+	"name": "Field Day: Desktop Data Manager",
+	"short_name": "Field Day: DDM",
 	"start_url": ".",
 	"display": "standalone",
 	"background_color": "#ffffff",
