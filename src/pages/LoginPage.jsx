@@ -3,9 +3,8 @@ import { GoogleIcon, LizardIcon } from "../assets/icons";
 import PageWrapper from "./PageWrapper";
 
 export default function LoginPage({ auth }) {
-
-    const LOADING_MESSAGE = 'Loading Google\'s authentication.'
-    const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.'
+    const LOADING_MESSAGE = 'Loading Google\'s authentication.';
+    const LOGIN_MESSAGE = 'Click login to sign in with your ASURITE ID.';
 
     return (
         <PageWrapper>
@@ -21,9 +20,7 @@ export default function LoginPage({ auth }) {
                     <Button
                         disabled={auth.loading}
                         text={(!auth.loading ? 'Login' : 'Please wait.')}
-                        onClick={() =>
-                            auth.login()
-                        }
+                        onClick={() => auth.login()}
                         icon={
                             <div className="bg-white rounded-full p-1 dark:bg-black">
                                 <GoogleIcon />

@@ -18,12 +18,23 @@ export class Authenticator {
     }
 
     login() {
-        signInWithRedirect(auth, new GoogleAuthProvider());
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' }); // Force account selection
+        signInWithRedirect(auth, provider);
         return this.validateUser();
     }
 
     logout() {
-        signOut(auth);
+        signOut(auth).then(() => {
+            // Clear cookies
+            document.cookie.split(";").forEach((c) => {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            // Clear local storage
+            localStorage.clear();
+            // Redirect to login page or homepage
+            window.location.href = '/login';
+        });
         return !this.user;
     }
 }
