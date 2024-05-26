@@ -23,7 +23,7 @@
     }
 
     .button {
-        @apply flex rounded-md p-1.5 text-white whitespace-nowrap bg-asu-maroon border-2 border-transparent;
+        @apply flex rounded-md p-1.5 text-white whitespace-nowrap bg-asu-maroon border-2 border-transparent items-center;
     }
 
     .button:disabled {

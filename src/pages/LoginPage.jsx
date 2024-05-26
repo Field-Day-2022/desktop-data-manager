@@ -1,5 +1,5 @@
 import Button from "../components/Button";
-import {GoogleIcon, LizardIcon} from "../assets/icons";
+import { GoogleIcon, LizardIcon } from "../assets/icons";
 import PageWrapper from "./PageWrapper";
 
 export default function LoginPage({ auth }) {
@@ -24,7 +24,11 @@ export default function LoginPage({ auth }) {
                         onClick={() =>
                             auth.login()
                         }
-                        icon={<GoogleIcon className="w-6 mx-auto bg-white dark:bg-black p-0.5 rounded-full" />}
+                        icon={
+                            <div className="bg-white rounded-full p-1 dark:bg-black">
+                                <GoogleIcon />
+                            </div>
+                        }
                     />
                 </div>
             </div>

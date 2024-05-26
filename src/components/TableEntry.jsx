@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 import { currentTableName } from '../utils/jotai';
 import { AnimatePresence, motion } from 'framer-motion';
 import { tableRows } from '../utils/variants';
-import { CheckIcon, DeleteIcon, EditIcon, XIcon } from '../assets/icons';
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from '../assets/icons';
 import { getKey, getKeys, getLabel } from '../const/tableLabels';
 import { getSessionEntryCount, startEntryOperation } from '../utils/firestore';
 import { Type, notify } from './Notifier';
@@ -168,7 +168,7 @@ const Actions = ({
                                 <CheckIcon />
                             </div>
                             <div className="w-5 h-5 hover:scale-125 transition hover:cursor-pointer" onClick={onCancelClick}>
-                                <XIcon />
+                                <CloseIcon />
                             </div>
                         </>
                     )}
