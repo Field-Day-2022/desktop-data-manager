@@ -12,7 +12,7 @@ import { getAuth } from 'firebase/auth';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: 'AIzaSyAmjxPpYBWe1gwBvDXka9-Fk4zRuWPQw-Y',
-    authDomain: 'asu-field-day.firebaseapp.com',
+    authDomain: 'asu-field-day-webui.web.app',
     databaseURL: 'https://asu-field-day-default-rtdb.firebaseio.com',
     projectId: 'asu-field-day',
     storageBucket: 'asu-field-day.appspot.com',
