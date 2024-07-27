@@ -27,8 +27,10 @@ export class Authenticator {
     logout() {
         signOut(auth).then(() => {
             // Clear cookies
-            document.cookie.split(";").forEach((c) => {
-                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            document.cookie.split(';').forEach((c) => {
+                document.cookie = c
+                    .replace(/^ +/, '')
+                    .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
             });
             // Clear local storage
             localStorage.clear();
