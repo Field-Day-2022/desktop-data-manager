@@ -111,12 +111,19 @@ const pushEntryChangesToFirestore = async (entrySnapshot, entryData, editMsg) =>
         updateLizardMetadata('update', { lastEditTime });
     }
     let response = [];
-    try {
-        await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData);
-        response = [Type.success, editMsg || 'Changes successfully written to database!'];
-    } catch (e) {
-        response = [Type.error, `Error writing changes to database: ${e}`];
+    if (entryData.dateTime) {
+        const newDate = new Date(entryData.dateTime);
+        if (!isNaN(newDate)) {
+            entryData.year = newDate.getFullYear();
+        }
     }
+    await setDoc(doc(db, entrySnapshot.ref.parent.id, entrySnapshot.id), entryData)
+        .then(() => {
+            response = [Type.success, editMsg || 'Changes successfully written to database!'];
+        })
+        .catch((e) => {
+            response = [Type.error, `Error writing changes to database: ${e}`];
+        });
     return response;
 };
 

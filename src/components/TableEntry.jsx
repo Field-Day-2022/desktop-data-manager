@@ -101,7 +101,7 @@ export const TableEntry = forwardRef((props, ref) => {
 const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData }) => {
     const [editable, setEditable] = useState(true);
 
-    const handleChange = (e) => {
+    const onChangeHandler = (e) => {
         const value = e.target.value.slice(-1);
         const isBinaryKey = BINARY_KEYS.includes(dbKey);
         const isTrueKey = TRUE_KEYS.includes(value);
@@ -113,16 +113,24 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
         }));
     };
 
-    const disabled = entryUIState === 'viewing' || (entryUIState === 'editing' && !editable) || entryUIState === 'deleting';
+    const onClickHandler = (e) => {
+        if (dbKey === 'year' && entryUIState === 'editing') {
+            notify(Type.error, "Editing the year directly is not supported. Please edit the date instead.");
+        }
+    };
+    
+    let disabled = dbKey === 'year' || entryUIState === 'viewing' || (entryUIState === 'editing' && !editable) || entryUIState === 'deleting';
+
     const size = entryData[dbKey] ? String(entryData[dbKey]).length : 1;
 
     return (
         <td className="text-center border-b border-neutral-400 dark:border-neutral-600 p-1">
             <input
-                disabled={disabled}
-                className="text-center"
+                readOnly={disabled}
+                className="text-center w-full read-only:bg-transparent read-only:border-transparent read-only:focus:outline-none"
                 value={entryData[dbKey] ?? 'N/A'}
-                onChange={handleChange}
+                onChange={(e) => onChangeHandler(e)}
+                onClick={(e) => onClickHandler(e)}
                 size={size}
             />
         </td>
