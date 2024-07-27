@@ -1,10 +1,27 @@
+// src/utils/authenticator.js
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithRedirect, signOut, getRedirectResult } from 'firebase/auth';
 
 export class Authenticator {
     constructor() {
         [this.user, this.loading, this.error] = useAuthState(auth);
+        this.handleRedirectResult();
+    }
+
+    async handleRedirectResult() {
+        try {
+            console.log("Handling redirect result...");
+            const result = await getRedirectResult(auth);
+            if (result) {
+                this.user = result.user;
+                console.log('User signed in:', this.user);
+            } else {
+                console.log("No redirect result.");
+            }
+        } catch (error) {
+            console.error('Error handling redirect result:', error);
+        }
     }
 
     validateUser() {
@@ -18,25 +35,11 @@ export class Authenticator {
     }
 
     login() {
-        const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' }); // Force account selection
-        signInWithRedirect(auth, provider);
-        return this.validateUser();
+        signInWithRedirect(auth, new GoogleAuthProvider());
     }
 
     logout() {
-        signOut(auth).then(() => {
-            // Clear cookies
-            document.cookie.split(';').forEach((c) => {
-                document.cookie = c
-                    .replace(/^ +/, '')
-                    .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
-            });
-            // Clear local storage
-            localStorage.clear();
-            // Redirect to login page or homepage
-            window.location.href = '/login';
-        });
+        signOut(auth);
         return !this.user;
     }
 }
