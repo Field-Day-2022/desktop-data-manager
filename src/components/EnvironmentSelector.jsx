@@ -12,7 +12,6 @@ export default function EnvironmentSelector() {
     <div className="flex items-center space-x-5">
       <label>Data Source:</label>
       <select
-        className="text-neutral-900"
         value={environment}
         onChange={handleEnvironmentChange}
       >

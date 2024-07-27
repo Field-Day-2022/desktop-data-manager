@@ -38,10 +38,6 @@ export default function TablePage() {
     const triggerRerender = () => setRerender(!rerender);
 
     useEffect(() => {
-        // if (additionalConstraints.length > 0) {
-        //     // loadBatch(additionalConstraints)
-        //     // console.log(additionalConstraints)
-        // }
         if (additionalConstraints) {
             console.log(additionalConstraints)
             loadBatch(additionalConstraints)
@@ -87,7 +83,7 @@ export default function TablePage() {
                 showModal={activeTool === 'merge'}
                 closeModal={() =>setActiveTool('none')}
             />
-            <div className="flex justify-between items-center overflow-auto">
+            <div className="flex justify-between items-center overflow-auto dark:bg-neutral-700">
                 <TabBar 
                     tabs={tabsData.map((tab) => ({
                         ...tab,
@@ -111,7 +107,7 @@ export default function TablePage() {
                     setEntries={setEntries}
                     updateConstraints={(newConstraints) => setAdditionalConstraints(newConstraints)}
                 />
-                <div className="flex justify-between overflow-auto">
+                <div className="flex justify-between overflow-auto dark:bg-neutral-800">
                     <TableTools>
                         <Button
                             flexible={true}

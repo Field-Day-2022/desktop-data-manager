@@ -7,8 +7,6 @@ import TablePage from './pages/TablePage';
 import React from 'react';
 import { Authenticator } from './utils/authenticator';
 import { Notifier } from './components/Notifier';
-import WhatsNew from "./pages/WhatsNew.jsx";
-import QuickStart from "./pages/QuickStart";
 
 function App() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);
@@ -18,12 +16,10 @@ function App() {
     const pageMap = {
         'Home': <HomePage />,
         'Table': <TablePage />,
-        'New' : <WhatsNew />,
-        'Guide' : <QuickStart/>
     }
 
     return (
-        <div className="flex flex-col w-full min-h-screen bg-neutral-100 text-neutral-800 select-none">
+        <div className="flex flex-col w-full min-h-screen text-neutral-800 dark:text-neutral-200 select-none">
             <Notifier />
             <TopNav title="Field Day" auth={auth} />
             <div className="flex flex-grow">

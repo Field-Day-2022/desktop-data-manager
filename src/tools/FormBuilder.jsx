@@ -1,9 +1,9 @@
-import PageWrapper from '../pages/PageWrapper';
 import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, where, query, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, addDoc, where, query, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { notify, Type } from '../components/Notifier';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import Button from '../components/Button';
 
 export default function FormBuilder({ triggerRerender }) {
     const [activeCollection, setActiveCollection] = useState(''); // current collection selected
@@ -281,7 +281,7 @@ export default function FormBuilder({ triggerRerender }) {
                         e.preventDefault();
                         setEditAllEntriesModal(true)
                     }}
-                    className="button border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                    className="button border-neutral-800 dark:border-neutral-200 border-2 m-2 rounded text-xl py-1 px-4 w-min cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                 >
                     Submit
                 </button>
@@ -306,7 +306,7 @@ export default function FormBuilder({ triggerRerender }) {
                                 duration: .25
                             }
                         }}
-                        className='absolute inset-0 m-40 flex flex-col items-center justify-around p-4 bg-white border-2 border-black rounded'
+                        className='absolute inset-0 m-40 flex flex-col items-center justify-around p-4 bg-white border-2 border-black dark:border-white rounded'
                     >
                         <p className='text-4xl'>Where would you like to update this data?</p>
                         <button
@@ -366,7 +366,7 @@ export default function FormBuilder({ triggerRerender }) {
     return (
         <div className="flex flex-col items-start p-2 text-center">
             <div className="grid grid-cols-3 w-full gap-1">
-                <div className="border-gray-800 border-2 rounded">
+                <div className="border-neutral-800 dark:border-neutral-200 border-2 rounded">
                     <h2 className="text-2xl">Collection</h2>
                     <ReusableUnorderedList
                         listItemArray={['AnswerSet']}
@@ -377,7 +377,7 @@ export default function FormBuilder({ triggerRerender }) {
                         selectedItem={activeCollection}
                     />
                 </div>
-                <div className="border-gray-800 border-2 h-[calc(100vh-21em)] rounded">
+                <div className="border-neutral-800 dark:border-neutral-200 border-2 h-[calc(100vh-21em)] rounded">
                     <div className="flex justify-around items-center">
                         <h2 className="text-2xl">Document</h2>
                         {activeCollection && (
@@ -398,7 +398,7 @@ export default function FormBuilder({ triggerRerender }) {
                         selectedItem={activeDocument}
                     />
                 </div>
-                <div className="grid grid-rows-2 border-gray-800 border-2 h-[calc(100vh-21em)] rounded">
+                <div className="grid grid-rows-2 border-neutral-800 dark:border-neutral-200 border-2 h-[calc(100vh-21em)] rounded">
                     <div className="border-gray-800 border-b-2 flex flex-col">
                         <div className="flex justify-around items-center">
                             <h2 className="text-2xl">Data</h2>
@@ -465,8 +465,8 @@ const ReusableListItem = ({ listItem, clickHandler, selectedItem, index }) => {
             onClick={() => clickHandler(listItem, index)}
             className={
                 listItem === selectedItem
-                    ? 'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 bg-blue-300 cursor-pointer sticky top-0 rounded'
-                    : 'border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 cursor-pointer rounded'
+                    ? 'border-2 border-black dark:border-white m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 bg-blue-300 cursor-pointer sticky top-0 rounded'
+                    : 'border-2 border-black dark:border-white m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500 cursor-pointer rounded'
             }
         >
             {displayText}
@@ -476,13 +476,7 @@ const ReusableListItem = ({ listItem, clickHandler, selectedItem, index }) => {
 
 const AddNewButton = ({ clickHandler }) => {
     return (
-        <motion.button
-            layout
-            onClick={() => clickHandler()}
-            className="border-2 border-black m-2 p-2 text-xl hover:bg-blue-400 active:bg-blue-500  cursor-pointer rounded"
-        >
-            Add new
-        </motion.button>
+        <Button onClick={clickHandler} text="Add New" />
     );
 };
 
@@ -523,7 +517,7 @@ const NewDocumentForm = ({
                     </div>
                 ))}
                 <button
-                    className="button border-gray-800 border-2 m-2 rounded text-xl py-1 px-4 w-max cursor-pointer hover:bg-blue-400 active:bg-blue-500"
+                    className="button border-neutral-800 dark:border-neutral-200 border-2 m-2 rounded text-xl py-1 px-4 w-max cursor-pointer hover:bg-blue-400 active:bg-blue-500"
                     onClick={e => {
                         e.preventDefault();
                         let tempKeysArray = [...formData.secondary_keys];

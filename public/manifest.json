@@ -1,0 +1,26 @@
+{
+	"name": "Field Day: Desktop Data Manager",
+	"short_name": "Field Day: DDM",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#8C1D40",
+	"icons": [
+		{
+			"src": "/icons/logo-512x512.icon",
+			"sizes": "64x64 32x32 24x24 16x16",
+			"type": "image/x-icon"
+		},
+		{
+			"src": "/icons/logo-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/icons/logo-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}

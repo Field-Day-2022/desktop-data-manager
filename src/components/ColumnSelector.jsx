@@ -26,7 +26,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
             {show &&
                 <motion.div
                     key='column-selector'
-                    className='flex items-center space-x-5 absolute z-50 bg-white rounded-md shadow-md overflow-auto'
+                    className='flex items-center space-x-5 absolute z-50 bg-white dark:bg-black rounded-md shadow-md overflow-auto'
                     initial={{ opacity: 0, y: '-100%', x: '-100%' }}
                     animate={{ opacity: 1, y: '0%', x: '-100%' }}
                     exit={{ opacity: 0, y: '-100%', x: '-100%' }}
@@ -35,7 +35,7 @@ const ColumnSelector = ({ show, labels, columns, setShow, toggleColumn }) => {
                     <div className='flex-col space-y-2 whitespace-nowrap max-h-full-column-selector-height'>
                         <h1 className='text-xl pt-2 px-4'>Column Selector</h1>
                         {labels && labels.map((label) =>
-                            <div key={label} className='hover:bg-neutral-100 px-6'>
+                            <div key={label} className='hover:bg-neutral-100 dark:hover:bg-neutral-900 px-6 transition-all duration-200'>
                                 <InputLabel
                                     label={label}
                                     orientation='horizontal'
