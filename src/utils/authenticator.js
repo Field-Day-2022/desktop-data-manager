@@ -1,6 +1,6 @@
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { GoogleAuthProvider, signInWithRedirect, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 export class Authenticator {
     constructor() {
@@ -20,7 +20,7 @@ export class Authenticator {
     login() {
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' }); // Force account selection
-        signInWithRedirect(auth, provider);
+        signInWithPopup(auth, provider);
         return this.validateUser();
     }
 
