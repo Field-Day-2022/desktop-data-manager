@@ -5,7 +5,6 @@ import { getStandardizedDateTimeString } from "../utils/firestore";
 
 export default function NewSessionTool({ setData, project, setProject }) {
 
-
     const [sessionData, setSessionData] = useState({
         dateTime: '',
         recorder: '',

@@ -22,6 +22,7 @@ export default function TablePage() {
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
     const [rerender, setRerender] = useState(false);
+    const [additionalConstraints, setAdditionalConstraints] = useState(null);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
@@ -35,6 +36,13 @@ export default function TablePage() {
     }
 
     const triggerRerender = () => setRerender(!rerender);
+
+    useEffect(() => {
+        if (additionalConstraints) {
+            console.log(additionalConstraints)
+            loadBatch(additionalConstraints)
+        }
+    }, [additionalConstraints])
 
     useEffect(() => {
         if (tableName === 'Arthropod') {
@@ -75,7 +83,7 @@ export default function TablePage() {
                 showModal={activeTool === 'merge'}
                 closeModal={() =>setActiveTool('none')}
             />
-            <div className="flex justify-between items-center overflow-auto">
+            <div className="flex justify-between items-center overflow-auto dark:bg-neutral-700">
                 <TabBar 
                     tabs={tabsData.map((tab) => ({
                         ...tab,
@@ -97,8 +105,9 @@ export default function TablePage() {
                     labels={labels}
                     entries={entries}
                     setEntries={setEntries}
+                    updateConstraints={(newConstraints) => setAdditionalConstraints(newConstraints)}
                 />
-                <div className="flex justify-between overflow-auto">
+                <div className="flex justify-between overflow-auto dark:bg-neutral-800">
                     <TableTools>
                         <Button
                             flexible={true}

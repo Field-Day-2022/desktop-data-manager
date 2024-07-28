@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useEffect } from 'react';
 import { SortAscIcon, SortDescIcon } from '../assets/icons';
 
 export const TableHeading = ({ label, active, sortDirection, onClick }) => {
@@ -11,8 +10,8 @@ export const TableHeading = ({ label, active, sortDirection, onClick }) => {
     };
 
     const thClasses = classNames(
-        'sticky top-0 bg-white z-10 border-b border-neutral-800 p-2 text-gray-600 font-semibold cursor-pointer',
-        { 'text-asu-maroon': active }
+        'sticky top-0 bg-white z-10 border-b border-neutral-800 dark:bg-neutral-950 p-2 font-semibold cursor-pointer',
+        { 'text-asu-maroon dark:text-asu-gold': active }
     );
 
     return (

@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { ArrowIcon } from "../assets/icons";
+import { BackArrowIcon, ForwardArrowIcon } from "../assets/icons";
 import { currentBatchSize } from "../utils/jotai";
 import { notify, Type } from "./Notifier";
 
@@ -12,12 +12,12 @@ export const Pagination = ({
     return (
         <div className="w-full p-2 flex justify-end items-center">
             <div
-                className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
+                className="cursor-pointer hover:scale-125 transition active:scale-100 text-xl"
                 onClick={async () => {
                     if (await loadPrevBatch() === false) notify(Type.error, 'No more data to load')
                 }
                 }>
-                <ArrowIcon direction='left' />
+                <BackArrowIcon />
             </div>
 
             <div className='relative p-2'>
@@ -33,11 +33,11 @@ export const Pagination = ({
             </div>
 
             <div
-                className="w-6 h-6 cursor-pointer hover:scale-125 transition active:scale-100"
+                className="cursor-pointer hover:scale-125 transition active:scale-100 text-xl"
                 onClick={async () => {
                     if (await loadNextBatch() === false) notify(Type.error, 'No more data to load')
                 }}>
-                <ArrowIcon direction='right' />
+                <ForwardArrowIcon />
             </div>
         </div>
     )
