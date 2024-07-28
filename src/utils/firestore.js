@@ -19,7 +19,7 @@ import { Type } from '../components/Notifier';
 export const getArthropodLabels = async () => {
     let labelArray = [];
     await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'ArthropodSpecies'))
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'ArthropodSpecies')),
     ).then((snapshot) => {
         snapshot.docs[0].data().answers.forEach((ans) => {
             labelArray.push(ans.primary);
@@ -44,7 +44,7 @@ const getDocsFromCollection = async (collectionName, constraints = []) => {
         const currentQuery = query(
             collection(db, collectionName),
             orderBy('dateTime', 'desc'),
-            ...constraints
+            ...constraints,
         );
         const docs = await getDocs(currentQuery);
         // console.log(`Read ${docs.size} docs from ${collectionName}.`);
@@ -158,11 +158,11 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
                 db,
                 `${sessionSnapshot.ref.parent.id.substr(
                     0,
-                    sessionSnapshot.ref.parent.id.length - 7
-                )}Data`
+                    sessionSnapshot.ref.parent.id.length - 7,
+                )}Data`,
             ),
-            where('sessionId', '==', sessionSnapshot.data().sessionId)
-        )
+            where('sessionId', '==', sessionSnapshot.data().sessionId),
+        ),
     );
     const batch = writeBatch(db);
     let entryCount = 0;
@@ -177,7 +177,7 @@ const editSessionAndItsEntries = async (sessionSnapshot, sessionData) => {
     return pushEntryChangesToFirestore(
         sessionSnapshot,
         sessionData,
-        `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`
+        `Session ${entryCount > 0 && `and its ${entryCount} entries`} successfully changed`,
     );
 };
 
@@ -188,14 +188,14 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
                 db,
                 `${sessionSnapshot.ref.parent.id.substr(
                     0,
-                    sessionSnapshot.ref.parent.id.length - 7
-                )}Data`
+                    sessionSnapshot.ref.parent.id.length - 7,
+                )}Data`,
             ),
             or(
                 where('sessionDateTime', '==', sessionSnapshot.data().dateTime),
-                where('sessionId', '==', sessionSnapshot.data().sessionId)
-            )
-        )
+                where('sessionId', '==', sessionSnapshot.data().sessionId),
+            ),
+        ),
     );
     console.log(entries);
     let entryCount = 0;
@@ -205,7 +205,7 @@ const deleteSessionAndItsEntries = async (sessionSnapshot) => {
     });
     return deleteDocumentFromFirestore(
         sessionSnapshot,
-        `Session ${entryCount > 0 ? `and its ${entryCount} entries` : ''} successfully deleted`
+        `Session ${entryCount > 0 ? `and its ${entryCount} entries` : ''} successfully deleted`,
     );
 };
 
@@ -225,7 +225,7 @@ const startEntryOperation = async (operationName, operationData) => {
 
 const getSitesForProject = async (projectName) => {
     const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', `${projectName}Sites`))
+        query(collection(db, 'AnswerSet'), where('set_name', '==', `${projectName}Sites`)),
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
@@ -240,8 +240,8 @@ const getArraysForSite = async (projectName, siteName) => {
     const answerSet = await getDocs(
         query(
             collection(db, 'AnswerSet'),
-            where('set_name', '==', `${projectName}${siteName}Array`)
-        )
+            where('set_name', '==', `${projectName}${siteName}Array`),
+        ),
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
@@ -254,7 +254,7 @@ const getArraysForSite = async (projectName, siteName) => {
 
 const getTrapStatuses = async () => {
     const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'trap statuses'))
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'trap statuses')),
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
@@ -267,7 +267,7 @@ const getTrapStatuses = async () => {
 
 const getFenceTraps = async () => {
     const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Fence Traps'))
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Fence Traps')),
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
@@ -280,7 +280,7 @@ const getFenceTraps = async () => {
 
 const getSexes = async () => {
     const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Sexes'))
+        query(collection(db, 'AnswerSet'), where('set_name', '==', 'Sexes')),
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
@@ -298,8 +298,8 @@ const getSessionsByProjectAndYear = async (environment, projectName, year) => {
             collection(db, `${environment}${projectName}Session`),
             where('dateTime', '>=', `${year}/01/01 00:00:00`),
             where('dateTime', '<=', `${year}/12/31 23:59:59`),
-            orderBy('dateTime', 'desc')
-        )
+            orderBy('dateTime', 'desc'),
+        ),
     );
     // console.log('sessions', sessions.docs);
     return sessions.docs;
@@ -308,7 +308,7 @@ const getSessionsByProjectAndYear = async (environment, projectName, year) => {
 const getSpeciesCodesForProjectByTaxa = async (project, taxa) => {
     // console.log(`${project}${taxa}Species`);
     const answerSet = await getDocs(
-        query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`))
+        query(collection(db, 'AnswerSet'), where('set_name', '==', `${project}${taxa}Species`)),
     );
     const options = [];
     answerSet.docs.forEach((doc) => {
