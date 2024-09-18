@@ -28,6 +28,3 @@ dist-ssr
 # VSCodeCounter
 .VSCodeCounter
 package-lock.json
-
-# Personal files
-TODO.md
