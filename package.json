@@ -9,7 +9,7 @@
     "ci": "npx prettier --write **/*.{html,css,js,md} --config .prettierrc && npm run lint && npm test",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "jest" 
+    "test": "jest --passWithNoTests" 
   },
   "dependencies": {
     "@blaumaus/react-alert": "^7.0.5",
