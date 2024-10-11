@@ -1,5 +1,5 @@
-## Group 26 Field Day Capstone Project
-# Group Members: Ayesha Arif, Chase Molstad, Evan Hagood, Quinten Knowles, Timothy Weaver
+# Group 26 Field Day Capstone Project
+### Group Members: Ayesha Arif, Chase Molstad, Evan Hagood, Quinten Knowles, Timothy Weaver
 
 # <img src="./public/logo.svg" alt="Field Day Logo" width="100">Field Day: Desktop Data Manager
 
