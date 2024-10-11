@@ -91,7 +91,13 @@ export const TableEntry = forwardRef((props, ref) => {
                         dbKey={key}
                         entryData={entryData}
                         setEntryData={setEntryData}
-                        className={getLabel(key) === 'Date & Time' ? 'dateTimeColumn' : ''}
+                        className={getLabel(key) === 'Date & Time' ? 'dateTimeColumn' : 
+                            getLabel(key) === 'Site' ? 'siteColumn' : 
+                            getLabel(key) === 'Year' ? 'yearColumn' : 
+                            getLabel(key) === 'Taxa' ? 'taxaColumn' : 
+                            getLabel(key) === 'Genus' ? 'genusColumn' : 
+                            getLabel(key) === 'Species' ? 'speciesColumn' : ''
+                        }
                     />
                 )
             ))}
