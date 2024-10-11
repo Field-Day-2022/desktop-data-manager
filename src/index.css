@@ -45,4 +45,28 @@
     textarea {
         @apply bg-white dark:bg-black dark:text-white focus:outline-asu-gold disabled:border-0 disabled:bg-transparent border border-neutral-300 rounded-lg py-1 px-4 leading-normal w-auto;
     }
+
+    .dateTimeColumn {
+        @apply min-w-[200px] whitespace-nowrap overflow-visible;
+    }
+
+    .siteColumn {
+        @apply min-w-[100px] whitespace-nowrap overflow-visible;
+    }
+
+    .yearColumn {
+        @apply min-w-[90px] whitespace-nowrap overflow-visible;
+    }
+
+    .taxaColumn {
+        @apply min-w-[100px] whitespace-nowrap overflow-visible;
+    }
+
+    .genusColumn {
+        @apply min-w-[120px] whitespace-nowrap overflow-visible;
+    }
+
+    .speciesColumn {
+        @apply min-w-[100px] whitespace-nowrap overflow-visible
+    }
 }
