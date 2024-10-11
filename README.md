@@ -1,3 +1,6 @@
+## Group 26 Field Day Capstone Project
+# Group Members: Ayesha Arif, Chase Molstad, Evan Hagood, Quinten Knowles, Timothy Weaver
+
 # <img src="./public/logo.svg" alt="Field Day Logo" width="100">Field Day: Desktop Data Manager
 
 Welcome to the Field Day: Desktop Data Manager (DDM) repository! This project is a desktop web application designed for managing wildlife data collected in the field.
