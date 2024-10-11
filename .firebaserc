@@ -1,12 +1,12 @@
 {
   "projects": {
-    "default": "asu-field-day"
+    "default": "field-day-backup"
   },
   "targets": {
-    "asu-field-day": {
+    "field-day-backup": {
         "hosting": {
             "webui": [
-                "asu-field-day-webui"
+                "desktop-data-manager"
             ]
         }
     }
