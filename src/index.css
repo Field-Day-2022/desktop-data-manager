@@ -67,6 +67,6 @@
     }
 
     .speciesColumn {
-        @apply min-w-[100px] whitespace-nowrap overflow-visible
+        @apply min-w-[100px] whitespace-nowrap overflow-visible;
     }
 }
