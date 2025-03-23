@@ -156,7 +156,38 @@ const DataForm = ({ exportFormat }) => {
         return csvData;
     };
 
-    
+    const generateCsvData = async () => {
+        setButtonText("Generating CSV Data...");
+        const entries = [];
+        const collectionName = environment === 'live' ? `${project}Data` : `Test${project}Data`;
+        const selectedTaxas = forms.filter(form => formsToInclude[form]).map(form => (form === 'Arthropod' ? 'N/A' : form));
+
+        if (selectedTaxas.length === 0) {
+            setButtonText('Select at least one form');
+            setTimeout(() => setButtonText('Generate CSV'), 2000);
+            return;
+        }
+
+        const collectionSnapshot = await getDocs(query(collection(db, collectionName), where('taxa', 'in', selectedTaxas)));
+        collectionSnapshot.forEach(doc => entries.push(doc.data()));
+
+        entries.sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime());
+
+        const labelArray = await Promise.all(
+            forms.filter(form => formsToInclude[form]).map(async form => (form === 'Arthropod' ? dynamicArthropodLabels() : TABLE_LABELS[form]))
+        );
+        const uniqueLabels = _.union(...labelArray);
+
+        // Generate CSV based on selected format
+        if (exportFormat === 'Standard') {
+            setCsvData(generateStandardCSV(uniqueLabels, entries));
+        } else { // Game and Fish format
+            setCsvData(generateGameAndFishCSV(uniqueLabels, entries));
+        }
+        
+        setDisabledState(true);
+        setButtonText('CSV Generated');
+    };
 
     const clearData = () => {
         setDisabledState(false);
