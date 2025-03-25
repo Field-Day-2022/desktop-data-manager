@@ -267,4 +267,85 @@ const SessionForm = ({ exportFormat }) => {
 
         entries.sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime());
 
+        // For session data, the standard format is used for both export types,
+        // but for Game and Fish we add extra metadata headers
+        let tempCsvData = entries.map(entry => ({
+            dateTime: entry.dateTime,
+            recorder: entry.recorder,
+            handler: entry.handler,
+            site: entry.site,
+            array: entry.array,
+            noCaptures: entry.noCaptures,
+            trapStatus: entry.trapStatus,
+            commentsAboutTheArray: entry.commentsAboutTheArray,
+        }));
+
+        if (exportFormat === 'Game and Fish') {
+            // Add metadata at the beginning of the CSV
+            const metadata = [
+                { project: project, exportType: "Game and Fish Format", date: new Date().toLocaleDateString() },
+                {} // Empty row for separation
+            ];
+            tempCsvData = [...metadata, ...tempCsvData];
+        }
+
+        setCsvData(tempCsvData);
+        setDisabledState(true);
+        setButtonText('CSV Generated');
+    };
+
+    const getFormattedDate = () => {
+        const date = new Date();
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    const getFileName = () => {
+        const formatSuffix = exportFormat === 'Standard' ? '' : '-GameAndFish';
+        return `${project}Sessions${formatSuffix}-${getFormattedDate()}.csv`;
+    };
+
+    const getHeaders = () => {
+        const baseHeaders = [
+            { label: 'Session Date/Time', key: 'dateTime' },
+            { label: 'Recorder', key: 'recorder' },
+            { label: 'Handler', key: 'handler' },
+            { label: 'Site', key: 'site' },
+            { label: 'Array', key: 'array' },
+            { label: 'No Captures', key: 'noCaptures' },
+            { label: 'Trap Status', key: 'trapStatus' },
+            { label: 'Comments About The Array', key: 'commentsAboutTheArray' }
+        ];
         
+        if (exportFormat === 'Game and Fish') {
+            return [
+                { label: 'Project', key: 'project' },
+                { label: 'Export Type', key: 'exportType' },
+                { label: 'Date Exported', key: 'date' },
+                ...baseHeaders
+            ];
+        }
+        
+        return baseHeaders;
+    };
+
+    return (
+        <div className="flex flex-col items-center p-6">
+            <h1 className='text-xl mb-4'>Download Session Entries</h1>
+            <Button 
+                text={buttonText}
+                onClick={generateCSV} 
+                disabled={disabledState}
+                className="mb-3"
+            />
+            
+            {csvData.length > 0 &&
+                <div className="flex space-x-3">
+                    <CSVLink data={csvData} filename={getFileName()} headers={getHeaders()}>
+                        <Button text="Download CSV" onClick={clearData} />
+                    </CSVLink>
+                    <Button text="Clear Form" onClick={clearData} />
+                </div>
+            }
+        </div>
+    );
+};
