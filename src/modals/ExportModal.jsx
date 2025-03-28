@@ -68,31 +68,34 @@ const Tabs = ({ activeTab, setActiveTab, currentProject, setCurrentProject }) =>
 );
 
 const ExportFormatSelector = ({ exportFormat, setExportFormat }) => (
-    <div className="bg-white dark:bg-neutral-800 p-3 border-b border-neutral-200 dark:border-neutral-700">
-        <div className="flex items-center space-x-4">
-            <span className="font-medium text-sm">Export Format:</span>
-            <div className="flex space-x-3">
+    <div className="bg-white dark:bg-neutral-800 p-4 border-b border-neutral-200 dark:border-neutral-700">
+        <div className="flex flex-col space-y-2">
+            <h3 className="text-lg font-semibold mb-1">Export Format</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                Select the format for your exported data:
+            </p>
+            <div className="flex space-x-6">
                 <label className="inline-flex items-center cursor-pointer">
                     <input
                         type="radio"
-                        className="form-radio h-4 w-4 text-asu-maroon accent-asu-maroon"
+                        className="form-radio h-5 w-5 text-asu-maroon accent-asu-maroon"
                         name="exportFormat"
                         value="Standard"
                         checked={exportFormat === 'Standard'}
                         onChange={(e) => setExportFormat(e.target.value)}
                     />
-                    <span className="ml-2 text-sm">Standard</span>
+                    <span className="ml-2 font-medium">Standard</span>
                 </label>
                 <label className="inline-flex items-center cursor-pointer">
                     <input
                         type="radio"
-                        className="form-radio h-4 w-4 text-asu-maroon accent-asu-maroon"
+                        className="form-radio h-5 w-5 text-asu-maroon accent-asu-maroon"
                         name="exportFormat"
                         value="Game and Fish"
                         checked={exportFormat === 'Game and Fish'}
                         onChange={(e) => setExportFormat(e.target.value)}
                     />
-                    <span className="ml-2 text-sm">Game and Fish</span>
+                    <span className="ml-2 font-medium">Game and Fish</span>
                 </label>
             </div>
         </div>
@@ -104,7 +107,7 @@ const DataForm = ({ exportFormat }) => {
     const project = useAtomValue(currentProjectName);
     const forms = ['Turtle', 'Lizard', 'Mammal', 'Snake', 'Arthropod', 'Amphibian'];
     const [formsToInclude, setFormsToInclude] = useState(forms.reduce((acc, form) => ({ ...acc, [form]: false }), {}));
-    const [buttonText, setButtonText] = useState('Generate CSV');
+    const [buttonText, setButtonText] = useState('Prepare Export');
     const [csvData, setCsvData] = useState([]);
     const [disabledState, setDisabledState] = useState(false);
 
@@ -157,16 +160,19 @@ const DataForm = ({ exportFormat }) => {
     };
 
     const generateCsvData = async () => {
-        setButtonText("Generating CSV Data...");
+        setButtonText("Preparing export...");
         const entries = [];
         const collectionName = environment === 'live' ? `${project}Data` : `Test${project}Data`;
         const selectedTaxas = forms.filter(form => formsToInclude[form]).map(form => (form === 'Arthropod' ? 'N/A' : form));
 
         if (selectedTaxas.length === 0) {
             setButtonText('Select at least one form');
-            setTimeout(() => setButtonText('Generate CSV'), 2000);
+            setTimeout(() => setButtonText('Prepare Export'), 2000);
             return;
         }
+
+        // Show the currently selected format in the button text while processing
+        setButtonText(`Preparing ${exportFormat} export...`);
 
         const collectionSnapshot = await getDocs(query(collection(db, collectionName), where('taxa', 'in', selectedTaxas)));
         collectionSnapshot.forEach(doc => entries.push(doc.data()));
@@ -186,13 +192,13 @@ const DataForm = ({ exportFormat }) => {
         }
         
         setDisabledState(true);
-        setButtonText('CSV Generated');
+        setButtonText(`${exportFormat} Export Ready`);
     };
 
     const clearData = () => {
         setDisabledState(false);
         setFormsToInclude(forms.reduce((acc, form) => ({ ...acc, [form]: false }), {}));
-        setButtonText('Generate CSV');
+        setButtonText('Prepare Export');
         setCsvData([]);
     };
 
@@ -234,7 +240,7 @@ const DataForm = ({ exportFormat }) => {
                 {csvData.length > 0 &&
                     <div className="flex space-x-3">
                         <CSVLink data={csvData} filename={getFileName()}>
-                            <Button text="Download CSV" onClick={clearData} />
+                            <Button text={`Download ${exportFormat}`} onClick={clearData} />
                         </CSVLink>
                         <Button text="Clear Form" onClick={clearData} />
                     </div>
@@ -247,18 +253,18 @@ const DataForm = ({ exportFormat }) => {
 const SessionForm = ({ exportFormat }) => {
     const environment = useAtomValue(appMode);
     const project = useAtomValue(currentProjectName);
-    const [buttonText, setButtonText] = useState('Generate CSV');
+    const [buttonText, setButtonText] = useState('Prepare Export');
     const [csvData, setCsvData] = useState([]);
     const [disabledState, setDisabledState] = useState(false);
 
     const clearData = () => {
         setDisabledState(false);
-        setButtonText('Generate CSV');
+        setButtonText('Prepare Export');
         setCsvData([]);
     };
 
     const generateCSV = async () => {
-        setButtonText('Generating CSV Data...');
+        setButtonText(`Preparing ${exportFormat} export...`);
         const entries = [];
         const collectionName = environment === 'live' ? `${project}Session` : `Test${project}Session`;
 
@@ -291,7 +297,7 @@ const SessionForm = ({ exportFormat }) => {
 
         setCsvData(tempCsvData);
         setDisabledState(true);
-        setButtonText('CSV Generated');
+        setButtonText(`${exportFormat} Export Ready`);
     };
 
     const getFormattedDate = () => {
@@ -341,7 +347,7 @@ const SessionForm = ({ exportFormat }) => {
             {csvData.length > 0 &&
                 <div className="flex space-x-3">
                     <CSVLink data={csvData} filename={getFileName()} headers={getHeaders()}>
-                        <Button text="Download CSV" onClick={clearData} />
+                        <Button text={`Download ${exportFormat}`} onClick={clearData} />
                     </CSVLink>
                     <Button text="Clear Form" onClick={clearData} />
                 </div>
