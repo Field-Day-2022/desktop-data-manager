@@ -170,13 +170,14 @@ const arthropodLabels = [
     'HYMB',
     'LEPI',
     'MANT',
+    'MICRO',
     'ORTH',
     'PSEU',
     'SCOR',
     'SOLI',
     'THYS',
     'UNKI',
-    'MICRO',
+
     'Comments',
 ];
 
@@ -207,7 +208,7 @@ export const getKey = (label, tableName) => {
 };
 
 export const getKeys = (tableName) => {
-    const labels = TABLE_LABELS[tableName];
+    const labels = TABLE_LABELS[tableName] || [];
     return labels.map((label) => getKey(label, tableName));
 };
 

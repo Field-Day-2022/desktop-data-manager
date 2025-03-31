@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import React from 'react';
 
 export default function Tab({ text, icon, active, onClick }) {
     const background = classNames({
@@ -8,7 +9,7 @@ export default function Tab({ text, icon, active, onClick }) {
     const containerClasses = classNames(
         background,
         'max-w-fit flex py-2 px-4 rounded-t-2xl text-lg items-center item cursor-pointer hover:border-asu-gold border-transparent border-b-2',
-        { 'active:bg-neutral-300 dark:active:bg-neutral-600': active }
+        { 'active:bg-neutral-300 dark:active:bg-neutral-600': active },
     );
 
     return (

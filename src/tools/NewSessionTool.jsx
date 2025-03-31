@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import NewSessionForm from "../components/NewSessionForm";
-import { getStandardizedDateTimeString } from "../utils/firestore";
+import { useEffect } from 'react';
+import { useState } from 'react';
+import NewSessionForm from '../components/NewSessionForm';
+import { getStandardizedDateTimeString } from '../utils/firestore';
+import React from 'react';
 
 export default function NewSessionTool({ setData, project, setProject }) {
-
     const [sessionData, setSessionData] = useState({
         dateTime: '',
         recorder: '',
@@ -22,30 +22,30 @@ export default function NewSessionTool({ setData, project, setProject }) {
             setDateTime(value);
             return;
         }
-        setSessionData(sessionData => {
+        setSessionData((sessionData) => {
             if (field === 'project') {
-                return ({
+                return {
                     ...sessionData,
                     [field]: value,
                     site: '',
                     array: '',
-                })
+                };
             }
-            return ({
+            return {
                 ...sessionData,
-                [field]: value
-            })
+                [field]: value,
+            };
         });
-    }
+    };
 
     const setDateTime = (dateTime) => {
-        const formattedDateTime = getStandardizedDateTimeString(dateTime)
+        const formattedDateTime = getStandardizedDateTimeString(dateTime);
         setSessionData({
             ...sessionData,
             dateTime: formattedDateTime,
             year: new Date(dateTime).getFullYear(),
         });
-    }
+    };
 
     useEffect(() => {
         setData(sessionData);

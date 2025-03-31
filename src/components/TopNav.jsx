@@ -1,9 +1,10 @@
-import {LizardIcon} from '../assets/icons';
+import { LizardIcon } from '../assets/icons';
 import LogoutButton from './LogoutButton';
 import UserImage from './UserImage';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { currentPageName } from '../utils/jotai';
 import EnvironmentSelector from './EnvironmentSelector';
+import React from 'react';
 
 /**
  *
@@ -12,7 +13,7 @@ import EnvironmentSelector from './EnvironmentSelector';
  * @returns
  */
 export default function TopNav({ title, auth }) {
-    const [currentPage, setCurrentPage] = useAtom(currentPageName)
+    const setCurrentPage = useSetAtom(currentPageName);
 
     return (
         <div className="px-5 bg-neutral-800 dark:bg-neutral-900 text-neutral-100 w-full shadow-md max-h-16">
@@ -33,13 +34,13 @@ export default function TopNav({ title, auth }) {
 
 function UserController({ user, auth }) {
     return (
-        user
-        &&
-        <div className='flex items-center space-x-5'>
-            <div key="email">{user.email}</div>
-            <UserImage key="profilePicture" className="h-12" user={user} />
-            <LogoutButton key="logoutBtn" auth={auth} />
-            <EnvironmentSelector />
-        </div>
+        user && (
+            <div className="flex items-center space-x-5">
+                <div key="email">{user.email}</div>
+                <UserImage key="profilePicture" className="h-12" user={user} />
+                <LogoutButton key="logoutBtn" auth={auth} />
+                <EnvironmentSelector />
+            </div>
+        )
     );
 }

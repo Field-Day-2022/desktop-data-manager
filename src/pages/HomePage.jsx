@@ -1,19 +1,20 @@
-import Button from "../components/Button";
-import PageWrapper from "./PageWrapper";
-import { useAtom } from "jotai";
+import Button from '../components/Button';
+import PageWrapper from './PageWrapper';
+import { useSetAtom } from 'jotai';
 import { currentPageName } from '../utils/jotai';
 import lizardImage from '../assets/lizard.jpg';
+import React from 'react';
 
 export default function HomePage() {
-    const [currentPage, setCurrentPage] = useAtom(currentPageName);
+    const setCurrentPage = useSetAtom(currentPageName);
 
     return (
         <PageWrapper>
             <div className="max-w-7xl flex flex-col items-center mx-5 xl:mx-auto">
-                <div className='m-5 p-10 rounded-lg shadow-md bg-asu-maroon mt-8 text-white w-full'>
+                <div className="m-5 p-10 rounded-lg shadow-md bg-asu-maroon mt-8 text-white w-full">
                     <HeaderSection />
                 </div>
-                <div className='m-5 p-10 rounded-lg shadow-md bg-white dark:bg-neutral-900 flex flex-col items-center w-full'>
+                <div className="m-5 p-10 rounded-lg shadow-md bg-white dark:bg-neutral-900 flex flex-col items-center w-full">
                     <MainContent setCurrentPage={setCurrentPage} />
                 </div>
             </div>
@@ -40,30 +41,67 @@ const MainContent = ({ setCurrentPage }) => (
                 backgroundPosition: 'center',
             }}
             className="w-full h-96 lg:h-96 rounded-lg shadow-lg"
-            aria-label={"Lizard"}
+            aria-label={'Lizard'}
         />
         <div className="flex flex-col items-center lg:items-start gap-5 text-center lg:text-left">
             <SectionTitle title="Enter the WebUI" />
             <p className="text-lg">
-                The Field Day Web UI is a powerful desktop application designed to manage wildlife data collected through the Field Day mobile app. It serves as an essential tool for researchers, allowing them to efficiently view, manage, and export data collected in the field.
+                The Field Day Web UI is a powerful desktop application designed to manage wildlife
+                data collected through the Field Day mobile app. It serves as an essential tool for
+                researchers, allowing them to efficiently view, manage, and export data collected in
+                the field.
             </p>
-            <Button text='Enter WebUI' onClick={() => setCurrentPage('Table')} />
+            <Button text="Enter WebUI" onClick={() => setCurrentPage('Table')} />
             <SectionTitle title="Resources" />
             <ResourceLinks />
         </div>
     </div>
 );
 
-const SectionTitle = ({ title }) => (
-    <h1 className="text-3xl font-semibold mb-3">{title}</h1>
-);
+const SectionTitle = ({ title }) => <h1 className="text-3xl font-semibold mb-3">{title}</h1>;
 
 const ResourceLinks = () => (
     <ul className="list-disc pl-5 space-y-2">
-        <li><a href="https://github.com/Field-Day-2022/field-day-2022-webUI" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
-        <li><a href="https://tailwindcss.com/docs/guides/vite" target="_blank" rel="noopener noreferrer">Tailwind with Vite</a></li>
-        <li><a href="https://reactjs.org/docs/getting-started.html" target="_blank" rel="noopener noreferrer">React Documentation</a></li>
-        <li><a href="https://firebase.google.com/docs" target="_blank" rel="noopener noreferrer">Firebase Documentation</a></li>
-        <li><a href="https://cloud.google.com/firestore/docs" target="_blank" rel="noopener noreferrer">Firestore Documentation</a></li>
+        <li>
+            <a
+                href="https://github.com/Field-Day-2022/field-day-2022-webUI"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                GitHub Repository
+            </a>
+        </li>
+        <li>
+            <a
+                href="https://tailwindcss.com/docs/guides/vite"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Tailwind with Vite
+            </a>
+        </li>
+        <li>
+            <a
+                href="https://reactjs.org/docs/getting-started.html"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                React Documentation
+            </a>
+        </li>
+        <li>
+            <a href="https://firebase.google.com/docs" target="_blank" rel="noopener noreferrer">
+                Firebase Documentation
+            </a>
+        </li>
+        <li>
+            <a
+                href="https://cloud.google.com/firestore/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Firestore Documentation
+            </a>
+        </li>
     </ul>
 );

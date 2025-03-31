@@ -7,11 +7,23 @@ import DataManager from '../tools/DataManager';
 import { useAtom, useAtomValue } from 'jotai';
 import { currentBatchSize, currentProjectName, currentTableName, appMode } from '../utils/jotai';
 import TableTools from '../components/TableTools';
-import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, MammalIcon, SnakeIcon, ArthropodIcon, AmphibianIcon, SessionIcon, MergeIcon } from '../assets/icons';
+import {
+    FormBuilderIcon,
+    ExportIcon,
+    NewDataIcon,
+    TurtleIcon,
+    LizardIcon,
+    MammalIcon,
+    SnakeIcon,
+    ArthropodIcon,
+    AmphibianIcon,
+    SessionIcon,
+    MergeIcon,
+} from '../assets/icons';
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
-
+import React from 'react';
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
 import { ProjectField } from '../components/FormFields';
@@ -22,35 +34,27 @@ export default function TablePage() {
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
     const [rerender, setRerender] = useState(false);
-    const [additionalConstraints, setAdditionalConstraints] = useState(null);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
-    const [batchSize, setBatchSize] = useAtom(currentBatchSize);
+    const batchSize = useAtomValue(currentBatchSize);
     const environment = useAtomValue(appMode);
 
     const { loadBatch, loadNextBatch, loadPreviousBatch } = usePagination(setEntries);
 
     const loadDynamicArthropodLabels = async () => {
-        setLabels(await dynamicArthropodLabels())
-    }
+        setLabels(await dynamicArthropodLabels());
+    };
 
     const triggerRerender = () => setRerender(!rerender);
-
-    useEffect(() => {
-        if (additionalConstraints) {
-            console.log(additionalConstraints)
-            loadBatch(additionalConstraints)
-        }
-    }, [additionalConstraints])
 
     useEffect(() => {
         if (tableName === 'Arthropod') {
             loadDynamicArthropodLabels();
         } else {
-            setLabels(TABLE_LABELS[tableName])
+            setLabels(TABLE_LABELS[tableName]);
         }
-        loadBatch()
+        loadBatch();
     }, [tableName, batchSize, currentProject, environment, rerender]);
 
     const tabsData = [
@@ -65,80 +69,82 @@ export default function TablePage() {
 
     return (
         <PageWrapper>
-            <FormBuilderModal
-                showModal={activeTool === 'formBuilder'}
-                onCancel={() => setActiveTool('none')}
-                onOkay={() => setActiveTool('none')}
-                triggerRerender={triggerRerender}
-            />
-            <ExportModal
-                showModal={activeTool === 'export'}
-                onCancel={() => setActiveTool('none')}
-            />
-            <DataInputModal
-                showModal={activeTool === 'newData'}
-                closeModal={() => setActiveTool('none')}
-            />
-            <MergeSessionsModal 
-                showModal={activeTool === 'merge'}
-                closeModal={() =>setActiveTool('none')}
-            />
-            <div className="flex justify-between items-center overflow-auto dark:bg-neutral-700">
-                <TabBar 
-                    tabs={tabsData.map((tab) => ({
-                        ...tab,
-                        active: tab.text === tableName,
-                        onClick: () => setTableName(tab.text),
-                    }))}
+            <>
+                <FormBuilderModal
+                    showModal={activeTool === 'formBuilder'}
+                    onCancel={() => setActiveTool('none')}
+                    onOkay={() => setActiveTool('none')}
+                    triggerRerender={triggerRerender}
                 />
-                <div className="flex items-center px-5 space-x-5">
-                    <ProjectField
-                        project={currentProject.replace(/([a-z])([A-Z])/g, '$1 $2')}
-                        setProject={(e) => setCurrentProject(e.replace(/ /g, ''))}
+                <ExportModal
+                    showModal={activeTool === 'export'}
+                    onCancel={() => setActiveTool('none')}
+                />
+                <DataInputModal
+                    showModal={activeTool === 'newData'}
+                    closeModal={() => setActiveTool('none')}
+                />
+                <MergeSessionsModal
+                    showModal={activeTool === 'merge'}
+                    closeModal={() => setActiveTool('none')}
+                />
+                <div className="flex justify-between items-center overflow-auto dark:bg-neutral-700">
+                    <TabBar
+                        tabs={tabsData.map((tab) => ({
+                            ...tab,
+                            active: tab.text === tableName,
+                            onClick: () => setTableName(tab.text),
+                        }))}
                     />
+                    <div className="flex items-center px-5 space-x-5">
+                        <ProjectField
+                            project={currentProject.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                            setProject={(e) => setCurrentProject(e.replace(/ /g, ''))}
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div>
-                <DataManager
-                    name={tableName}
-                    labels={labels}
-                    entries={entries}
-                    setEntries={setEntries}
-                    updateConstraints={(newConstraints) => setAdditionalConstraints(newConstraints)}
-                />
-                <div className="flex justify-between overflow-auto dark:bg-neutral-800">
-                    <TableTools>
-                        <Button
-                            flexible={true}
-                            text="Form Builder"
-                            icon={<FormBuilderIcon />}
-                            onClick={() => setActiveTool('formBuilder')}
+                <div>
+                    <DataManager
+                        name={tableName}
+                        labels={labels}
+                        entries={entries}
+                        setEntries={setEntries}
+                    />
+                    <div className="flex justify-between overflow-auto dark:bg-neutral-800">
+                        <TableTools>
+                            <Button
+                                flexible={true}
+                                text="Form Builder"
+                                icon={<FormBuilderIcon />}
+                                onClick={() => setActiveTool('formBuilder')}
+                            />
+                            <Button
+                                flexible={true}
+                                text="Export to CSV"
+                                icon={<ExportIcon />}
+                                onClick={() => setActiveTool('export')}
+                            />
+                            <Button
+                                flexible={true}
+                                text="New Data Entry"
+                                icon={<NewDataIcon />}
+                                onClick={() => setActiveTool('newData')}
+                            />
+                            <Button
+                                flexible={true}
+                                text="Merge Sessions"
+                                icon={<MergeIcon />}
+                                onClick={() => setActiveTool('merge')}
+                            />
+                        </TableTools>
+                        <Pagination
+                            loadPrevBatch={loadPreviousBatch}
+                            loadNextBatch={loadNextBatch}
                         />
-                        <Button
-                            flexible={true}
-                            text="Export to CSV"
-                            icon={<ExportIcon />}
-                            onClick={() => setActiveTool('export')}
-                        />
-                        <Button
-                            flexible={true}
-                            text="New Data Entry"
-                            icon={<NewDataIcon />}
-                            onClick={() => setActiveTool('newData')}
-                        />
-                        <Button 
-                            flexible={true}
-                            text="Merge Sessions"
-                            icon={<MergeIcon />}
-                            onClick={() => setActiveTool('merge')}
-                        />
-                    </TableTools>
-                    <Pagination
-                        loadPrevBatch={loadPreviousBatch}
-                        loadNextBatch={loadNextBatch} />
+                    </div>
                 </div>
-            </div>
+            </>
         </PageWrapper>
     );
 }

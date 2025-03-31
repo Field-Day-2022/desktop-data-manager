@@ -23,51 +23,48 @@ export const usePagination = (updateEntries) => {
     const environment = useAtomValue(appMode);
 
     const collectionName = getCollectionName(environment, currentProject, currentTable);
-
-    const [lastVisibleDoc, setLastVisibleDoc] = useState();
+    const [lastVisibleDoc, setLastVisibleDoc] = useState(null);
     const [queryCursorStack, setQueryCursorStack] = useState([]);
 
     useEffect(() => {
-        setLastVisibleDoc(null);
-        setQueryCursorStack([]);
+        const resetPagination = async () => {
+            setLastVisibleDoc(null);
+            setQueryCursorStack([]);
+            await loadBatch(); // Reload data after resetting state
+        };
+        resetPagination();
     }, [currentTableName, batchSize]);
 
     const getBatch = async (constraints = []) => {
-        if (!Array.isArray(constraints)) {
-            constraints = [constraints];
-        }
+        if (!Array.isArray(constraints)) constraints = [constraints];
 
         const whereClause =
+            currentTable &&
             currentTable !== 'Session' &&
             where('taxa', '==', currentTable === 'Arthropod' ? 'N/A' : currentTable);
-        whereClause && constraints.push(whereClause);
+        if (whereClause) constraints.push(whereClause);
         constraints.push(limit(batchSize));
-        console.log(constraints);
         return await getDocsFromCollection(collectionName, constraints);
     };
 
     const loadBatch = async (constraints = []) => {
-        const docs = (await getBatch(constraints)).docs;
-        console.log(docs);
-        const newLastVisibleDoc = docs[docs.length - 1];
+        const docs = (await getBatch(constraints)).docs || [];
         updateEntries(docs);
-        setLastVisibleDoc(newLastVisibleDoc);
+        if (docs.length > 0) {
+            setLastVisibleDoc(docs[docs.length - 1]);
+        } else {
+            setLastVisibleDoc(null);
+        }
     };
 
     const loadNextBatch = async () => {
-        const newQueryCursorStack = [...queryCursorStack, lastVisibleDoc];
-        setQueryCursorStack(newQueryCursorStack);
+        if (!lastVisibleDoc) return false;
         const batch = await getBatch(startAfter(lastVisibleDoc));
-        const docs = batch.docs;
-        if (docs.length === 0) {
-            setQueryCursorStack(queryCursorStack);
-            return false;
-        } else {
-            console.log('New last visible doc: ', docs[docs.length - 1]);
-            const newLastVisibleDoc = docs[docs.length - 1];
+        const docs = batch.docs || [];
+        if (docs.length > 0) {
+            setQueryCursorStack((prev) => [...prev, lastVisibleDoc]);
+            setLastVisibleDoc(docs[docs.length - 1]);
             updateEntries(docs);
-            setLastVisibleDoc(newLastVisibleDoc);
-            return true;
         }
     };
 
@@ -75,9 +72,7 @@ export const usePagination = (updateEntries) => {
         if (queryCursorStack.length === 0) return false;
         const previousCursor = queryCursorStack.pop();
         setQueryCursorStack([...queryCursorStack]);
-        await loadBatch(endAt(previousCursor)).then(() => {
-            return true;
-        });
+        await loadBatch(endAt(previousCursor));
     };
 
     return { loadBatch, loadNextBatch, loadPreviousBatch };

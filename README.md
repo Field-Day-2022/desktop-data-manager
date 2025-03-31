@@ -1,3 +1,7 @@
+# Group 26 Field Day Capstone Project
+
+### Group Members: Ayesha Arif, Chase Molstad, Evan Hagood, Quinten Knowles, Timothy Weaver
+
 # <img src="./public/logo.svg" alt="Field Day Logo" width="100">Field Day: Desktop Data Manager
 
 Welcome to the Field Day: Desktop Data Manager (DDM) repository! This project is a desktop web application designed for managing wildlife data collected in the field.
@@ -62,6 +66,20 @@ DDM is an essential tool for viewing, managing, and exporting wildlife data coll
 5. Open the application in your browser at `http://localhost:3000`.
 6. You're all set! 🎉
 
+## Run Unit Tests
+
+Install dependencies:
+
+1.  ```bash
+    npm install
+    ```
+2.  ```bash
+    npm install --save-dev @testing-library/react jest jest-dom
+    ```
+3.  ```bash
+    npm test
+    ```
+
 ## Test Deployments
 
 Test deployments are automatically created on PR into `main` and `dev` branches using the workflow: `firebase-hosting-pull-request.yml`. The URLs for the test deployment are provided in the PR checks.
@@ -81,3 +99,11 @@ In order to use Google Auth and access the test deployment, you will need to add
 <a href="https://github.com/realdgrassl"><img src="https://github.com/realdgrassl.png" width="50" height="50" alt="Dennis Grassl"></a>  
 <a href="https://github.com/ianskelskey"><img src="https://github.com/ianskelskey.png" width="50" height="50" alt="Ian Skelskey"></a>
 <a href="https://github.com/zacharyjacobson"><img src="https://github.com/zacharyjacobson.png" width="50" height="50" alt="Zachary Jacobson"></a>
+
+### 2024 Capstone Team
+
+<a href="https://github.com/evanhagood"><img src="https://github.com/evanhagood.png" width="50" height="50" alt="Evan Hagood"></a>
+<a href="https://github.com/ayeshaArif6"><img src="https://github.com/ayeshaArif6.png" width="50" height="50" alt="Ayesha Arif"></a>
+<a href="https://github.com/cmolstad"><img src="https://github.com/cmolstad.png" width="50" height="50" alt="Chase Molstad"></a>
+<a href="https://github.com/tlweave2"><img src="https://github.com/tlweave2.png" width="50" height="50" alt="Timothy Weaver"></a>
+<a href="https://github.com/qknowles"><img src="https://github.com/qknowles.png" width="50" height="50" alt="Quinten Knowles"></a>

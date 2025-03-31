@@ -1,20 +1,20 @@
-import toast, { Toaster } from "react-hot-toast";
+import toast, { Toaster } from 'react-hot-toast';
+import React from 'react';
 
 const Type = {
     error: 0,
     success: 1,
-    plain: 2
-}
+    plain: 2,
+};
 
 const style = {
-    padding: '8px'
-}
+    padding: '8px',
+};
 
 const config = {
-    duration: 2000, 
+    duration: 4000,
     style: style,
-
-}
+};
 
 const notify = (type, text) => {
     switch (type) {
@@ -28,12 +28,10 @@ const notify = (type, text) => {
             toast(text, config);
             return;
     }
-}
+};
 
 function Notifier() {
-    return (
-        <Toaster  position="bottom-center" />
-    );
+    return <Toaster position="bottom-center" />;
 }
 
-export { notify, Notifier, Type }
+export { notify, Notifier, Type };
