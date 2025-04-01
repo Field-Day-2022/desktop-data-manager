@@ -224,6 +224,13 @@ const CritterForm = ({ critter, project, session, reset }) => {
             data,
             keys: TABLE_KEYS[species],
         });
+        for (const key in data) {
+            const value = data[key];
+            const num = parseFloat(value);
+            if (!isNaN(num) && num < 0) {
+                return false;
+            }
+        }
         return true;
     };
 
@@ -238,6 +245,8 @@ const CritterForm = ({ critter, project, session, reset }) => {
                 notify(Type.success, 'Successfully uploaded entry to session');
                 reset();
             }
+        } else {
+            notify(Type.error, 'Cannot enter negative numbers.');
         }
     };
 

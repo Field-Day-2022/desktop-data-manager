@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.1",
   "type": "module",
+  "overrides": {
+    "camelcase": "5.3.1"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
