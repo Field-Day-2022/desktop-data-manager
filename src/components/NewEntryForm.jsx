@@ -246,7 +246,7 @@ const CritterForm = ({ critter, project, session, reset }) => {
                 reset();
             }
         } else {
-            notify(Type.error, 'Cannot enter negative numbers.')
+            notify(Type.error, 'Cannot enter negative numbers.');
         }
     };
 
