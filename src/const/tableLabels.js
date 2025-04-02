@@ -142,7 +142,7 @@ export const dynamicArthropodLabels = async () => {
         'Date & Time',
         'Site',
         'Array',
-        'Fence Trap',
+        'Arthropod Fence Trap',
         'Predator?',
         ...(await getArthropodLabels()),
         'Comments',
