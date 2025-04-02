@@ -324,6 +324,7 @@ export const getArraysForSite = (projectName, siteName) =>
     getAnswerSetOptions(`${projectName}${siteName}Array`);
 export const getTrapStatuses = () => getAnswerSetOptions('trap statuses');
 export const getFenceTraps = () => getAnswerSetOptions('Fence Traps');
+export const getArthropodFenceTraps = () => getAnswerSetOptions('Arthropod Fence Traps');
 export const getSexes = () => getAnswerSetOptions('Sexes');
 
 const getSessionsByProjectAndYear = async (environment, projectName, year) => {
