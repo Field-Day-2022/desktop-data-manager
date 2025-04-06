@@ -302,55 +302,6 @@ export const getStandardizedDateTimeString = (dateString) => {
     return `${tempDate.getFullYear()}/${String(tempDate.getMonth() + 1).padStart(2, '0')}/${String(tempDate.getDate()).padStart(2, '0')} ${tempDate.toLocaleTimeString('en-US', { hourCycle: 'h23' })}`;
 };
 
-/**
- * Updates the document in AnswerSet collection with secondary taxa values
- * @param {string} docId - The document ID (e.g., 'sPhVOPXQ7uqmTSXWJTCs')
- * @returns {Promise<boolean>} - Whether the update was successful
- */
-export const addSecondaryTaxaToAnswerSet = async (docId = 'sPhVOPXQ7uqmTSXWJTCs') => {
-    try {
-        // Get the document reference
-        const docRef = doc(db, 'AnswerSet', docId);
-        
-        // Get the current document data
-        const docSnap = await getDocs(query(collection(db, 'AnswerSet'), where('__name__', '==', docId)));
-        
-        if (docSnap.empty) {
-            console.error('Document not found');
-            return false;
-        }
-        
-        const docData = docSnap.docs[0].data();
-        const answers = docData.answers || [];
-        
-        // Create the updated answers array with secondary taxa values
-        const updatedAnswers = answers.map(answer => {
-            return {
-                ...answer,
-                secondary: {
-                    amphibian: true,
-                    arthropod: true,
-                    lizard: true,
-                    mammal: true,
-                    snake: true,
-                    turtle: true
-                }
-            };
-        });
-        
-        // Update the document
-        await updateDoc(docRef, {
-            answers: updatedAnswers
-        });
-        
-        console.log('Successfully updated secondary taxa values');
-        return true;
-    } catch (error) {
-        console.error('Error updating secondary taxa values:', error);
-        return false;
-    }
-};
-
 export const uploadNewSession = async (sessionData, project, environment) => {
     const collectionName = `${environment === 'live' ? '' : 'Test'}${project.replace(/\s/g, '')}Session`;
     try {

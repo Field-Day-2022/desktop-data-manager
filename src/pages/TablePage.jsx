@@ -28,14 +28,12 @@ import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
 import { ProjectField } from '../components/FormFields';
 import MergeSessionsModal from '../modals/MergeSessionsModal';
-import { addSecondaryTaxaToAnswerSet } from '../utils/firestore';
 
 export default function TablePage() {
     const [entries, setEntries] = useState([]);
     const [labels, setLabels] = useState();
     const [activeTool, setActiveTool] = useState('none');
     const [rerender, setRerender] = useState(false);
-    const [taxaUpdated, setTaxaUpdated] = useState(false);
 
     const [currentProject, setCurrentProject] = useAtom(currentProjectName);
     const [tableName, setTableName] = useAtom(currentTableName);
@@ -51,16 +49,6 @@ export default function TablePage() {
     const triggerRerender = () => setRerender(!rerender);
 
     useEffect(() => {
-        // Update secondary taxa values in AnswerSet document if not already done
-        if (!taxaUpdated) {
-            addSecondaryTaxaToAnswerSet().then(success => {
-                if (success) {
-                    console.log('Secondary taxa values updated successfully');
-                    setTaxaUpdated(true);
-                }
-            });
-        }
-        
         if (tableName === 'Arthropod') {
             loadDynamicArthropodLabels();
         } else {
