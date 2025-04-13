@@ -297,15 +297,21 @@ export default function FormBuilder({ triggerRerender, modalStep, setModalStep }
     const handleDataSelection = (data) => {
         const selectedAnswer = selectedDocument.answers.find((answer) => answer.primary === data);
 
-        // If the selected document's name ends with "Species", set genus and species separately
-        if (selectedDocument.set_name.endsWith('Species') && selectedAnswer) {
-            setEditData({
+        if (selectedAnswer) {
+            const editData = {
                 primary: selectedAnswer.primary,
-                genus: selectedAnswer.secondary?.Genus || '',
-                species: selectedAnswer.secondary?.Species || '',
-            });
+                ...selectedAnswer.secondary, // Spread all secondary keys so that it works with my new arthropod shit
+            };
+
+            // If the document's name ends with "Species", handle genus and species separately
+            if (selectedDocument.set_name.endsWith('Species')) {
+                editData.genus = selectedAnswer.secondary?.Genus || '';
+                editData.species = selectedAnswer.secondary?.Species || '';
+            }
+
+            setEditData(editData);
         } else {
-            setEditData(selectedAnswer || {});
+            setEditData({});
         }
     };
 

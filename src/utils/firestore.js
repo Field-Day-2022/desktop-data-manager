@@ -323,7 +323,16 @@ export const getSitesForProject = (projectName) => getAnswerSetOptions(`${projec
 export const getArraysForSite = (projectName, siteName) =>
     getAnswerSetOptions(`${projectName}${siteName}Array`);
 export const getTrapStatuses = () => getAnswerSetOptions('trap statuses');
-export const getFenceTraps = () => getAnswerSetOptions('Fence Traps');
+export const getFenceTraps = async () => {
+    try {
+        const snapshot = await getDocs(query(collection(db, 'AnswerSet'), where('set_name', '==', 'Fence Traps')));
+        return snapshot.docs.flatMap((doc) => doc.data().answers); // Ensure secondary keys returned
+    } catch (error) {
+        console.error('Error fetching fence traps:', error);
+        return [];
+    }
+};
+
 export const getSexes = () => getAnswerSetOptions('Sexes');
 
 const getSessionsByProjectAndYear = async (environment, projectName, year) => {

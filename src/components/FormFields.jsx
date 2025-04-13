@@ -418,13 +418,19 @@ const CommentsField = ({ setComments, layout, disabled }) => (
     />
 );
 
-const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
+const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled, taxa }) => {
     const [fenceTrapOptions, setFenceTrapOptions] = useState([]);
+
     useEffect(() => {
         getFenceTraps().then((fenceTraps) => {
-            setFenceTrapOptions(fenceTraps);
+            // Filter options based on the current taxa
+            const filteredOptions = fenceTraps.filter(
+                (trap) => trap.secondary && trap.secondary[taxa.toLowerCase()] === true
+            );
+            setFenceTrapOptions(filteredOptions);
         });
-    }, []);
+    }, [taxa]); // Re-run the effect whenever the taxa changes
+
     return (
         <InputLabel
             label="Fence Trap"
@@ -440,13 +446,11 @@ const FenceTrapField = ({ fenceTrap, setFenceTrap, layout, disabled }) => {
                     <option value="Select an option" disabled hidden>
                         Select an option
                     </option>
-                    {fenceTrapOptions.map((option) => {
-                        return (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        );
-                    })}
+                    {fenceTrapOptions.map((option) => (
+                        <option key={option.primary} value={option.primary}>
+                            {option.primary}
+                        </option>
+                    ))}
                 </select>
             }
         />
@@ -1049,6 +1053,7 @@ export function FormField({
                     setFenceTrap={setValue}
                     layout={layout}
                     disabled={disabled}
+                    taxa={taxa}
                 />
             );
         case 'dead':
