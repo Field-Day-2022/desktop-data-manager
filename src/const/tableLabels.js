@@ -42,13 +42,13 @@ const keyLabelMap = {
     hymb: 'HYMB',
     lepi: 'LEPI',
     mant: 'MANT',
+    micro: 'MICRO',
     orth: 'ORTH',
     pseu: 'PSEU',
     scor: 'SCOR',
     soli: 'SOLI',
     thys: 'THYS',
     unki: 'UNKI',
-    micro: 'MICRO',
 };
 
 const sessionLabels = [
