@@ -8,7 +8,7 @@ Welcome to the Field Day: Desktop Data Manager (DDM) repository! This project is
 
 To quickly get started with the Field Day: Desktop Data Manager application, follow these steps:
 
-1. Visit the [Firebase hosting](https://asu-field-day-webui.web.app/) page to access the application.
+1. Contact Dr. Bateman for the current desktop app access information.
 2. Note that an ASU email address ending with `@asu.edu` is required to log in and use the application.
 
 The application can be installed as a PWA (Progressive Web App) on your device for easy access. To install the application as a PWA, follow these steps:
