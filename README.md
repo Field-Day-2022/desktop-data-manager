@@ -27,19 +27,19 @@ DDM is an essential tool for viewing, managing, and exporting wildlife data coll
 
 ### Key Features
 
--   **Data Management**: Efficiently view, search, edit, and sort collected data in a table view.
--   **Dynamic Data Loading**: Data is loaded dynamically from the database based on user activity to optimize performance and reduce costs.
--   **Google Authentication**: Enhanced authentication security with 2-factor Google authentication.
--   **Data Export**: Export data to CSV format for further analysis.
--   **Answer Sets Management**: Manage answer sets, which are templates for data input specifying permissible data types for given fields.
+- **Data Management**: Efficiently view, search, edit, and sort collected data in a table view.
+- **Dynamic Data Loading**: Data is loaded dynamically from the database based on user activity to optimize performance and reduce costs.
+- **Google Authentication**: Enhanced authentication security with 2-factor Google authentication.
+- **Data Export**: Export data to CSV format for further analysis.
+- **Answer Sets Management**: Manage answer sets, which are templates for data input specifying permissible data types for given fields.
 
 ## Development Guide
 
 ### Prerequisites
 
--   [Node.js](https://nodejs.org/en/download/)
--   [npm](https://www.npmjs.com/get-npm)
--   [Firebase Account](https://firebase.google.com/)
+- [Node.js](https://nodejs.org/en/download/)
+- [npm](https://www.npmjs.com/get-npm)
+- [Firebase Account](https://firebase.google.com/)
 
 ### Installation
 
