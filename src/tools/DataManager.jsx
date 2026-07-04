@@ -69,16 +69,20 @@ export default function DataManager({ name, labels = [], entries = [], setEntrie
     }, []);
 
     const filteredEntries = useCallback((entries, search) => {
-
+        
         if (search === '') {
             return entries;
         }
-
+    
+        const searchTerms = search.split('+').map(term => term.trim().toLowerCase());
+    
         return entries.filter((entry) => {
-            return labels.some((label) => {
-                const entryValue = getValue(entry, label);
-                return entryValue?.toString().toLowerCase().includes(search.toLowerCase());
-            });
+            return searchTerms.every((term) => 
+                labels.some((label) => {
+                    const entryValue = getValue(entry, label)?.toString().toLowerCase();
+                    return entryValue?.includes(term);
+                })
+            );
         });
     }, [labels]);
 
